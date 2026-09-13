@@ -1,0 +1,42 @@
+08-06-26
+---------
+
+"0th Floor
+Meter Reading->(0-88)
+Electricity Amount(@Rs.8/Unit)->Rs.704.00
+Rent->Rs.7000
+Total->7000+704.00= *Rs.7704/-.*
+
+UPI ID-> meeradevi.md85@okhdfcbank
+GPay Number-> 9910968146."
+
+"1st Floor
+Meter Reading->(8155-8253)
+Electricity Amount(@Rs.7/Unit)->Rs.686.00
+Rent->Rs.6000
+Total->6000+686.00+0.94(prev)+1210.81(IGL)+600(Water)= *Rs.8497.75/-.*
+
+UPI ID-> meeradevi.md85@okhdfcbank
+GPay Number-> 9910968146."
+
+"2nd Floor
+Meter Reading->(4240-4363)
+Electricity Amount(@Rs.7/Unit)->Rs.861.00
+Rent->Rs.5600
+Total->5600+861.00+2,884.14(prev)+ 756.69(IGL))+600(Water)= *Rs.10701.83/-.*
+
+UPI ID-> meeradevi.md85@okhdfcbank
+GPay Number-> 9910968146."
+
+"3rd Floor
+Meter Reading->(4522-4651)
+Electricity Amount(@Rs.6/Unit)->Rs.774.00
+Rent->Rs.6000
+Total->6000+774.00+0.00(prev)+600(Water)= *Rs.7374/-.*
+
+UPI ID-> meeradevi.md85@okhdfcbank
+GPay Number-> 9910968146."
+
+
+Total rent - 34,277.58 Billed (incl. elect.)
+Total Elect. - 3025

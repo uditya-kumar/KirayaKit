@@ -1,0 +1,5712 @@
+{
+  "version": "2.13",
+  "children": [
+    {
+      "type": "frame",
+      "id": "qqkkz",
+      "x": -16,
+      "y": -397,
+      "name": "StatusBar",
+      "reusable": true,
+      "width": 390,
+      "height": 50,
+      "fill": "$--white",
+      "padding": [
+        0,
+        32
+      ],
+      "justifyContent": "space_between",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "text",
+          "id": "AC3sg",
+          "name": "Time",
+          "fill": "$text-primary",
+          "content": "9:41",
+          "fontFamily": "$font",
+          "fontSize": 17,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "Dlaze",
+          "name": "Right",
+          "gap": 7,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "h8l9N",
+              "name": "Signal",
+              "width": 18,
+              "height": 18,
+              "icon": "signal-high",
+              "library": "lucide",
+              "fill": "$text-primary"
+            },
+            {
+              "type": "icon",
+              "id": "VqLwD",
+              "name": "Wifi",
+              "width": 18,
+              "height": 18,
+              "icon": "wifi",
+              "library": "lucide",
+              "fill": "$text-primary"
+            },
+            {
+              "type": "icon",
+              "id": "LsbHR",
+              "name": "Battery",
+              "width": 24,
+              "height": 18,
+              "icon": "battery-full",
+              "library": "lucide",
+              "fill": "$text-primary"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "K5xxyq",
+      "x": -16,
+      "y": -279,
+      "name": "HouseCard",
+      "reusable": true,
+      "width": 358,
+      "fill": "$surface",
+      "cornerRadius": 18,
+      "stroke": "$separator",
+      "strokeWidth": 1,
+      "strokeAlignment": "inner",
+      "gap": 12,
+      "padding": 16,
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "frame",
+          "id": "ArcBU",
+          "name": "Info",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 8,
+          "children": [
+            {
+              "type": "text",
+              "id": "cYdoj",
+              "name": "HouseName",
+              "fill": "$text-primary",
+              "content": "Meera Residency",
+              "fontFamily": "$font",
+              "fontSize": 17,
+              "fontWeight": "700"
+            },
+            {
+              "type": "frame",
+              "id": "T7FgB",
+              "name": "AddressRow",
+              "gap": 5,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "ViSCn",
+                  "name": "Pin",
+                  "width": 15,
+                  "height": 15,
+                  "icon": "map-pin",
+                  "library": "lucide",
+                  "fill": "$text-secondary"
+                },
+                {
+                  "type": "text",
+                  "id": "P5Al0",
+                  "name": "Address",
+                  "fill": "$text-secondary",
+                  "content": "Sector 12, Dwarka",
+                  "fontFamily": "$font",
+                  "fontSize": 13,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "t4qGR",
+              "name": "TenantPill",
+              "fill": "#f7f7f8ff",
+              "cornerRadius": 9,
+              "gap": 5,
+              "padding": [
+                5,
+                9
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "LqS3d",
+                  "name": "UsersIcon",
+                  "width": 13,
+                  "height": 13,
+                  "icon": "users",
+                  "library": "lucide",
+                  "fill": "$text-secondary"
+                },
+                {
+                  "type": "text",
+                  "id": "dh5NT",
+                  "name": "TenantCount",
+                  "fill": "$text-secondary",
+                  "content": "4 tenants",
+                  "fontFamily": "$font",
+                  "fontSize": 12,
+                  "fontWeight": "500"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "icon",
+          "id": "ZRKYb",
+          "name": "Chevron",
+          "width": 18,
+          "height": 18,
+          "icon": "chevron-right",
+          "library": "lucide",
+          "fill": "$text-secondary"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "V2jht",
+      "x": 508,
+      "y": -305,
+      "name": "TenantCard",
+      "reusable": true,
+      "width": 358,
+      "fill": "$surface",
+      "cornerRadius": 18,
+      "stroke": "$separator",
+      "strokeWidth": 1,
+      "strokeAlignment": "inner",
+      "layout": "vertical",
+      "gap": 12,
+      "padding": 16,
+      "children": [
+        {
+          "type": "frame",
+          "id": "myOyS",
+          "name": "Top",
+          "width": "fill_container",
+          "gap": 12,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "uUMJN",
+              "name": "NameWrap",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 3,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "NlobL",
+                  "name": "NameRow",
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "r1HAGz",
+                      "name": "TenantName",
+                      "fill": "$text-primary",
+                      "content": "Mr. Piyush",
+                      "fontFamily": "$font",
+                      "fontSize": 17,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "P7ezSD",
+                  "name": "FloorRow",
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "v88ji",
+                      "name": "FloorLabel",
+                      "fill": "$text-secondary",
+                      "content": "Ground Floor",
+                      "fontFamily": "$font",
+                      "fontSize": 13,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "icon",
+              "id": "WMNsK",
+              "name": "Chevron",
+              "width": 20,
+              "height": 20,
+              "icon": "chevron-right",
+              "library": "lucide",
+              "fill": "$text-secondary"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "cXO4o",
+          "name": "InfoRow",
+          "width": "fill_container",
+          "gap": 10,
+          "children": [
+            {
+              "type": "frame",
+              "id": "EO69D",
+              "name": "Info Monthly Rent",
+              "width": "fill_container",
+              "fill": "$surface-2",
+              "cornerRadius": "$radius-inner",
+              "gap": 10,
+              "padding": [
+                10,
+                12
+              ],
+              "justifyContent": "space_around",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "rcr1y",
+                  "name": "TW",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 1,
+                  "padding": [
+                    0,
+                    8
+                  ],
+                  "justifyContent": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "edvCB",
+                      "name": "L",
+                      "fill": "$text-secondary",
+                      "content": "Monthly Rent",
+                      "fontFamily": "$font",
+                      "fontSize": 11,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "text",
+                      "id": "b0RCm",
+                      "name": "V",
+                      "fill": "$text-primary",
+                      "content": "₹5,000",
+                      "fontFamily": "$font",
+                      "fontSize": 15,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "MIMo7",
+              "name": "Info Electricity",
+              "width": 151,
+              "fill": "$surface-2",
+              "cornerRadius": "$radius-inner",
+              "gap": 14,
+              "padding": [
+                10,
+                12
+              ],
+              "justifyContent": "space_around",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Lbg8v",
+                  "name": "TW",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 1,
+                  "padding": [
+                    0,
+                    8
+                  ],
+                  "justifyContent": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "D4Hmt",
+                      "name": "L",
+                      "fill": "$text-secondary",
+                      "content": "Total Pending",
+                      "fontFamily": "$font",
+                      "fontSize": 11,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "text",
+                      "id": "AkjUO",
+                      "name": "V",
+                      "fill": "$red",
+                      "content": "₹0",
+                      "fontFamily": "$font",
+                      "fontSize": 15,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "RvkZD",
+      "x": 1875,
+      "y": 710,
+      "name": "PaymentCard",
+      "reusable": true,
+      "width": 358,
+      "fill": "$surface",
+      "cornerRadius": 18,
+      "stroke": "$separator",
+      "strokeWidth": 1,
+      "strokeAlignment": "inner",
+      "layout": "vertical",
+      "gap": 9,
+      "padding": 16,
+      "children": [
+        {
+          "type": "frame",
+          "id": "SkZ0G",
+          "name": "MonthWrap",
+          "width": 323,
+          "gap": 10,
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "DSFFN",
+              "name": "Month",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fit_content(158)",
+              "content": "January 2025",
+              "fontFamily": "$font",
+              "fontSize": 16,
+              "fontWeight": "600"
+            },
+            {
+              "type": "icon",
+              "id": "W9s0o2",
+              "name": "Chevron",
+              "width": 20,
+              "height": 20,
+              "icon": "chevron-right",
+              "library": "lucide",
+              "fill": "$text-secondary"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "q1LzMO",
+          "name": "InfoRow",
+          "width": "fill_container",
+          "gap": 6,
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "pcd4P",
+              "name": "Info Monthly Rent",
+              "width": 155,
+              "fill": "$surface-2",
+              "cornerRadius": "$radius-inner",
+              "gap": 10,
+              "padding": [
+                10,
+                12
+              ],
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "kF9w2",
+                  "name": "TW",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 1,
+                  "padding": [
+                    0,
+                    8
+                  ],
+                  "justifyContent": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "o4jTq",
+                      "name": "L",
+                      "fill": "$text-secondary",
+                      "content": "Billed",
+                      "fontFamily": "$font",
+                      "fontSize": 11,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "text",
+                      "id": "W7rPC",
+                      "name": "V",
+                      "fill": "$text-primary",
+                      "content": "₹5,000",
+                      "fontFamily": "$font",
+                      "fontSize": 15,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "nkJOq",
+              "name": "Info Electricity",
+              "width": 155,
+              "fill": "$surface-2",
+              "cornerRadius": "$radius-inner",
+              "gap": 14,
+              "padding": [
+                10,
+                12
+              ],
+              "justifyContent": "space_around",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "jS8uZ",
+                  "name": "TW",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 1,
+                  "padding": [
+                    0,
+                    8
+                  ],
+                  "justifyContent": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Yzuh4",
+                      "name": "L",
+                      "fill": "$text-secondary",
+                      "content": "Paid",
+                      "fontFamily": "$font",
+                      "fontSize": 11,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "text",
+                      "id": "JuJ33",
+                      "name": "V",
+                      "fill": "$green",
+                      "content": "₹5,600",
+                      "fontFamily": "$font",
+                      "fontSize": 15,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "psOwn",
+      "x": -32,
+      "y": 49,
+      "name": "Screen — Home",
+      "clip": true,
+      "width": 390,
+      "height": 774,
+      "fill": "#fafafaff",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "q3yu8",
+          "name": "AppBar",
+          "width": "fill_container",
+          "fill": "$surface",
+          "layout": "vertical",
+          "children": [
+            {
+              "id": "F4osy",
+              "type": "ref",
+              "ref": "qqkkz",
+              "name": "StatusBar",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "xn4rt",
+              "name": "NavBar",
+              "width": "fill_container",
+              "fill": "#00000000",
+              "gap": 14,
+              "padding": [
+                8,
+                16,
+                12,
+                16
+              ],
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "cS9xg",
+                  "name": "BarTitle",
+                  "fill": "$text-primary",
+                  "content": "Home",
+                  "fontFamily": "$font",
+                  "fontSize": 18,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "frame",
+                  "id": "O3E5y",
+                  "name": "AddButton",
+                  "width": 28,
+                  "height": 28,
+                  "fill": "#00000000",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "jJFz3",
+                      "name": "Plus",
+                      "width": 26,
+                      "height": 26,
+                      "icon": "circle-plus",
+                      "library": "lucide",
+                      "fill": "$text-primary"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "rectangle",
+              "id": "A6bM3",
+              "name": "BarSeparator",
+              "fill": "$separator",
+              "width": "fill_container",
+              "height": 1
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "HHN85",
+          "name": "Content",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 14,
+          "padding": [
+            16,
+            20,
+            13,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "vtYUc",
+              "name": "SearchBar",
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": 14,
+              "stroke": "$separator",
+              "strokeWidth": 1,
+              "strokeAlignment": "inner",
+              "gap": 10,
+              "padding": [
+                12,
+                14
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "JfO1N",
+                  "name": "SearchIcon",
+                  "width": 18,
+                  "height": 18,
+                  "icon": "search",
+                  "library": "lucide",
+                  "fill": "$text-secondary"
+                },
+                {
+                  "type": "text",
+                  "id": "H2OCf",
+                  "name": "SearchPlaceholder",
+                  "fill": "$text-tertiary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Search property by name",
+                  "fontFamily": "$font",
+                  "fontSize": 15,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "niOwj",
+              "name": "SectionHeader",
+              "width": "fill_container",
+              "padding": [
+                10,
+                0,
+                2,
+                0
+              ],
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "zjovC",
+                  "name": "SectionTitle",
+                  "fill": "$text-primary",
+                  "content": "4 Properties",
+                  "fontFamily": "$font",
+                  "fontSize": 18,
+                  "fontWeight": "600"
+                }
+              ]
+            },
+            {
+              "id": "wNQGH",
+              "type": "ref",
+              "ref": "K5xxyq",
+              "name": "House Meera Residency",
+              "width": "fill_container",
+              "descendants": {
+                "cYdoj": {
+                  "content": "Meera Residency"
+                },
+                "P5Al0": {
+                  "content": "Sector 12, Dwarka"
+                },
+                "dh5NT": {
+                  "content": "4 tenants"
+                }
+              }
+            },
+            {
+              "id": "qzw1T",
+              "type": "ref",
+              "ref": "K5xxyq",
+              "name": "House Lotus Villa",
+              "width": "fill_container",
+              "descendants": {
+                "cYdoj": {
+                  "content": "Lotus Villa"
+                },
+                "P5Al0": {
+                  "content": "Greater Kailash II"
+                },
+                "dh5NT": {
+                  "content": "3 tenants"
+                }
+              }
+            },
+            {
+              "id": "M7ZRY5",
+              "type": "ref",
+              "ref": "K5xxyq",
+              "name": "House Sunrise Apartments",
+              "width": "fill_container",
+              "descendants": {
+                "cYdoj": {
+                  "content": "Sunrise Apartments"
+                },
+                "P5Al0": {
+                  "content": "Rohini, Block C"
+                },
+                "dh5NT": {
+                  "content": "6 tenants"
+                }
+              }
+            },
+            {
+              "id": "IKspA",
+              "type": "ref",
+              "ref": "K5xxyq",
+              "name": "House Green Nest",
+              "width": "fill_container",
+              "descendants": {
+                "cYdoj": {
+                  "content": "Green Nest"
+                },
+                "P5Al0": {
+                  "content": "Vasant Kunj"
+                },
+                "dh5NT": {
+                  "content": "2 tenants"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "M90YlU",
+          "type": "ref",
+          "ref": "Fa15Q",
+          "name": "BottomTabBar",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 710,
+          "width": 390,
+          "cornerRadius": 16
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "hf8HL",
+      "x": 508,
+      "y": 49,
+      "name": "Screen — Tenants",
+      "clip": true,
+      "width": 390,
+      "height": 728,
+      "fill": "#fafafaff",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "pL0Sy",
+          "name": "AppBar",
+          "width": "fill_container",
+          "fill": "$surface",
+          "layout": "vertical",
+          "children": [
+            {
+              "id": "qAK11",
+              "type": "ref",
+              "ref": "qqkkz",
+              "name": "StatusBar",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "GvmJC",
+              "name": "NavBar",
+              "width": "fill_container",
+              "fill": "#00000000",
+              "gap": 14,
+              "padding": [
+                10,
+                16,
+                12,
+                16
+              ],
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "B7sDE",
+                  "name": "Back",
+                  "width": 28,
+                  "height": 28,
+                  "fill": "#00000000",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "tYyHS",
+                      "name": "BackIcon",
+                      "width": 26,
+                      "height": 26,
+                      "icon": "chevron-left",
+                      "library": "lucide",
+                      "fill": "$text-primary"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "P3H2CM",
+                  "name": "BarTitle",
+                  "fill": "$text-primary",
+                  "content": "Meera Residency",
+                  "fontFamily": "$font",
+                  "fontSize": 18,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "frame",
+                  "id": "r9Zly",
+                  "name": "BarSpacer",
+                  "width": "fill_container",
+                  "height": 1
+                },
+                {
+                  "type": "frame",
+                  "id": "zvwOs",
+                  "name": "AddButton",
+                  "width": 28,
+                  "height": 28,
+                  "fill": "#00000000",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "Im2xy",
+                      "name": "Plus",
+                      "width": 26,
+                      "height": 26,
+                      "icon": "ellipsis-vertical",
+                      "library": "lucide",
+                      "fill": "$text-primary"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "rectangle",
+              "id": "o6WNr",
+              "name": "BarSeparator",
+              "fill": "$separator",
+              "width": "fill_container",
+              "height": 1
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "E6VQu",
+          "name": "Content",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 14,
+          "padding": [
+            20,
+            20,
+            17,
+            20
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "rNwOx",
+              "name": "SearchBar",
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": 14,
+              "stroke": "$separator",
+              "strokeWidth": 1,
+              "strokeAlignment": "inner",
+              "gap": 10,
+              "padding": [
+                12,
+                14
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "W43zRO",
+                  "name": "SearchIcon",
+                  "width": 18,
+                  "height": 18,
+                  "icon": "search",
+                  "library": "lucide",
+                  "fill": "$text-secondary"
+                },
+                {
+                  "type": "text",
+                  "id": "B8dBi",
+                  "name": "SearchPlaceholder",
+                  "fill": "$text-tertiary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Search tenant by name",
+                  "fontFamily": "$font",
+                  "fontSize": 15,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "CZptk",
+              "name": "ListLabel",
+              "fill": "$text-primary",
+              "content": "3 Tenants",
+              "fontFamily": "$font",
+              "fontSize": 18,
+              "fontWeight": "600"
+            },
+            {
+              "id": "LknKg",
+              "type": "ref",
+              "ref": "V2jht",
+              "name": "Tenant Mr. Ashutosh",
+              "width": "fill_container"
+            },
+            {
+              "id": "rPETh",
+              "type": "ref",
+              "ref": "V2jht",
+              "name": "Tenant Mr. Anil",
+              "width": "fill_container"
+            },
+            {
+              "id": "ZD2cJ",
+              "type": "ref",
+              "ref": "V2jht",
+              "name": "Tenant Mr. Anup",
+              "width": "fill_container"
+            }
+          ]
+        },
+        {
+          "id": "YwPc6",
+          "type": "ref",
+          "ref": "Fa15Q",
+          "name": "BottomTabBar",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 664,
+          "width": 390,
+          "cornerRadius": 16
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "MADxZ",
+      "x": 1415,
+      "y": 49,
+      "name": "Screen — Tenant Detail",
+      "clip": true,
+      "width": 390,
+      "fill": "#fafafaff",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "GQ3TF",
+          "name": "AppBar",
+          "width": "fill_container",
+          "fill": "$surface",
+          "layout": "vertical",
+          "children": [
+            {
+              "id": "JGI9h",
+              "type": "ref",
+              "ref": "qqkkz",
+              "name": "StatusBar",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "VAvrL",
+              "name": "NavBar",
+              "width": "fill_container",
+              "fill": "#00000000",
+              "gap": 14,
+              "padding": [
+                10,
+                16,
+                12,
+                16
+              ],
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "MXOmL",
+                  "name": "Back",
+                  "width": 28,
+                  "height": 28,
+                  "fill": "#00000000",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "hLz2e",
+                      "name": "BackIcon",
+                      "width": 26,
+                      "height": 26,
+                      "icon": "chevron-left",
+                      "library": "lucide",
+                      "fill": "$text-primary"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "fo60B",
+                  "name": "BarTitle",
+                  "fill": "$text-primary",
+                  "content": "Tenant Detail",
+                  "fontFamily": "$font",
+                  "fontSize": 18,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "frame",
+                  "id": "x5pOS",
+                  "name": "BarSpacer",
+                  "width": "fill_container",
+                  "height": 1
+                }
+              ]
+            },
+            {
+              "type": "rectangle",
+              "id": "RaRUX",
+              "name": "BarSeparator",
+              "fill": "$separator",
+              "width": "fill_container",
+              "height": 1
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "TJFW1",
+          "name": "Content",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 12,
+          "padding": [
+            10,
+            20,
+            0,
+            20
+          ],
+          "children": [
+            {
+              "id": "B2D0c6",
+              "type": "ref",
+              "ref": "MyCYg"
+            },
+            {
+              "type": "frame",
+              "id": "Uy7Zi",
+              "name": "Pending",
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": "$radius-card",
+              "stroke": "$separator",
+              "strokeWidth": 1,
+              "strokeAlignment": "inner",
+              "layout": "vertical",
+              "gap": 14,
+              "padding": [
+                18,
+                18,
+                16,
+                18
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "yD7Bl",
+                  "name": "PendingRow",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "L1LpRv",
+                      "name": "PendLabel",
+                      "fill": "$text-primary",
+                      "content": "Total pending",
+                      "fontFamily": "$font",
+                      "fontSize": 16,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "EMzvG",
+                      "name": "PendAmt",
+                      "fill": "$red",
+                      "content": "₹5,386",
+                      "fontFamily": "$font",
+                      "fontSize": 18,
+                      "fontWeight": "600",
+                      "letterSpacing": -0.5
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "WSfNa",
+              "type": "ref",
+              "ref": "CVpkP"
+            },
+            {
+              "type": "frame",
+              "id": "DRQ0u",
+              "name": "HistoryHead",
+              "width": "fill_container",
+              "padding": [
+                10,
+                0,
+                0,
+                0
+              ],
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "SrIum",
+                  "name": "HistTitle",
+                  "fill": "$text-primary",
+                  "content": "Payment history",
+                  "fontFamily": "$font",
+                  "fontSize": 18,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "G206zs",
+                  "name": "ViewAll",
+                  "fill": "$accent",
+                  "content": "View all",
+                  "fontFamily": "$font",
+                  "fontSize": 14,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "id": "kZNvx",
+              "type": "ref",
+              "ref": "RvkZD",
+              "name": "Pay February 2023",
+              "width": "fill_container",
+              "descendants": {
+                "DSFFN": {
+                  "content": "February 2026"
+                }
+              }
+            },
+            {
+              "id": "vqCes",
+              "type": "ref",
+              "ref": "RvkZD",
+              "name": "Pay January 2023",
+              "width": "fill_container",
+              "descendants": {
+                "DSFFN": {
+                  "content": "January 2026"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "LRD5b",
+              "name": "DeleteGap",
+              "width": "fill_container",
+              "height": 13
+            },
+            {
+              "type": "frame",
+              "id": "np1RI",
+              "name": "DeleteBtn",
+              "width": "fill_container",
+              "fill": "$red",
+              "cornerRadius": 14,
+              "gap": 10,
+              "padding": 15,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "xM2U8",
+                  "name": "TrashIcon",
+                  "width": 18,
+                  "height": 18,
+                  "icon": "trash-2",
+                  "library": "lucide",
+                  "fill": "$--white"
+                },
+                {
+                  "type": "text",
+                  "id": "PkbBI",
+                  "name": "DeleteTxt",
+                  "rotation": -0.056386552193712074,
+                  "fill": "$--white",
+                  "content": "Delete Tenant",
+                  "fontFamily": "$font",
+                  "fontSize": 16,
+                  "fontWeight": "600"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Q9sOP",
+              "name": "BottomPad",
+              "width": "fill_container",
+              "height": 16
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "umV64",
+      "x": -32,
+      "y": 939,
+      "name": "Screen — Add House",
+      "clip": true,
+      "width": 390,
+      "height": 627,
+      "fill": "$bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "HDzWl",
+          "name": "AppBar",
+          "width": "fill_container",
+          "fill": "$surface",
+          "layout": "vertical",
+          "children": [
+            {
+              "id": "JSE0L",
+              "type": "ref",
+              "ref": "qqkkz",
+              "name": "StatusBar",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "afGtv",
+              "name": "NavBar",
+              "width": "fill_container",
+              "gap": 14,
+              "padding": [
+                10,
+                16,
+                12,
+                16
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "S5m3Y",
+                  "name": "Back",
+                  "width": 28,
+                  "height": 28,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "N1PLs",
+                      "name": "BackIcon",
+                      "width": 26,
+                      "height": 26,
+                      "icon": "chevron-left",
+                      "library": "lucide",
+                      "fill": "$text-primary"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "hjKhy",
+                  "name": "BarTitle",
+                  "fill": "$text-primary",
+                  "content": "New House",
+                  "fontFamily": "$font",
+                  "fontSize": 18,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "rectangle",
+              "id": "wWaXY",
+              "name": "BarSeparator",
+              "fill": "$separator",
+              "width": "fill_container",
+              "height": 1
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Ub6m2",
+          "name": "Body",
+          "width": "fill_container",
+          "fill": "#fafafaff",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "ny9kF",
+              "name": "Form",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 18,
+              "padding": [
+                18,
+                20,
+                24,
+                20
+              ],
+              "children": [
+                {
+                  "id": "HOpXy",
+                  "type": "ref",
+                  "ref": "lpzRE",
+                  "name": "Field House name",
+                  "width": "fill_container",
+                  "descendants": {
+                    "r0CiLB": {
+                      "content": "House name"
+                    },
+                    "E1OxI": {
+                      "stroke": "$accent",
+                      "strokeWidth": 1.5
+                    },
+                    "HeO6Y": {
+                      "icon": "house"
+                    },
+                    "klFBi": {
+                      "content": "e.g. Meera Residency",
+                      "fill": "$text-primary"
+                    }
+                  }
+                },
+                {
+                  "id": "HZHVV",
+                  "type": "ref",
+                  "ref": "lpzRE",
+                  "name": "Field Address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "r0CiLB": {
+                      "content": "Address"
+                    },
+                    "HeO6Y": {
+                      "icon": "map-pin"
+                    },
+                    "klFBi": {
+                      "content": "Street, area, city",
+                      "fill": "$text-tertiary"
+                    }
+                  }
+                },
+                {
+                  "id": "cLyGG",
+                  "type": "ref",
+                  "ref": "lpzRE",
+                  "name": "Field Number of floors",
+                  "width": "fill_container",
+                  "descendants": {
+                    "r0CiLB": {
+                      "content": "Number of floors"
+                    },
+                    "HeO6Y": {
+                      "icon": "layers"
+                    },
+                    "klFBi": {
+                      "content": "e.g. 4",
+                      "fill": "$text-tertiary"
+                    }
+                  }
+                },
+                {
+                  "id": "AbJcl",
+                  "type": "ref",
+                  "ref": "lpzRE",
+                  "name": "Field UPI ID",
+                  "width": "fill_container",
+                  "descendants": {
+                    "r0CiLB": {
+                      "content": "UPI ID"
+                    },
+                    "HeO6Y": {
+                      "icon": "wallet"
+                    },
+                    "klFBi": {
+                      "content": "name@bank",
+                      "fill": "$text-tertiary"
+                    }
+                  }
+                },
+                {
+                  "id": "RuQGi",
+                  "type": "ref",
+                  "ref": "lpzRE",
+                  "name": "Field GPay number",
+                  "width": "fill_container",
+                  "descendants": {
+                    "r0CiLB": {
+                      "content": "GPay number"
+                    },
+                    "HeO6Y": {
+                      "icon": "phone"
+                    },
+                    "klFBi": {
+                      "content": "98765 43210",
+                      "fill": "$text-tertiary"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "tKaMC",
+                  "name": "CTA",
+                  "width": "fill_container",
+                  "fill": "$accent",
+                  "cornerRadius": 14,
+                  "gap": 8,
+                  "padding": 15,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "PPB3U",
+                      "name": "PlusI",
+                      "width": 18,
+                      "height": 18,
+                      "icon": "plus",
+                      "library": "lucide",
+                      "fill": "#FFFFFF"
+                    },
+                    {
+                      "type": "text",
+                      "id": "j7QpXY",
+                      "name": "CTATxt",
+                      "fill": "#FFFFFF",
+                      "content": "Add House",
+                      "fontFamily": "$font",
+                      "fontSize": 16,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "slGmE",
+      "x": 508,
+      "y": 881,
+      "name": "Screen — Edit House",
+      "clip": true,
+      "width": 390,
+      "height": 627,
+      "fill": "$bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "h5rPZ",
+          "name": "AppBar",
+          "width": "fill_container",
+          "fill": "$surface",
+          "layout": "vertical",
+          "children": [
+            {
+              "id": "LrDBQ",
+              "type": "ref",
+              "ref": "qqkkz",
+              "name": "StatusBar",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "kkn4r",
+              "name": "NavBar",
+              "width": "fill_container",
+              "gap": 14,
+              "padding": [
+                10,
+                16,
+                12,
+                16
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "XK13A",
+                  "name": "Back",
+                  "width": 28,
+                  "height": 28,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "Md7Vz",
+                      "name": "BackIcon",
+                      "width": 26,
+                      "height": 26,
+                      "icon": "chevron-left",
+                      "library": "lucide",
+                      "fill": "$text-primary"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "lR7PZ",
+                  "name": "BarTitle",
+                  "fill": "$text-primary",
+                  "content": "Edit House",
+                  "fontFamily": "$font",
+                  "fontSize": 18,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "rectangle",
+              "id": "yFiQL",
+              "name": "BarSeparator",
+              "fill": "$separator",
+              "width": "fill_container",
+              "height": 1
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "k1DPR",
+          "name": "Body",
+          "width": "fill_container",
+          "fill": "#fafafaff",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "QrSJw",
+              "name": "Form",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 18,
+              "padding": [
+                18,
+                20,
+                24,
+                20
+              ],
+              "children": [
+                {
+                  "id": "esFHh",
+                  "type": "ref",
+                  "ref": "lpzRE",
+                  "name": "Field House name",
+                  "width": "fill_container",
+                  "descendants": {
+                    "r0CiLB": {
+                      "content": "House name"
+                    },
+                    "E1OxI": {
+                      "stroke": "$accent",
+                      "strokeWidth": 1.5
+                    },
+                    "HeO6Y": {
+                      "icon": "house"
+                    },
+                    "klFBi": {
+                      "content": "e.g. Meera Residency",
+                      "fill": "$text-primary"
+                    }
+                  }
+                },
+                {
+                  "id": "UzJRd",
+                  "type": "ref",
+                  "ref": "lpzRE",
+                  "name": "Field Address",
+                  "width": "fill_container",
+                  "descendants": {
+                    "r0CiLB": {
+                      "content": "Address"
+                    },
+                    "HeO6Y": {
+                      "icon": "map-pin"
+                    },
+                    "klFBi": {
+                      "content": "Street, area, city",
+                      "fill": "$text-tertiary"
+                    }
+                  }
+                },
+                {
+                  "id": "HFq10",
+                  "type": "ref",
+                  "ref": "lpzRE",
+                  "name": "Field Number of floors",
+                  "width": "fill_container",
+                  "descendants": {
+                    "r0CiLB": {
+                      "content": "Number of floors"
+                    },
+                    "HeO6Y": {
+                      "icon": "layers"
+                    },
+                    "klFBi": {
+                      "content": "e.g. 4",
+                      "fill": "$text-tertiary"
+                    }
+                  }
+                },
+                {
+                  "id": "wmMmp",
+                  "type": "ref",
+                  "ref": "lpzRE",
+                  "name": "Field UPI ID",
+                  "width": "fill_container",
+                  "descendants": {
+                    "r0CiLB": {
+                      "content": "UPI ID"
+                    },
+                    "HeO6Y": {
+                      "icon": "wallet"
+                    },
+                    "klFBi": {
+                      "content": "name@bank",
+                      "fill": "$text-tertiary"
+                    }
+                  }
+                },
+                {
+                  "id": "EIzXt",
+                  "type": "ref",
+                  "ref": "lpzRE",
+                  "name": "Field GPay number",
+                  "width": "fill_container",
+                  "descendants": {
+                    "r0CiLB": {
+                      "content": "GPay number"
+                    },
+                    "HeO6Y": {
+                      "icon": "phone"
+                    },
+                    "klFBi": {
+                      "content": "98765 43210",
+                      "fill": "$text-tertiary"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "w3u8hH",
+                  "name": "CTA",
+                  "width": "fill_container",
+                  "fill": "$accent",
+                  "cornerRadius": 14,
+                  "gap": 8,
+                  "padding": 15,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "VTDvO",
+                      "name": "CTATxt",
+                      "fill": "#FFFFFF",
+                      "content": "Save",
+                      "fontFamily": "$font",
+                      "fontSize": 16,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "lpzRE",
+      "x": 1947,
+      "y": -416,
+      "name": "FormField",
+      "reusable": true,
+      "width": 358,
+      "layout": "vertical",
+      "gap": 7,
+      "children": [
+        {
+          "type": "text",
+          "id": "r0CiLB",
+          "name": "FieldLabel",
+          "fill": "$text-secondary",
+          "content": "Label",
+          "fontFamily": "$font",
+          "fontSize": 13,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "E1OxI",
+          "name": "InputBox",
+          "width": "fill_container",
+          "fill": "$surface",
+          "cornerRadius": "$radius-inner",
+          "stroke": "$separator",
+          "strokeWidth": 1,
+          "gap": 10,
+          "padding": [
+            14,
+            16
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "HeO6Y",
+              "name": "FieldIcon",
+              "width": 18,
+              "height": 18,
+              "icon": "type",
+              "library": "lucide",
+              "fill": "$text-secondary"
+            },
+            {
+              "type": "text",
+              "id": "klFBi",
+              "name": "FieldValue",
+              "fill": "$text-tertiary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Placeholder",
+              "fontFamily": "$font",
+              "fontSize": 15,
+              "fontWeight": "normal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "sB7vt",
+      "x": 508,
+      "y": 1590,
+      "name": "Screen — Create Tenant",
+      "clip": true,
+      "width": 390,
+      "fill": "$bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "BLAR8",
+          "name": "AppBar",
+          "width": "fill_container",
+          "fill": "$surface",
+          "layout": "vertical",
+          "children": [
+            {
+              "id": "e3rlv",
+              "type": "ref",
+              "ref": "qqkkz",
+              "name": "StatusBar",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "TjPHr",
+              "name": "NavBar",
+              "width": "fill_container",
+              "gap": 14,
+              "padding": [
+                10,
+                16,
+                12,
+                16
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "LVH5a",
+                  "name": "Back",
+                  "width": 28,
+                  "height": 28,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "j8Bvt6",
+                      "name": "BackIcon",
+                      "width": 26,
+                      "height": 26,
+                      "icon": "chevron-left",
+                      "library": "lucide",
+                      "fill": "$text-primary"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "e4exV",
+                  "name": "BarTitle",
+                  "fill": "$text-primary",
+                  "content": "Create Tenant",
+                  "fontFamily": "$font",
+                  "fontSize": 18,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "rectangle",
+              "id": "Z3e2E3",
+              "name": "BarSeparator",
+              "fill": "$separator",
+              "width": "fill_container",
+              "height": 1
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "SeAiy",
+          "name": "Body",
+          "width": "fill_container",
+          "fill": "#fafafaff",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "xG0Ww",
+              "name": "Form",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 18,
+              "padding": [
+                18,
+                20,
+                24,
+                20
+              ],
+              "children": [
+                {
+                  "id": "zO8Xo",
+                  "type": "ref",
+                  "ref": "lpzRE",
+                  "name": "Field House name",
+                  "width": "fill_container",
+                  "descendants": {
+                    "r0CiLB": {
+                      "content": "Tenant name"
+                    },
+                    "E1OxI": {
+                      "stroke": "$accent",
+                      "strokeWidth": 1.5
+                    },
+                    "HeO6Y": {
+                      "icon": "user"
+                    },
+                    "klFBi": {
+                      "content": "e.g. Mr. Piyush",
+                      "fill": "$text-primary"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "gWcQJ",
+                  "name": "Row Mobile Expiry",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "id": "kwsVj",
+                      "type": "ref",
+                      "ref": "lpzRE",
+                      "name": "Field UPI ID",
+                      "width": "fill_container",
+                      "descendants": {
+                        "r0CiLB": {
+                          "content": "Mobile Number"
+                        },
+                        "HeO6Y": {
+                          "icon": "phone"
+                        },
+                        "klFBi": {
+                          "content": "98765 43210",
+                          "fill": "$text-tertiary"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "UXMmd",
+                  "name": "Row Mobile Expiry",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "id": "s5Djz1",
+                      "type": "ref",
+                      "ref": "lpzRE",
+                      "name": "Field UPI ID",
+                      "width": "fill_container",
+                      "descendants": {
+                        "r0CiLB": {
+                          "content": "Aadhar Card"
+                        },
+                        "HeO6Y": {
+                          "icon": "id-card"
+                        },
+                        "klFBi": {
+                          "content": "XXXX XXXX XXXX",
+                          "fill": "$text-tertiary"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "U8pEo",
+                  "type": "ref",
+                  "ref": "lpzRE",
+                  "name": "Field GPay number",
+                  "width": "fill_container",
+                  "x": 20,
+                  "y": 279,
+                  "descendants": {
+                    "r0CiLB": {
+                      "content": "Opening meter reading"
+                    },
+                    "HeO6Y": {
+                      "icon": "gauge"
+                    },
+                    "klFBi": {
+                      "content": "e.g. 4522",
+                      "fill": "$text-tertiary"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "PjFVC",
+                  "name": "Row Floor Rent",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "id": "JRvgP",
+                      "type": "ref",
+                      "ref": "lpzRE",
+                      "name": "Field Address",
+                      "width": "fill_container",
+                      "descendants": {
+                        "r0CiLB": {
+                          "content": "Assign floor"
+                        },
+                        "HeO6Y": {
+                          "icon": "layers"
+                        },
+                        "klFBi": {
+                          "content": "Ground Floor",
+                          "fill": "$text-tertiary"
+                        }
+                      }
+                    },
+                    {
+                      "id": "R8f87h",
+                      "type": "ref",
+                      "ref": "lpzRE",
+                      "name": "Field Agrement Expiry",
+                      "width": "fill_container",
+                      "x": 181,
+                      "y": 0,
+                      "descendants": {
+                        "r0CiLB": {
+                          "content": "Agrement Expiry"
+                        },
+                        "HeO6Y": {
+                          "icon": "calendar"
+                        },
+                        "klFBi": {
+                          "content": "DD/MM/YYYY",
+                          "fill": "$text-tertiary"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "WPiyg",
+                  "name": "Row Rate Meter",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "id": "evalP",
+                      "type": "ref",
+                      "ref": "lpzRE",
+                      "name": "Field UPI ID",
+                      "width": "fill_container",
+                      "descendants": {
+                        "r0CiLB": {
+                          "content": "Electricity rate (₹/unit)"
+                        },
+                        "HeO6Y": {
+                          "icon": "zap"
+                        },
+                        "klFBi": {
+                          "content": "e.g. 6",
+                          "fill": "$text-tertiary"
+                        }
+                      }
+                    },
+                    {
+                      "id": "Z4gntz",
+                      "type": "ref",
+                      "ref": "lpzRE",
+                      "name": "Field Number of floors",
+                      "width": "fill_container",
+                      "x": 181,
+                      "y": 0,
+                      "descendants": {
+                        "r0CiLB": {
+                          "content": "Monthly rent"
+                        },
+                        "HeO6Y": {
+                          "icon": "indian-rupee"
+                        },
+                        "klFBi": {
+                          "content": "e.g. 5000",
+                          "fill": "$text-tertiary"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "VMSGA",
+                  "name": "CTA",
+                  "width": "fill_container",
+                  "fill": "$accent",
+                  "cornerRadius": 14,
+                  "gap": 8,
+                  "padding": 15,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "W29zX",
+                      "name": "PlusI",
+                      "width": 18,
+                      "height": 18,
+                      "icon": "plus",
+                      "library": "lucide",
+                      "fill": "#FFFFFF"
+                    },
+                    {
+                      "type": "text",
+                      "id": "DjYQz",
+                      "name": "CTATxt",
+                      "fill": "#FFFFFF",
+                      "content": "Create Tenant",
+                      "fontFamily": "$font",
+                      "fontSize": 16,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "lXpcT",
+      "x": 1415,
+      "y": 1049,
+      "name": "Screen — Edit Tenant",
+      "clip": true,
+      "width": 390,
+      "fill": "$bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "eFAC2",
+          "name": "AppBar",
+          "width": "fill_container",
+          "fill": "$surface",
+          "layout": "vertical",
+          "children": [
+            {
+              "id": "iXV03",
+              "type": "ref",
+              "ref": "qqkkz",
+              "name": "StatusBar",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "VFVgI",
+              "name": "NavBar",
+              "width": "fill_container",
+              "gap": 14,
+              "padding": [
+                10,
+                16,
+                12,
+                16
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "rN14Z",
+                  "name": "Back",
+                  "width": 28,
+                  "height": 28,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "vbpvz",
+                      "name": "BackIcon",
+                      "width": 26,
+                      "height": 26,
+                      "icon": "chevron-left",
+                      "library": "lucide",
+                      "fill": "$text-primary"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "b4jA3",
+                  "name": "BarTitle",
+                  "fill": "$text-primary",
+                  "content": "Edit Tenant",
+                  "fontFamily": "$font",
+                  "fontSize": 18,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "rectangle",
+              "id": "HKwE2",
+              "name": "BarSeparator",
+              "fill": "$separator",
+              "width": "fill_container",
+              "height": 1
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "aB8DS",
+          "name": "Body",
+          "width": "fill_container",
+          "fill": "#fafafaff",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "OlWve",
+              "name": "Form",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 18,
+              "padding": [
+                18,
+                20,
+                24,
+                20
+              ],
+              "children": [
+                {
+                  "id": "cUckd",
+                  "type": "ref",
+                  "ref": "lpzRE",
+                  "name": "Field House name",
+                  "width": "fill_container",
+                  "descendants": {
+                    "r0CiLB": {
+                      "content": "Tenant name"
+                    },
+                    "E1OxI": {
+                      "stroke": "$accent",
+                      "strokeWidth": 1.5
+                    },
+                    "HeO6Y": {
+                      "icon": "user"
+                    },
+                    "klFBi": {
+                      "content": "e.g. Mr. Piyush",
+                      "fill": "$text-primary"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "EZXZA",
+                  "name": "Row Mobile Aadhar",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "id": "y9NYe",
+                      "type": "ref",
+                      "ref": "lpzRE",
+                      "name": "Field Mobile",
+                      "width": "fill_container",
+                      "descendants": {
+                        "r0CiLB": {
+                          "content": "Mobile Number"
+                        },
+                        "HeO6Y": {
+                          "icon": "phone"
+                        },
+                        "klFBi": {
+                          "content": "98765 43210",
+                          "fill": "$text-primary"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "P7JAc",
+                  "type": "ref",
+                  "ref": "lpzRE",
+                  "name": "Field Aadhar",
+                  "width": "fill_container",
+                  "x": 20,
+                  "y": 192,
+                  "descendants": {
+                    "r0CiLB": {
+                      "content": "Aadhar Card"
+                    },
+                    "HeO6Y": {
+                      "icon": "id-card"
+                    },
+                    "klFBi": {
+                      "content": "1234 5678 9012",
+                      "fill": "$text-primary"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "g7jem",
+                  "name": "Row Floor Rent",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "id": "B57HLC",
+                      "type": "ref",
+                      "ref": "lpzRE",
+                      "name": "Field Floor",
+                      "width": "fill_container",
+                      "x": 0,
+                      "y": 0,
+                      "descendants": {
+                        "r0CiLB": {
+                          "content": "Assigned floor"
+                        },
+                        "HeO6Y": {
+                          "icon": "layers"
+                        },
+                        "klFBi": {
+                          "content": "3rd Floor",
+                          "fill": "$text-primary"
+                        }
+                      }
+                    },
+                    {
+                      "id": "HM1MI",
+                      "type": "ref",
+                      "ref": "lpzRE",
+                      "name": "Field Expiry",
+                      "width": "fill_container",
+                      "x": 181,
+                      "y": 0,
+                      "descendants": {
+                        "r0CiLB": {
+                          "content": "Agreement expiry"
+                        },
+                        "HeO6Y": {
+                          "icon": "calendar"
+                        },
+                        "klFBi": {
+                          "content": "12/04/2027",
+                          "fill": "$text-primary"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "nvdTh",
+                  "name": "Row Rate Meter",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "id": "UbEzP",
+                      "type": "ref",
+                      "ref": "lpzRE",
+                      "name": "Electricity Rate",
+                      "width": "fill_container",
+                      "x": 0,
+                      "y": 0,
+                      "descendants": {
+                        "r0CiLB": {
+                          "content": "Electricity rate (₹/unit)"
+                        },
+                        "HeO6Y": {
+                          "icon": "zap"
+                        },
+                        "klFBi": {
+                          "content": "6",
+                          "fill": "$text-primary"
+                        }
+                      }
+                    },
+                    {
+                      "id": "bSZsG",
+                      "type": "ref",
+                      "ref": "lpzRE",
+                      "name": "Monthly Rent",
+                      "width": "fill_container",
+                      "x": 181,
+                      "y": 0,
+                      "descendants": {
+                        "r0CiLB": {
+                          "content": "Monthly rent"
+                        },
+                        "HeO6Y": {
+                          "icon": "indian-rupee"
+                        },
+                        "klFBi": {
+                          "content": "5,000",
+                          "fill": "$text-primary"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "qsswv",
+                  "name": "CTA",
+                  "width": "fill_container",
+                  "fill": "$accent",
+                  "cornerRadius": 14,
+                  "gap": 8,
+                  "padding": 15,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "R5UZzM",
+                      "name": "CTATxt",
+                      "fill": "#FFFFFF",
+                      "content": "Save",
+                      "fontFamily": "$font",
+                      "fontSize": 16,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "po6t5",
+      "x": 1972,
+      "y": -237,
+      "name": "ChargeRow",
+      "reusable": true,
+      "width": 358,
+      "gap": 10,
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "frame",
+          "id": "G73sF",
+          "name": "LabelBox",
+          "width": "fill_container",
+          "fill": "$surface",
+          "cornerRadius": "$radius-inner",
+          "stroke": "$separator",
+          "strokeWidth": 1,
+          "gap": 8,
+          "padding": [
+            12,
+            14
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "GBGCV",
+              "name": "TagIcon",
+              "width": 16,
+              "height": 16,
+              "icon": "tag",
+              "library": "lucide",
+              "fill": "$text-secondary"
+            },
+            {
+              "type": "text",
+              "id": "mZwOG",
+              "name": "ChargeLabel",
+              "fill": "$text-tertiary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Charge name",
+              "fontFamily": "$font",
+              "fontSize": 15,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "D2aNAq",
+          "name": "AmountBox",
+          "width": 120,
+          "fill": "$surface",
+          "cornerRadius": "$radius-inner",
+          "stroke": "$separator",
+          "strokeWidth": 1,
+          "gap": 4,
+          "padding": [
+            12,
+            14
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "NPyvK",
+              "name": "Rupee",
+              "fill": "$text-secondary",
+              "content": "₹",
+              "fontFamily": "$font",
+              "fontSize": 15,
+              "fontWeight": "500"
+            },
+            {
+              "type": "text",
+              "id": "SHO5c",
+              "name": "ChargeAmount",
+              "fill": "$text-tertiary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "0",
+              "fontFamily": "$font",
+              "fontSize": 15,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "s7io7J",
+          "name": "RemoveBtn",
+          "width": 32,
+          "height": 32,
+          "fill": "$red-soft",
+          "cornerRadius": 16,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "L9uJO",
+              "name": "MinusIcon",
+              "width": 18,
+              "height": 18,
+              "icon": "minus",
+              "library": "lucide",
+              "fill": "$red"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "H68UY",
+      "x": 1940,
+      "y": 1126,
+      "name": "Screen — Edit Bill",
+      "clip": true,
+      "width": 390,
+      "fill": "#fafafaff",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "onBHg",
+          "name": "AppBar",
+          "width": "fill_container",
+          "fill": "$surface",
+          "layout": "vertical",
+          "children": [
+            {
+              "id": "qBUUh",
+              "type": "ref",
+              "ref": "qqkkz",
+              "name": "StatusBar",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "WwTEg",
+              "name": "NavBar",
+              "width": "fill_container",
+              "fill": "#00000000",
+              "gap": 14,
+              "padding": [
+                10,
+                16,
+                12,
+                16
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "WzxsP",
+                  "name": "Back",
+                  "width": 28,
+                  "height": 28,
+                  "fill": "#00000000",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "gL1u0",
+                      "name": "BackIcon",
+                      "width": 26,
+                      "height": 26,
+                      "icon": "chevron-left",
+                      "library": "lucide",
+                      "fill": "$text-primary"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "bd2mO",
+                  "name": "BarTitle",
+                  "fill": "$text-primary",
+                  "content": "Edit Bill",
+                  "fontFamily": "$font",
+                  "fontSize": 18,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "rectangle",
+              "id": "Dt7Qz",
+              "name": "BarSeparator",
+              "fill": "$separator",
+              "width": "fill_container",
+              "height": 1
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "ATIll",
+          "name": "Body",
+          "width": "fill_container",
+          "fill": "#fafafaff",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "Hxqrj",
+              "name": "Form",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                14,
+                20,
+                24,
+                20
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "i4pmuQ",
+                  "name": "RentMonthRow",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "K8KWv",
+                      "name": "Field Month",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 7,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "inI2N",
+                          "name": "MonthLabel",
+                          "fill": "$text-secondary",
+                          "content": "Month",
+                          "fontFamily": "$font",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "thh9T",
+                          "name": "MonthBtn",
+                          "width": "fill_container",
+                          "fill": "$surface",
+                          "cornerRadius": "$radius-inner",
+                          "stroke": "$separator",
+                          "strokeWidth": 1,
+                          "gap": 8,
+                          "padding": [
+                            14,
+                            16
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "ABKrL",
+                              "name": "Cal",
+                              "width": 18,
+                              "height": 18,
+                              "icon": "calendar-days",
+                              "library": "lucide",
+                              "fill": "$text-secondary"
+                            },
+                            {
+                              "type": "text",
+                              "id": "cbRYj",
+                              "name": "MonthValue",
+                              "fill": "$text-tertiary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Select month",
+                              "fontFamily": "$font",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "icon",
+                              "id": "dnGX3",
+                              "name": "Chev",
+                              "width": 16,
+                              "height": 16,
+                              "icon": "chevron-down",
+                              "library": "lucide",
+                              "fill": "$text-secondary"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "C77TBN",
+                      "type": "ref",
+                      "ref": "lpzRE",
+                      "name": "Field Rent",
+                      "width": "fill_container",
+                      "descendants": {
+                        "r0CiLB": {
+                          "content": "Monthly rent"
+                        },
+                        "E1OxI": {
+                          "stroke": "$separator",
+                          "strokeWidth": 1.5,
+                          "fill": "$surface-2"
+                        },
+                        "HeO6Y": {
+                          "icon": "indian-rupee"
+                        },
+                        "klFBi": {
+                          "content": "5,000",
+                          "fill": "$text-secondary"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "uAIAX",
+                  "type": "ref",
+                  "ref": "lpzRE",
+                  "name": "Field Paid this month",
+                  "width": "fill_container",
+                  "descendants": {
+                    "r0CiLB": {
+                      "content": "Paid this month"
+                    },
+                    "HeO6Y": {
+                      "icon": "indian-rupee"
+                    },
+                    "klFBi": {
+                      "content": "0",
+                      "fill": "$text-primary"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "H6x7Q",
+                  "name": "ElecSection",
+                  "width": "fill_container",
+                  "fill": "$surface",
+                  "cornerRadius": "$radius-card",
+                  "stroke": "$separator",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 14,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "ubIT4",
+                      "name": "ElecHead",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "onYkb",
+                          "name": "BoltTile",
+                          "width": 30,
+                          "height": 30,
+                          "cornerRadius": 9,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "zEIth",
+                              "name": "Bolt",
+                              "width": 18,
+                              "height": 18,
+                              "icon": "zap",
+                              "library": "lucide",
+                              "fill": "$orange"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "xSPRc",
+                          "name": "ElecTitle",
+                          "fill": "$text-primary",
+                          "content": "Electricity reading",
+                          "fontFamily": "$font",
+                          "fontSize": 16,
+                          "fontWeight": "700",
+                          "letterSpacing": -0.2
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Q81Mj2",
+                      "name": "Readings",
+                      "width": "fill_container",
+                      "gap": 10,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "sa65h",
+                          "name": "RF Current",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 6,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "dAbDJ",
+                              "name": "L",
+                              "fill": "$text-tertiary",
+                              "content": "Current",
+                              "fontFamily": "$font",
+                              "fontSize": 12,
+                              "fontWeight": "500"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "BRuVT",
+                              "name": "Box",
+                              "width": "fill_container",
+                              "fill": "$surface",
+                              "cornerRadius": "$radius-inner",
+                              "stroke": "$separator",
+                              "strokeWidth": 1,
+                              "padding": 12,
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "DN0Jq",
+                                  "name": "V",
+                                  "fill": "$text-primary",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "4,651",
+                                  "fontFamily": "$font",
+                                  "fontSize": 15,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "pcVtF",
+                          "name": "RF Rate ₹/unit",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 6,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "taQBE",
+                              "name": "L",
+                              "fill": "$text-tertiary",
+                              "content": "Rate ₹/unit",
+                              "fontFamily": "$font",
+                              "fontSize": 12,
+                              "fontWeight": "500"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "h4QXt6",
+                              "name": "Box",
+                              "width": "fill_container",
+                              "fill": "$surface-2",
+                              "cornerRadius": "$radius-inner",
+                              "stroke": "$separator",
+                              "strokeWidth": 1,
+                              "strokeAlignment": "inner",
+                              "padding": 12,
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "Ab5Xi",
+                                  "name": "V",
+                                  "fill": "$text-secondary",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "6",
+                                  "fontFamily": "$font",
+                                  "fontSize": 15,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "G2hKb",
+                      "name": "ComputedElec",
+                      "width": "fill_container",
+                      "fill": "$orange-soft",
+                      "cornerRadius": "$radius-inner",
+                      "layout": "vertical",
+                      "gap": 8,
+                      "padding": [
+                        14,
+                        14,
+                        12,
+                        14
+                      ],
+                      "justifyContent": "space_between",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "F0mZr",
+                          "name": "R Previous reading",
+                          "width": "fill_container",
+                          "padding": [
+                            2,
+                            0
+                          ],
+                          "justifyContent": "space_between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "s7IWXn",
+                              "name": "L",
+                              "fill": "$text-primary",
+                              "content": "Previous reading",
+                              "fontFamily": "$font",
+                              "fontSize": 14,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "w47OnY",
+                              "name": "V",
+                              "fill": "$text-primary",
+                              "content": "4,522",
+                              "fontFamily": "$font",
+                              "fontSize": 14,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "x8HpQH",
+                          "name": "R Current reading",
+                          "width": "fill_container",
+                          "padding": [
+                            2,
+                            0
+                          ],
+                          "justifyContent": "space_between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "oedeR",
+                              "name": "L",
+                              "fill": "$text-primary",
+                              "content": "Current reading",
+                              "fontFamily": "$font",
+                              "fontSize": 14,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "j6l4f0",
+                              "name": "V",
+                              "fill": "$text-primary",
+                              "content": "4,651",
+                              "fontFamily": "$font",
+                              "fontSize": 14,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "kBm5D",
+                          "name": "R Units consumed",
+                          "width": "fill_container",
+                          "padding": [
+                            2,
+                            0
+                          ],
+                          "justifyContent": "space_between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "pKvTI",
+                              "name": "L",
+                              "fill": "$text-primary",
+                              "content": "Units consumed",
+                              "fontFamily": "$font",
+                              "fontSize": 14,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "VI7s7",
+                              "name": "V",
+                              "fill": "$text-primary",
+                              "content": "129 × ₹6",
+                              "fontFamily": "$font",
+                              "fontSize": 14,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "q2jB6S",
+                          "name": "ElecDivider",
+                          "fill": "#FF950033",
+                          "width": "fill_container",
+                          "height": 1
+                        },
+                        {
+                          "type": "frame",
+                          "id": "E646w",
+                          "name": "ElecTotRow",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "GfV4a",
+                              "name": "TotL",
+                              "fill": "$text-primary",
+                              "content": "Electricity total",
+                              "fontFamily": "$font",
+                              "fontSize": 16,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "text",
+                              "id": "nw1PV",
+                              "name": "TotV",
+                              "fill": "$orange",
+                              "content": "₹774",
+                              "fontFamily": "$font",
+                              "fontSize": 20,
+                              "fontWeight": "700",
+                              "letterSpacing": -0.4
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Z4K1lg",
+                  "name": "ExtraSection",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": [
+                    0,
+                    0,
+                    7,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "mNkFi",
+                      "name": "ExtraHead",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Q2T6zM",
+                          "name": "ExHL",
+                          "gap": 7,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "XJNvR",
+                              "name": "PlusCircle",
+                              "width": 16,
+                              "height": 16,
+                              "icon": "circle-plus",
+                              "library": "lucide",
+                              "fill": "$text-secondary"
+                            },
+                            {
+                              "type": "text",
+                              "id": "H0jRP",
+                              "name": "ExtraTitle",
+                              "fill": "$text-secondary",
+                              "content": "Extra charges (Optional)",
+                              "fontFamily": "$font",
+                              "fontSize": 14,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "K6Qw9",
+                      "type": "ref",
+                      "ref": "po6t5",
+                      "name": "Charge Water charge",
+                      "width": "fill_container",
+                      "descendants": {
+                        "mZwOG": {
+                          "content": "Water charge",
+                          "fill": "$text-primary"
+                        },
+                        "SHO5c": {
+                          "content": "600",
+                          "fill": "$text-primary"
+                        }
+                      }
+                    },
+                    {
+                      "id": "LCleA",
+                      "type": "ref",
+                      "ref": "po6t5",
+                      "name": "Charge IGL (gas)",
+                      "width": "fill_container",
+                      "descendants": {
+                        "mZwOG": {
+                          "content": "IGL (gas)",
+                          "fill": "$text-primary"
+                        },
+                        "SHO5c": {
+                          "content": "1,210",
+                          "fill": "$text-primary"
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "UOVhr",
+                      "name": "AddChargeBtn",
+                      "width": "fill_container",
+                      "fill": "$--white",
+                      "cornerRadius": "$radius-inner",
+                      "stroke": "$accent",
+                      "strokeWidth": 1.5,
+                      "strokeAlignment": "inner",
+                      "gap": 8,
+                      "padding": 13,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "DRlgm",
+                          "name": "PlusI",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "plus",
+                          "library": "lucide",
+                          "fill": "$accent"
+                        },
+                        {
+                          "type": "text",
+                          "id": "kgBSq",
+                          "name": "AddTxt",
+                          "fill": "$accent",
+                          "content": "Add charge",
+                          "fontFamily": "$font",
+                          "fontSize": 15,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "llW0P",
+                  "name": "PrevBalance",
+                  "width": "fill_container",
+                  "padding": [
+                    2,
+                    2,
+                    0,
+                    2
+                  ],
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "WjXfy",
+                      "name": "PrevLabel",
+                      "fill": "$text-secondary",
+                      "content": "Previous balance carried",
+                      "fontFamily": "$font",
+                      "fontSize": 14,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "text",
+                      "id": "jTlUu",
+                      "name": "PrevVal",
+                      "fill": "$text-primary",
+                      "content": "₹6,000",
+                      "fontFamily": "$font",
+                      "fontSize": 15,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "rectangle",
+                  "id": "ZUgTA",
+                  "name": "FormDivider",
+                  "fill": "$separator",
+                  "width": "fill_container",
+                  "height": 1
+                },
+                {
+                  "type": "frame",
+                  "id": "FXfwE",
+                  "name": "TotalRow",
+                  "width": "fill_container",
+                  "padding": 2,
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "P5rOE",
+                      "name": "TL",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "XED5C",
+                          "name": "TotLabel",
+                          "fill": "$text-secondary",
+                          "content": "Total bill",
+                          "fontFamily": "$font",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "text",
+                          "id": "lfw3b",
+                          "name": "TotSub",
+                          "fill": "$text-tertiary",
+                          "content": "Rent + Electricity + Charges",
+                          "fontFamily": "$font",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "glmhl",
+                      "name": "TotVal",
+                      "fill": "$text-primary",
+                      "content": "₹7,584",
+                      "fontFamily": "$font",
+                      "fontSize": 26,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "e2JrhD",
+                  "name": "CTA",
+                  "width": "fill_container",
+                  "fill": "$accent",
+                  "cornerRadius": 14,
+                  "gap": 8,
+                  "padding": 15,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "Rquo1",
+                      "name": "BillIcon",
+                      "width": 18,
+                      "height": 18,
+                      "icon": "receipt-text",
+                      "library": "lucide",
+                      "fill": "#FFFFFF"
+                    },
+                    {
+                      "type": "text",
+                      "id": "KKOWa",
+                      "name": "CTATxt",
+                      "fill": "#FFFFFF",
+                      "content": "Create Bill",
+                      "fontFamily": "$font",
+                      "fontSize": 16,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "MyCYg",
+      "x": 1875,
+      "y": 145,
+      "name": "Profile",
+      "reusable": true,
+      "width": "fill_container(350)",
+      "fill": "$surface",
+      "cornerRadius": "$radius-card",
+      "stroke": "$separator",
+      "strokeWidth": 1,
+      "strokeAlignment": "inner",
+      "layout": "vertical",
+      "gap": 14,
+      "padding": [
+        18,
+        18,
+        16,
+        18
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "QJTko",
+          "name": "ProfileTop",
+          "width": "fill_container",
+          "gap": 12,
+          "justifyContent": "space_between",
+          "children": [
+            {
+              "type": "frame",
+              "id": "t7b8mB",
+              "name": "NameWrap",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 3,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "e6Upm7",
+                  "name": "Name",
+                  "fill": "$text-primary",
+                  "content": "Mr. Rakesh",
+                  "fontFamily": "$font",
+                  "fontSize": 19,
+                  "fontWeight": "700",
+                  "letterSpacing": -0.4
+                },
+                {
+                  "type": "text",
+                  "id": "TgAVU",
+                  "name": "Floor",
+                  "fill": "$text-secondary",
+                  "content": "3rd Floor · Meera Residency",
+                  "fontFamily": "$font",
+                  "fontSize": 13,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "CbdA9",
+              "name": "EditBtn",
+              "cornerRadius": 14,
+              "gap": 5,
+              "padding": [
+                6,
+                12
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "wbJiO",
+                  "name": "EditIcon",
+                  "width": 14,
+                  "height": 14,
+                  "icon": "pencil",
+                  "library": "lucide",
+                  "fill": "$accent"
+                },
+                {
+                  "type": "text",
+                  "id": "e3KyF",
+                  "name": "EditTxt",
+                  "fill": "$accent",
+                  "content": "Edit",
+                  "fontFamily": "$font",
+                  "fontSize": 13,
+                  "fontWeight": "600"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "gcI3o",
+          "name": "InfoRow",
+          "width": "fill_container",
+          "gap": 10,
+          "children": [
+            {
+              "type": "frame",
+              "id": "e348Y",
+              "name": "Info Monthly Rent",
+              "width": "fill_container",
+              "fill": "$surface-2",
+              "cornerRadius": "$radius-inner",
+              "gap": 10,
+              "padding": [
+                10,
+                12
+              ],
+              "justifyContent": "space_around",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "fEFuk",
+                  "name": "RowIcon",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "house",
+                  "library": "lucide",
+                  "fill": "$text-secondary"
+                },
+                {
+                  "type": "frame",
+                  "id": "DcQ4r",
+                  "name": "TW",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 1,
+                  "padding": [
+                    0,
+                    8
+                  ],
+                  "justifyContent": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "jlxYF",
+                      "name": "L",
+                      "fill": "$text-secondary",
+                      "content": "Monthly Rent",
+                      "fontFamily": "$font",
+                      "fontSize": 11,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "text",
+                      "id": "r9VA1f",
+                      "name": "V",
+                      "fill": "$text-primary",
+                      "content": "₹5,000",
+                      "fontFamily": "$font",
+                      "fontSize": 15,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "kDhxD",
+              "name": "Info Electricity",
+              "width": 151,
+              "fill": "$surface-2",
+              "cornerRadius": "$radius-inner",
+              "gap": 14,
+              "padding": [
+                10,
+                12
+              ],
+              "justifyContent": "space_around",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "s5fMx",
+                  "name": "RowIcon",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "zap",
+                  "library": "lucide",
+                  "fill": "$text-secondary"
+                },
+                {
+                  "type": "frame",
+                  "id": "Q1Q2x",
+                  "name": "TW",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 1,
+                  "padding": [
+                    0,
+                    8
+                  ],
+                  "justifyContent": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "WUJxw",
+                      "name": "L",
+                      "fill": "$text-secondary",
+                      "content": "Electricity",
+                      "fontFamily": "$font",
+                      "fontSize": 11,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "text",
+                      "id": "WeGrk",
+                      "name": "V",
+                      "fill": "$text-primary",
+                      "content": "₹6 / unit",
+                      "fontFamily": "$font",
+                      "fontSize": 15,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "CVpkP",
+      "x": 1875,
+      "y": 367,
+      "name": "BillBreakdown",
+      "reusable": true,
+      "width": "fill_container(350)",
+      "fill": "$surface",
+      "cornerRadius": "$radius-card",
+      "stroke": "$separator",
+      "strokeWidth": 1,
+      "strokeAlignment": "inner",
+      "layout": "vertical",
+      "padding": 16,
+      "children": [
+        {
+          "type": "frame",
+          "id": "O25a6",
+          "name": "BillHead",
+          "width": "fill_container",
+          "padding": [
+            0,
+            0,
+            4,
+            0
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "PWXJb",
+              "name": "BillTitle",
+              "fill": "$text-primary",
+              "content": "Current Month",
+              "fontFamily": "$font",
+              "fontSize": 17,
+              "fontWeight": "700"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "gGt1r",
+          "name": "InfoRow",
+          "width": "fill_container",
+          "gap": 6,
+          "padding": [
+            12,
+            0
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "opyuU",
+              "name": "Info Monthly Rent",
+              "width": 155,
+              "fill": "$surface-2",
+              "cornerRadius": "$radius-inner",
+              "gap": 10,
+              "padding": [
+                10,
+                12
+              ],
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "IyA5e",
+                  "name": "TW",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 1,
+                  "padding": [
+                    0,
+                    8
+                  ],
+                  "justifyContent": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "SDylh",
+                      "name": "L",
+                      "fill": "$text-secondary",
+                      "content": "Billed",
+                      "fontFamily": "$font",
+                      "fontSize": 11,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "text",
+                      "id": "z63T7T",
+                      "name": "V",
+                      "fill": "$text-primary",
+                      "content": "₹5,000",
+                      "fontFamily": "$font",
+                      "fontSize": 15,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "v2noRt",
+              "name": "Info Electricity",
+              "width": 155,
+              "fill": "$surface-2",
+              "cornerRadius": "$radius-inner",
+              "gap": 14,
+              "padding": [
+                10,
+                12
+              ],
+              "justifyContent": "space_around",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Ik2bN",
+                  "name": "TW",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 1,
+                  "padding": [
+                    0,
+                    8
+                  ],
+                  "justifyContent": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "rOe2a",
+                      "name": "L",
+                      "fill": "$text-secondary",
+                      "content": "Paid",
+                      "fontFamily": "$font",
+                      "fontSize": 11,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "text",
+                      "id": "k0Msw",
+                      "name": "V",
+                      "fill": "$green",
+                      "content": "₹5,600",
+                      "fontFamily": "$font",
+                      "fontSize": 15,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "wMni6",
+          "name": "InfoRow",
+          "width": "fill_container",
+          "gap": 6,
+          "padding": [
+            7,
+            0
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "o8Ruxt",
+              "name": "DeleteBtn",
+              "width": "fill_container",
+              "cornerRadius": 10,
+              "stroke": "$separator",
+              "strokeWidth": 1,
+              "strokeAlignment": "inner",
+              "padding": 14,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "EqZCh",
+                  "name": "DelTxt",
+                  "fill": "$--black",
+                  "content": "Edit",
+                  "fontFamily": "$font",
+                  "fontSize": 16,
+                  "fontWeight": "600"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "d69UT",
+              "name": "DeleteBtn",
+              "width": "fill_container",
+              "cornerRadius": 10,
+              "stroke": "$separator",
+              "strokeWidth": 1,
+              "strokeAlignment": "inner",
+              "gap": 8,
+              "padding": 14,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "q8l84",
+                  "name": "DelTxt",
+                  "fill": "$--black",
+                  "content": "View Details",
+                  "fontFamily": "$font",
+                  "fontSize": 16,
+                  "fontWeight": "600"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "RMSnO",
+      "x": 910,
+      "y": 145,
+      "name": "DropdownMenu",
+      "reusable": true,
+      "width": 220,
+      "fill": "$surface",
+      "cornerRadius": 16,
+      "effect": {
+        "type": "shadow",
+        "shadowType": "outer",
+        "color": "#0000001a",
+        "blur": 18
+      },
+      "layout": "vertical",
+      "padding": 6,
+      "children": [
+        {
+          "type": "frame",
+          "id": "TvDF3",
+          "name": "Item Create",
+          "width": "fill_container",
+          "cornerRadius": 10,
+          "gap": 12,
+          "padding": [
+            11,
+            12
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "G6Yr8",
+              "name": "Edit House",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Edit House",
+              "fontFamily": "$font",
+              "fontSize": 15,
+              "fontWeight": "500"
+            },
+            {
+              "type": "icon",
+              "id": "U9Gd4A",
+              "name": "Icon0",
+              "width": 19,
+              "height": 19,
+              "icon": "house",
+              "library": "lucide",
+              "fill": "$text-primary"
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "hlGkz",
+          "name": "MenuDivider",
+          "fill": "$separator",
+          "width": "fill_container",
+          "height": 1
+        },
+        {
+          "type": "frame",
+          "id": "aysjN",
+          "name": "Item Create",
+          "width": "fill_container",
+          "cornerRadius": 10,
+          "gap": 12,
+          "padding": [
+            11,
+            12
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "uHSK9",
+              "name": "Label1",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Create Tenant",
+              "fontFamily": "$font",
+              "fontSize": 15,
+              "fontWeight": "500"
+            },
+            {
+              "type": "icon",
+              "id": "G3Ysvp",
+              "name": "Icon1",
+              "width": 19,
+              "height": 19,
+              "icon": "user-plus",
+              "library": "lucide",
+              "fill": "$text-primary"
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "YAzW7",
+          "name": "MenuDivider",
+          "fill": "$separator",
+          "width": "fill_container",
+          "height": 1
+        },
+        {
+          "type": "frame",
+          "id": "bPbXc",
+          "name": "Item Delete",
+          "width": "fill_container",
+          "cornerRadius": 10,
+          "gap": 12,
+          "padding": [
+            11,
+            12
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "eG7po",
+              "name": "Label2",
+              "fill": "$red",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Delete House",
+              "fontFamily": "$font",
+              "fontSize": 15,
+              "fontWeight": "500"
+            },
+            {
+              "type": "icon",
+              "id": "ILVP1",
+              "name": "Icon2",
+              "width": 19,
+              "height": 19,
+              "icon": "trash-2",
+              "library": "lucide",
+              "fill": "$red"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "KGzqj",
+      "x": 957,
+      "y": 313,
+      "name": "DeleteHouseDialog",
+      "reusable": true,
+      "width": 320,
+      "fill": "$surface",
+      "cornerRadius": 24,
+      "effect": {
+        "type": "shadow",
+        "shadowType": "outer",
+        "color": "#00000026",
+        "offset": {
+          "x": 0,
+          "y": 12
+        },
+        "blur": 32
+      },
+      "layout": "vertical",
+      "gap": 15,
+      "padding": [
+        24,
+        22,
+        20,
+        22
+      ],
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "frame",
+          "id": "F3zSDn",
+          "name": "TextWrap",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 8,
+          "children": [
+            {
+              "type": "text",
+              "id": "UVt1S",
+              "name": "Title",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fit_content(172)",
+              "content": "Delete this house?",
+              "fontFamily": "$font",
+              "fontSize": 19,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "jDSAG",
+              "name": "Message",
+              "fill": "$text-secondary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "This will permanently remove Meera Residency and all its tenants. This action cannot be undone.",
+              "lineHeight": 1.4,
+              "fontFamily": "$font",
+              "fontSize": 14,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "tyL7X",
+          "name": "DeleteGap",
+          "width": "fill_container",
+          "height": 10
+        },
+        {
+          "type": "frame",
+          "id": "CS0a4",
+          "name": "ConfirmWrap",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 7,
+          "children": [
+            {
+              "type": "frame",
+              "id": "vsQIS",
+              "name": "Hint",
+              "gap": 4,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "FdITf",
+                  "name": "HintPre",
+                  "fill": "$text-secondary",
+                  "content": "Type",
+                  "fontFamily": "$font",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "ZrmEu",
+                  "name": "HintWord",
+                  "fill": "$text-primary",
+                  "content": "delete",
+                  "fontFamily": "$font",
+                  "fontSize": 13,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "pm0xl",
+                  "name": "HintPost",
+                  "fill": "$text-secondary",
+                  "content": "to confirm",
+                  "fontFamily": "$font",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "p8rJa",
+              "name": "InputBox",
+              "width": "fill_container",
+              "fill": "$surface-2",
+              "cornerRadius": "$radius-inner",
+              "stroke": "$separator",
+              "strokeWidth": 1,
+              "padding": [
+                13,
+                14
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "AOzYA",
+                  "name": "InputValue",
+                  "fill": "$text-tertiary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "delete",
+                  "fontFamily": "$font",
+                  "fontSize": 15,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "wNoVT",
+          "name": "DeleteBtn",
+          "width": "fill_container",
+          "fill": "$red",
+          "cornerRadius": 10,
+          "gap": 8,
+          "padding": 14,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "OTzW7",
+              "name": "DelIcon",
+              "width": 18,
+              "height": 18,
+              "icon": "trash-2",
+              "library": "lucide",
+              "fill": "#FFFFFF"
+            },
+            {
+              "type": "text",
+              "id": "Mx0tN",
+              "name": "DelTxt",
+              "fill": "#FFFFFF",
+              "content": "Delete House",
+              "fontFamily": "$font",
+              "fontSize": 16,
+              "fontWeight": "600"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "wUR75",
+          "name": "DeleteBtn",
+          "width": "fill_container",
+          "cornerRadius": 10,
+          "stroke": "$separator",
+          "strokeWidth": 1,
+          "strokeAlignment": "inner",
+          "gap": 8,
+          "padding": 14,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "mPewW",
+              "name": "DelTxt",
+              "fill": "$--black",
+              "content": "Cancel",
+              "fontFamily": "$font",
+              "fontSize": 16,
+              "fontWeight": "600"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "dam1y",
+      "x": 1415,
+      "y": 2254,
+      "name": "Screen — Payment History",
+      "clip": true,
+      "width": 390,
+      "height": 614,
+      "fill": "#fafafaff",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "UMNwQ",
+          "name": "AppBar",
+          "width": "fill_container",
+          "fill": "$surface",
+          "layout": "vertical",
+          "children": [
+            {
+              "id": "RXSCX",
+              "type": "ref",
+              "ref": "qqkkz",
+              "name": "StatusBar",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "ts78p",
+              "name": "NavBar",
+              "width": "fill_container",
+              "fill": "#00000000",
+              "gap": 14,
+              "padding": [
+                10,
+                16,
+                12,
+                16
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "O2qhe",
+                  "name": "Back",
+                  "width": 28,
+                  "height": 28,
+                  "fill": "#00000000",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "CIHjQ",
+                      "name": "BackIcon",
+                      "width": 26,
+                      "height": 26,
+                      "icon": "chevron-left",
+                      "library": "lucide",
+                      "fill": "$text-primary"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "kUZ7j",
+                  "name": "BarTitle",
+                  "fill": "$text-primary",
+                  "content": "Payment History",
+                  "fontFamily": "$font",
+                  "fontSize": 18,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "rectangle",
+              "id": "ghyw4",
+              "name": "BarSeparator",
+              "fill": "$separator",
+              "width": "fill_container",
+              "height": 1
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "EwinP",
+          "name": "List",
+          "width": "fill_container",
+          "height": 513,
+          "fill": "#00000000",
+          "layout": "vertical",
+          "gap": 12,
+          "padding": [
+            12,
+            20,
+            24,
+            20
+          ],
+          "children": [
+            {
+              "id": "utjg3",
+              "type": "ref",
+              "ref": "RvkZD",
+              "name": "Pay June 2026",
+              "width": "fill_container",
+              "descendants": {
+                "DSFFN": {
+                  "content": "June 2026"
+                }
+              }
+            },
+            {
+              "id": "FB2Ih",
+              "type": "ref",
+              "ref": "RvkZD",
+              "name": "Pay May 2026",
+              "width": "fill_container",
+              "descendants": {
+                "DSFFN": {
+                  "content": "May 2026"
+                }
+              }
+            },
+            {
+              "id": "fXUyq",
+              "type": "ref",
+              "ref": "RvkZD",
+              "name": "Pay April 2026",
+              "width": "fill_container",
+              "descendants": {
+                "DSFFN": {
+                  "content": "April 2026"
+                }
+              }
+            },
+            {
+              "id": "X2cqO",
+              "type": "ref",
+              "ref": "RvkZD",
+              "name": "Pay March 2026",
+              "width": "fill_container",
+              "descendants": {
+                "DSFFN": {
+                  "content": "March 2026"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "Fa15Q",
+      "x": 508,
+      "y": -411,
+      "name": "BottomTabBar",
+      "reusable": true,
+      "width": 390,
+      "cornerRadius": 63,
+      "children": [
+        {
+          "type": "frame",
+          "id": "eu0E1",
+          "name": "TabBar",
+          "width": "fill_container",
+          "height": 64,
+          "fill": "$surface",
+          "cornerRadius": 2,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#1C1C1E1F",
+            "offset": {
+              "x": 0,
+              "y": 6
+            },
+            "blur": 18,
+            "spread": -4
+          },
+          "padding": [
+            8,
+            12,
+            12,
+            12
+          ],
+          "justifyContent": "space_around",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "TBaHg",
+              "name": "Tab Houses",
+              "fill": "$accent-soft",
+              "cornerRadius": 12,
+              "layout": "vertical",
+              "gap": 3,
+              "padding": [
+                6,
+                12
+              ],
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "Zk4sv",
+                  "name": "Icon",
+                  "width": 22,
+                  "height": 22,
+                  "icon": "house",
+                  "library": "lucide",
+                  "fill": "$accent"
+                },
+                {
+                  "type": "text",
+                  "id": "GjKZF",
+                  "name": "Label",
+                  "fill": "$accent",
+                  "content": "Houses",
+                  "fontFamily": "$font",
+                  "fontSize": 10,
+                  "fontWeight": "600"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "j95pf",
+              "name": "Tab Settings",
+              "fill": "#00000000",
+              "cornerRadius": 12,
+              "layout": "vertical",
+              "gap": 3,
+              "padding": [
+                6,
+                12
+              ],
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "xVlvS",
+                  "name": "Icon",
+                  "width": 22,
+                  "height": 22,
+                  "icon": "settings",
+                  "library": "lucide",
+                  "fill": "$text-secondary"
+                },
+                {
+                  "type": "text",
+                  "id": "kiqt0",
+                  "name": "Label",
+                  "fill": "$text-secondary",
+                  "content": "Settings",
+                  "fontFamily": "$font",
+                  "fontSize": 10,
+                  "fontWeight": "500"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "rectangle",
+      "id": "JLGaG",
+      "x": -111,
+      "y": -106,
+      "fill": "#CCCCCC",
+      "width": 2482,
+      "height": 19
+    },
+    {
+      "type": "frame",
+      "id": "ioyXF",
+      "x": 1940,
+      "y": 2218,
+      "name": "Screen - Bill Details",
+      "clip": true,
+      "width": 390,
+      "height": 703,
+      "fill": "#fafafaff",
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "JEgM8",
+          "type": "ref",
+          "ref": "qqkkz",
+          "name": "StatusBar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "OR9nL",
+          "name": "AppBar",
+          "width": "fill_container",
+          "fill": "$surface",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "a6Bpr",
+              "name": "NavBar",
+              "width": "fill_container",
+              "fill": "#00000000",
+              "gap": 14,
+              "padding": [
+                10,
+                16,
+                12,
+                16
+              ],
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "t2DeDC",
+                  "name": "Back",
+                  "width": 28,
+                  "height": 28,
+                  "fill": "#00000000",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "IjeUg",
+                      "name": "BackIcon",
+                      "width": 26,
+                      "height": 26,
+                      "icon": "chevron-left",
+                      "library": "lucide",
+                      "fill": "$text-primary"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "jFk4I",
+                  "name": "BarTitle",
+                  "fill": "$text-primary",
+                  "content": "Bill Details",
+                  "fontFamily": "$font",
+                  "fontSize": 18,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "frame",
+                  "id": "b5h6P",
+                  "name": "BarSpacer",
+                  "width": 28,
+                  "height": 28,
+                  "fill": "#00000000"
+                }
+              ]
+            },
+            {
+              "type": "rectangle",
+              "id": "s7FbLu",
+              "name": "BarSeparator",
+              "fill": "$separator",
+              "width": "fill_container",
+              "height": 1
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Z6fZA8",
+          "name": "Content",
+          "width": "fill_container",
+          "height": 596,
+          "fill": "#00000000",
+          "layout": "vertical",
+          "padding": [
+            18,
+            20,
+            16,
+            20
+          ],
+          "justifyContent": "space_between",
+          "children": [
+            {
+              "id": "Ya12Z",
+              "type": "ref",
+              "ref": "pjKTB"
+            },
+            {
+              "type": "frame",
+              "id": "V0EgRK",
+              "name": "ShareCTA",
+              "width": "fill_container",
+              "fill": "#17ad48",
+              "cornerRadius": 14,
+              "gap": 10,
+              "padding": 16,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "group",
+                  "id": "Q0ThK",
+                  "children": [
+                    {
+                      "type": "path",
+                      "id": "Sdfpi",
+                      "x": 0.6416906609590569,
+                      "y": 0.5402070149534666,
+                      "geometry": "M487.40723 230.86206c-0.60001 63.39999-16.9 112.99997-50.79999 156.10001-36.4 46.29998-83.80002 75.70001-141.80002 87.6-44.79999 9.10001-88.39999 5.10001-131.2-10.39999-9.5-3.5-18.8-7.60001-27.69999-12.5-2.7-1.5-5-1.70001-8-0.70001-40.5 13.1-81.09999 26.1-121.69999 39-1.8 0.6-4.2 2.29998-5.6 1-1.6-1.60001 0.4-4 1-5.9 8.1-24.1 16.2-48.29999 24.4-72.39999 5-14.70001 9.8-29.29999 15-43.9 1.4-3.79998 0.9-6.70001-1.2-10.20001-10.3-17.6-17.9-36.39999-23.3-56.1-10.1-37-11.2-74.4-3.3-111.79999 8.6-40.80002 26.6-77.20001 54.3-108.60001 33.5-38 74.8-63.1 123.89999-75.19999 31.3-7.7 62.89999-8.9 94.69998-3.7 41.6 6.8 79.1 23.3 111.79999 49.9 34 27.7 58.79998 62.1 74.39999 103.39999 8.60001 22.30001 15.39999 58.80001 15.10001 74.39999m-425.79996 199.69998c24.8-8 48.5-15.6 72-23.29999 3.1-1 5.6-0.79998 8.3 1 9 6 18.7 10.79999 28.7 15 32.5 13.79999 66.3 18.79999 101.19998 14.29999 42.79999-5.5 80.39999-22.70001 112-52.6 39.79999-37.70002 61.10001-83.9 63-138.5 1.79999-53.5-15.39999-100.5-51.29999-140.39999-34.1-37.9-76.89999-59.5-127.39999-64.9-43.9-4.7-85 4.8-123 27.6-32.49999 19.6-57.39999 46.3-74.69999 80-19.1 37.09998-25.6 76.5-20.1 117.79999 4.1 31.20001 15.3 59.9 33.3 85.70001 2 2.9 2.6 5.29999 1.4 8.70002-3.7 10.20001-7 20.5-10.5 30.70001-4.2 12.6-8.3 25.20001-12.9 38.89999",
+                      "fill": "#ffffffff",
+                      "width": 24.072696151882383,
+                      "height": 24.2713904507519
+                    },
+                    {
+                      "type": "path",
+                      "id": "F7M0z",
+                      "x": 6.963610367703723,
+                      "y": 6.580901355514925,
+                      "geometry": "M0.0029 61.45187c0.5-23.8 8.89999-41.5 24.8-55.59999 5.10001-4.60001 11.39999-6.60001 18.5-5.6 3 0.39999 6 0.7 9 0.5 5.60001-0.3 9.39999 2.39999 11.3 7.3 6.7 17.39999 13.2 34.8 19.7 52.3 2.2 6-1.60001 10.7-4.8 15-3.7 5.10001-8.2 9.60001-12.60001 14.10001-4.5 4.60001-5.10001 7.2-2 12.8 18.10001 32.90001 43.5 58.2 78 73.80001 1.20002 0.5 2.4 1.20001 3.60001 1.79998 4.60001 2.10001 8.70001 1.60001 12.20001-2.39999 6.4-7.5 13.4-14.39999 19.29999-22.29999 3.89999-5.20001 6.60001-6.1 12.5-3.5 17.60001 7.60001 34.10001 17.20001 50.89999 26.5 3.10001 1.70001 4.20002 4.29999 4.10001 7.9-0.89999 29.5-17.79999 44.89999-47.5 51.70001-14.39999 3.29999-27.70001-0.29999-40.89999-5.10001-27.70002-10-54.4-21.79999-76.80001-41.6-17.8-15.79999-33.5-33.4-46.8-53.10001-10.2-15.2-20.8-30.10001-26.7-47.8-3.39999-9.39999-5.89999-19-5.8-26.7",
+                      "fill": "#ffffffff",
+                      "width": 12.075894139749119,
+                      "height": 11.706419956200293
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "Cd07h",
+                  "name": "ShareTxt",
+                  "fill": "#FFFFFF",
+                  "content": "Share via WhatsApp",
+                  "fontFamily": "$font",
+                  "fontSize": 16,
+                  "fontWeight": "600"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "pjKTB",
+      "x": 2373,
+      "y": 2349,
+      "name": "ReceiptCard",
+      "reusable": true,
+      "width": "fill_container(350)",
+      "fill": "$surface",
+      "cornerRadius": 20,
+      "effect": {
+        "type": "shadow",
+        "shadowType": "outer",
+        "color": "#0000000d",
+        "offset": {
+          "x": 0,
+          "y": 1
+        },
+        "blur": 10
+      },
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "A8GEb",
+          "name": "Header",
+          "width": "fill_container",
+          "fill": "#effbf5",
+          "cornerRadius": 20,
+          "layout": "vertical",
+          "gap": 6,
+          "padding": [
+            22,
+            22,
+            18,
+            22
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "se2Qf",
+              "name": "ReceiptLabel",
+              "fill": "$text-secondary",
+              "content": "RENT RECEIPT",
+              "fontFamily": "$font",
+              "fontSize": 11,
+              "fontWeight": "700",
+              "letterSpacing": 2
+            },
+            {
+              "type": "text",
+              "id": "WaN6b",
+              "name": "Tenant",
+              "fill": "$text-primary",
+              "content": "Mr. Rakesh",
+              "fontFamily": "$font",
+              "fontSize": 22,
+              "fontWeight": "700",
+              "letterSpacing": -0.5
+            },
+            {
+              "type": "text",
+              "id": "utk1b",
+              "name": "Address",
+              "fill": "$text-secondary",
+              "content": "3rd Floor · Meera Residency",
+              "fontFamily": "$font",
+              "fontSize": 13,
+              "fontWeight": "500"
+            },
+            {
+              "type": "frame",
+              "id": "pn3UG",
+              "name": "MonthPill",
+              "fill": "#d8f6e0ff",
+              "cornerRadius": 8,
+              "gap": 5,
+              "padding": [
+                5,
+                12
+              ],
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "EsQjz",
+                  "name": "Cal",
+                  "width": 14,
+                  "height": 14,
+                  "icon": "calendar-days",
+                  "library": "lucide",
+                  "fill": "#10762dff"
+                },
+                {
+                  "type": "text",
+                  "id": "EKTka",
+                  "name": "Month",
+                  "fill": "$text-primary",
+                  "content": "February 2026",
+                  "fontFamily": "$font",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "E5Mfnk",
+          "name": "Items",
+          "width": "fill_container",
+          "fill": "#00000000",
+          "layout": "vertical",
+          "padding": [
+            8,
+            22
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "eH4jz",
+              "name": "Row Rent",
+              "width": "fill_container",
+              "fill": "#00000000",
+              "gap": 12,
+              "padding": [
+                14,
+                0
+              ],
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "jWiV2",
+                  "name": "Left",
+                  "fill": "#00000000",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "AcIST",
+                      "name": "Label",
+                      "fill": "$text-primary",
+                      "content": "Rent",
+                      "fontFamily": "$font",
+                      "fontSize": 15
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "SIcyK",
+                  "name": "Val",
+                  "fill": "$text-primary",
+                  "content": "₹5,000",
+                  "fontFamily": "$font",
+                  "fontSize": 15,
+                  "fontWeight": "500",
+                  "letterSpacing": -0.3
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "uWdFV",
+              "name": "Row Electricity",
+              "width": "fill_container",
+              "fill": "#00000000",
+              "gap": 12,
+              "padding": [
+                14,
+                0
+              ],
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "V6J26",
+                  "name": "Left",
+                  "fill": "#00000000",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "duO1W",
+                      "name": "Label",
+                      "fill": "$text-primary",
+                      "content": "Electricity",
+                      "fontFamily": "$font",
+                      "fontSize": 15
+                    },
+                    {
+                      "type": "text",
+                      "id": "IhNKL",
+                      "name": "Sub",
+                      "fill": "$text-secondary",
+                      "content": "129 units × ₹6",
+                      "fontFamily": "$font",
+                      "fontSize": 12
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "PDVHo",
+                  "name": "Val",
+                  "fill": "$text-primary",
+                  "content": "₹774",
+                  "fontFamily": "$font",
+                  "fontSize": 15,
+                  "fontWeight": "500",
+                  "letterSpacing": -0.3
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "p5txdT",
+              "name": "Row Water charge",
+              "width": "fill_container",
+              "fill": "#00000000",
+              "gap": 12,
+              "padding": [
+                14,
+                0
+              ],
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "g27fu",
+                  "name": "Left",
+                  "fill": "#00000000",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "L5IJG",
+                      "name": "Label",
+                      "fill": "$text-primary",
+                      "content": "Water charge",
+                      "fontFamily": "$font",
+                      "fontSize": 15
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "nZGyn",
+                  "name": "Val",
+                  "fill": "$text-primary",
+                  "content": "₹600",
+                  "fontFamily": "$font",
+                  "fontSize": 15,
+                  "fontWeight": "500",
+                  "letterSpacing": -0.3
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "mbj8d",
+              "name": "Row IGL (Gas)",
+              "width": "fill_container",
+              "fill": "#00000000",
+              "gap": 12,
+              "padding": [
+                14,
+                0
+              ],
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "bRwxk",
+                  "name": "Left",
+                  "fill": "#00000000",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "emzFC",
+                      "name": "Label",
+                      "fill": "$text-primary",
+                      "content": "IGL (Gas)",
+                      "fontFamily": "$font",
+                      "fontSize": 15
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "Lk5g0",
+                  "name": "Val",
+                  "fill": "$text-primary",
+                  "content": "₹0",
+                  "fontFamily": "$font",
+                  "fontSize": 15,
+                  "fontWeight": "500",
+                  "letterSpacing": -0.3
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "H2DUV",
+              "name": "Row Previous balance",
+              "width": "fill_container",
+              "fill": "#00000000",
+              "gap": 12,
+              "padding": [
+                14,
+                0
+              ],
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "a9nQ9K",
+                  "name": "Left",
+                  "fill": "#00000000",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "CxJay",
+                      "name": "Label",
+                      "fill": "$text-primary",
+                      "content": "Previous balance",
+                      "fontFamily": "$font",
+                      "fontSize": 15
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "MPCbU",
+                  "name": "Val",
+                  "fill": "$text-primary",
+                  "content": "₹0",
+                  "fontFamily": "$font",
+                  "fontSize": 15,
+                  "fontWeight": "500",
+                  "letterSpacing": -0.3
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "ONvIv",
+          "name": "StrongDivider",
+          "fill": "$text-tertiary",
+          "width": "fill_container",
+          "height": 1
+        },
+        {
+          "type": "frame",
+          "id": "gFSbh",
+          "name": "TotalRow",
+          "width": "fill_container",
+          "fill": "#00000000",
+          "gap": 12,
+          "padding": [
+            18,
+            22,
+            20,
+            22
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "sHwh1",
+              "name": "TotalLabel",
+              "fill": "$text-secondary",
+              "content": "Total billed",
+              "fontFamily": "$font",
+              "fontSize": 14,
+              "fontWeight": "500"
+            },
+            {
+              "type": "frame",
+              "id": "ZRzHD",
+              "name": "TotalVal",
+              "fill": "#00000000",
+              "gap": 2,
+              "alignItems": "end",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "jtv1o",
+                  "name": "Rupee",
+                  "fill": "$text-secondary",
+                  "content": "₹",
+                  "fontFamily": "$font",
+                  "fontSize": 20,
+                  "fontWeight": "600",
+                  "letterSpacing": -0.5
+                },
+                {
+                  "type": "text",
+                  "id": "Z8qARV",
+                  "name": "Amount",
+                  "fill": "$text-primary",
+                  "content": "6,374",
+                  "fontFamily": "$font",
+                  "fontSize": 20,
+                  "fontWeight": "700",
+                  "letterSpacing": -0.8
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "themes": {
+    "Mode": [
+      "Light",
+      "Dark"
+    ]
+  },
+  "variables": {
+    "--sidebar": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#E7E8E5"
+        },
+        {
+          "value": "#18181b",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--sidebar-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#666666"
+        },
+        {
+          "value": "#fafafa",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--sidebar-primary": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#18181b"
+        },
+        {
+          "value": "#18181b",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--sidebar-primary-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#fafafa"
+        },
+        {
+          "value": "#fafafa",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--sidebar-border": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#CBCCC9"
+        },
+        {
+          "value": "#ffffff1a",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--sidebar-accent": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#CBCCC9"
+        },
+        {
+          "value": "#2a2a30",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--sidebar-accent-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#18181b"
+        },
+        {
+          "value": "#fafafa",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--sidebar-ring": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#71717a"
+        },
+        {
+          "value": "#71717a",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--background": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#F2F3F0"
+        },
+        {
+          "value": "#111111",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#111111"
+        },
+        {
+          "value": "#FFFFFF",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--card": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#FFFFFF"
+        },
+        {
+          "value": "#1A1A1A",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--card-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#111111"
+        },
+        {
+          "value": "#FFFFFF",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--popover": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#FFFFFF"
+        },
+        {
+          "value": "#1A1A1A",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--popover-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#111111"
+        },
+        {
+          "value": "#FFFFFF",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--primary": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#FF8400"
+        },
+        {
+          "value": "#FF8400",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--primary-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#111111"
+        },
+        {
+          "value": "#111111",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--secondary": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#E7E8E5"
+        },
+        {
+          "value": "#2E2E2E",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--secondary-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#111111"
+        },
+        {
+          "value": "#FFFFFF",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--muted": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#F2F3F0"
+        },
+        {
+          "value": "#2E2E2E",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--muted-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#666666"
+        },
+        {
+          "value": "#B8B9B6",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--accent": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#F2F3F0"
+        },
+        {
+          "value": "#111111",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--accent-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#111111"
+        },
+        {
+          "value": "#F2F3F0",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--destructive": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#D93C15"
+        },
+        {
+          "value": "#FF5C33",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--border": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#CBCCC9"
+        },
+        {
+          "value": "#2E2E2E",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--input": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#CBCCC9"
+        },
+        {
+          "value": "#2E2E2E",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--ring": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#666666"
+        },
+        {
+          "value": "#666666",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--white": {
+      "type": "color",
+      "value": "#FFFFFF"
+    },
+    "--black": {
+      "type": "color",
+      "value": "#000000"
+    },
+    "--font-primary": {
+      "type": "string",
+      "value": "JetBrains Mono"
+    },
+    "--font-secondary": {
+      "type": "string",
+      "value": "Geist"
+    },
+    "--radius-none": {
+      "type": "number",
+      "value": 0
+    },
+    "--radius-pill": {
+      "type": "number",
+      "value": 999
+    },
+    "--color-success": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#DFE6E1"
+        },
+        {
+          "value": "#222924",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--color-success-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#004D1A"
+        },
+        {
+          "value": "#B6FFCE",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--color-warning": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#E9E3D8"
+        },
+        {
+          "value": "#291C0F",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--color-warning-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#804200"
+        },
+        {
+          "value": "#FF8400",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--color-error": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#E5DCDA"
+        },
+        {
+          "value": "#24100B",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--color-error-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#8C1C00"
+        },
+        {
+          "value": "#FF5C33",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--color-info": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#DFDFE6"
+        },
+        {
+          "value": "#222229",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--color-info-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#000066"
+        },
+        {
+          "value": "#B2B2FF",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--radius-m": {
+      "type": "number",
+      "value": 16
+    },
+    "accent": {
+      "type": "color",
+      "value": "#007AFF"
+    },
+    "accent-soft": {
+      "type": "color",
+      "value": "#EAF3FF"
+    },
+    "bg": {
+      "type": "color",
+      "value": "#F2F2F7"
+    },
+    "font": {
+      "type": "string",
+      "value": "Inter"
+    },
+    "green": {
+      "type": "color",
+      "value": "#34C759"
+    },
+    "green-soft": {
+      "type": "color",
+      "value": "#E7F8ED"
+    },
+    "orange": {
+      "type": "color",
+      "value": "#FF9500"
+    },
+    "orange-soft": {
+      "type": "color",
+      "value": "#FFF3E0"
+    },
+    "radius-card": {
+      "type": "number",
+      "value": 20
+    },
+    "radius-inner": {
+      "type": "number",
+      "value": 14
+    },
+    "red": {
+      "type": "color",
+      "value": "#FF3B30"
+    },
+    "red-soft": {
+      "type": "color",
+      "value": "#FFECEB"
+    },
+    "separator": {
+      "type": "color",
+      "value": "#E5E5EA"
+    },
+    "surface": {
+      "type": "color",
+      "value": "#FFFFFF"
+    },
+    "surface-2": {
+      "type": "color",
+      "value": "#F9F9FB"
+    },
+    "text-primary": {
+      "type": "color",
+      "value": "#1C1C1E"
+    },
+    "text-secondary": {
+      "type": "color",
+      "value": "#8E8E93"
+    },
+    "text-tertiary": {
+      "type": "color",
+      "value": "#C7C7CC"
+    }
+  }
+}
