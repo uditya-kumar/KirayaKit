@@ -1,4 +1,4 @@
-import { colors, radii } from "@/constants/design";
+import Colors from "@/constants/Colors";
 import type { LucideIcon } from "lucide-react-native";
 import {
   StyleSheet,
@@ -8,11 +8,19 @@ import {
   View,
 } from "react-native";
 
+const colors = Colors.light;
+
+type FormFieldProps = TextInputProps & {
+  label: string;
+  /** Leading glyph; the mock shows "type" as a stand-in. */
+  icon?: LucideIcon;
+};
+
 /**
  * Labelled text input used by every create/edit form.
  *
  * The input box has no border — in the mock it is a white card on the tinted
- * screen background, which is what separates it. Put these on `colors.fill`,
+ * screen background, which is what separates it. Put these on `colors.fillBackground`,
  * not on white.
  */
 export function FormField({
@@ -20,16 +28,12 @@ export function FormField({
   icon: Icon,
   style,
   ...inputProps
-}: TextInputProps & {
-  label: string;
-  /** Leading glyph; the mock shows "type" as a stand-in. */
-  icon?: LucideIcon;
-}) {
+}: FormFieldProps) {
   return (
     <View style={styles.field}>
       <Text style={styles.label}>{label}</Text>
       <View style={styles.inputBox}>
-        {Icon ? <Icon size={18} color={colors.muted} /> : null}
+        {Icon ? <Icon size={18} color={colors.textMuted} /> : null}
         <TextInput
           accessibilityLabel={label}
           placeholderTextColor={colors.placeholder}
@@ -48,7 +52,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 13,
     fontWeight: "600",
-    color: colors.muted,
+    color: colors.textMuted,
   },
   inputBox: {
     flexDirection: "row",
@@ -56,8 +60,8 @@ const styles = StyleSheet.create({
     gap: 10,
     paddingVertical: 14,
     paddingHorizontal: 16,
-    backgroundColor: colors.card,
-    borderRadius: radii.tile,
+    backgroundColor: colors.cardBackground,
+    borderRadius: 14,
   },
   input: {
     flex: 1,

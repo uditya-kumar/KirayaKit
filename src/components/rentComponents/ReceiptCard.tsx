@@ -1,13 +1,24 @@
-import { colors, radii } from "@/constants/design";
-import { formatAmount, formatBillMonth, formatRupees } from "@/lib/format";
+import Colors from "@/constants/Colors";
+import { formatAmount, formatBillMonth, formatRupees } from "@/libs/format";
 import { CalendarDays } from "lucide-react-native";
 import { StyleSheet, Text, View } from "react-native";
+
+const colors = Colors.light;
 
 export type ReceiptLine = {
   label: string;
   /** Second line under the label, e.g. "129 units × ₹6". */
   sub?: string;
   amount: number | string;
+};
+
+type ReceiptCardProps = {
+  tenantName: string;
+  address?: string | null;
+  /** `bills.bill_month` ("2026-02-01"), or a ready-made label. */
+  month: string;
+  lines: ReceiptLine[];
+  total: number | string;
 };
 
 /**
@@ -22,14 +33,7 @@ export function ReceiptCard({
   month,
   lines,
   total,
-}: {
-  tenantName: string;
-  address?: string | null;
-  /** `bills.bill_month` ("2026-02-01"), or a ready-made label. */
-  month: string;
-  lines: ReceiptLine[];
-  total: number | string;
-}) {
+}: ReceiptCardProps) {
   return (
     <View style={styles.card}>
       <View style={styles.header}>
@@ -69,8 +73,8 @@ export function ReceiptCard({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: colors.card,
-    borderRadius: radii.panel,
+    backgroundColor: colors.cardBackground,
+    borderRadius: 20,
     // Clips the mint header to the card's top corners.
     overflow: "hidden",
     boxShadow: [{ offsetX: 0, offsetY: 1, blurRadius: 10, color: "#0000000D" }],
@@ -81,18 +85,18 @@ const styles = StyleSheet.create({
     paddingTop: 22,
     paddingHorizontal: 22,
     paddingBottom: 18,
-    backgroundColor: colors.receiptHeader,
+    backgroundColor: colors.receiptBackground,
     // The export rounds all four corners of the header; only the top two are
     // visible once it is clipped to the card, and the bottom two would leave
     // white notches against the body.
-    borderTopLeftRadius: radii.panel,
-    borderTopRightRadius: radii.panel,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
   receiptLabel: {
     fontSize: 11,
     fontWeight: "700",
     letterSpacing: 2,
-    color: colors.muted,
+    color: colors.textMuted,
   },
   tenant: {
     fontSize: 22,
@@ -103,7 +107,7 @@ const styles = StyleSheet.create({
   address: {
     fontSize: 13,
     fontWeight: "500",
-    color: colors.muted,
+    color: colors.textMuted,
   },
   monthPill: {
     flexDirection: "row",
@@ -111,7 +115,7 @@ const styles = StyleSheet.create({
     gap: 5,
     paddingVertical: 5,
     paddingHorizontal: 12,
-    backgroundColor: colors.receiptMonthPill,
+    backgroundColor: colors.receiptMonthBackground,
     borderRadius: 8,
   },
   monthText: {
@@ -142,7 +146,7 @@ const styles = StyleSheet.create({
   rowSub: {
     fontSize: 12,
     fontWeight: "400",
-    color: colors.muted,
+    color: colors.textMuted,
   },
   rowValue: {
     fontSize: 15,
@@ -165,7 +169,7 @@ const styles = StyleSheet.create({
   totalLabel: {
     fontSize: 14,
     fontWeight: "500",
-    color: colors.muted,
+    color: colors.textMuted,
   },
   totalValue: {
     flexDirection: "row",
@@ -176,7 +180,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "600",
     letterSpacing: -0.5,
-    color: colors.muted,
+    color: colors.textMuted,
   },
   totalAmount: {
     fontSize: 20,

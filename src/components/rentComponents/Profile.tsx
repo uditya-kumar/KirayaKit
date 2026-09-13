@@ -1,8 +1,21 @@
-import { InfoTile } from "@/components/InfoTile";
-import { colors, pressedOpacity, radii } from "@/constants/design";
-import { formatFloor, formatRate, formatRupees } from "@/lib/format";
+import Button from "@/components/rentComponents/Button";
+import { InfoTile } from "@/components/rentComponents/InfoTile";
+import Colors from "@/constants/Colors";
+import { formatFloor, formatRate, formatRupees } from "@/libs/format";
 import { House, Pencil, Zap } from "lucide-react-native";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
+
+const colors = Colors.light;
+
+type ProfileProps = {
+  name: string;
+  /** 0-indexed, as stored. */
+  floorNumber: number;
+  houseName?: string | null;
+  monthlyRent: number | string;
+  electricityRate: number | string;
+  onEdit?: () => void;
+};
 
 /**
  * Header panel on the tenant detail screen: who they are, where they live, and
@@ -15,15 +28,7 @@ export function Profile({
   monthlyRent,
   electricityRate,
   onEdit,
-}: {
-  name: string;
-  /** 0-indexed, as stored. */
-  floorNumber: number;
-  houseName?: string | null;
-  monthlyRent: number | string;
-  electricityRate: number | string;
-  onEdit?: () => void;
-}) {
+}: ProfileProps) {
   const floor = formatFloor(floorNumber);
 
   return (
@@ -36,15 +41,16 @@ export function Profile({
           </Text>
         </View>
 
-        <Pressable
-          accessibilityRole="button"
+        <Button
+          text="Edit"
           accessibilityLabel="Edit tenant"
+          textColor={colors.tint}
+          backgroundColor="transparent"
+          icon={<Pencil size={14} color={colors.tint} />}
           onPress={onEdit}
-          style={({ pressed }) => [styles.editBtn, pressed && styles.pressed]}
-        >
-          <Pencil size={14} color={colors.blue} />
-          <Text style={styles.editText}>Edit</Text>
-        </Pressable>
+          paddingVertical={6}
+          paddingHorizontal={12}
+        />
       </View>
 
       <View style={styles.infoRow}>
@@ -69,10 +75,10 @@ const styles = StyleSheet.create({
     paddingTop: 18,
     paddingHorizontal: 18,
     paddingBottom: 16,
-    backgroundColor: colors.card,
-    borderRadius: radii.panel,
+    backgroundColor: colors.cardBackground,
+    borderRadius: 20,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: colors.borderColor,
   },
   top: {
     flexDirection: "row",
@@ -93,23 +99,7 @@ const styles = StyleSheet.create({
   floor: {
     fontSize: 13,
     fontWeight: "500",
-    color: colors.muted,
-  },
-  editBtn: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 5,
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: radii.tile,
-  },
-  editText: {
-    fontSize: 13,
-    fontWeight: "600",
-    color: colors.blue,
-  },
-  pressed: {
-    opacity: pressedOpacity,
+    color: colors.textMuted,
   },
   infoRow: {
     flexDirection: "row",

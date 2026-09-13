@@ -1,14 +1,18 @@
-import {
-  colors,
-  disabledOpacity,
-  pressedOpacity,
-  radii,
-} from "@/constants/design";
+import Button from "@/components/rentComponents/Button";
+import Colors from "@/constants/Colors";
 import { Trash2 } from "lucide-react-native";
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, Text, TextInput, View } from "react-native";
+
+const colors = Colors.light;
 
 const CONFIRM_WORD = "delete";
+
+type DeleteHouseDialogProps = {
+  houseName: string;
+  onDelete: () => void;
+  onCancel: () => void;
+};
 
 /**
  * Confirmation for deleting a house. Deleting one cascades to its tenants,
@@ -23,11 +27,7 @@ export function DeleteHouseDialog({
   houseName,
   onDelete,
   onCancel,
-}: {
-  houseName: string;
-  onDelete: () => void;
-  onCancel: () => void;
-}) {
+}: DeleteHouseDialogProps) {
   const [typed, setTyped] = useState("");
   const confirmed = typed.trim().toLowerCase() === CONFIRM_WORD;
 
@@ -63,28 +63,26 @@ export function DeleteHouseDialog({
         </View>
       </View>
 
-      <Pressable
-        accessibilityRole="button"
+      <Button
+        text="Delete House"
+        textColor={colors.buttonText}
+        backgroundColor={colors.error}
+        icon={<Trash2 size={18} color={colors.buttonText} />}
         onPress={onDelete}
         disabled={!confirmed}
-        style={({ pressed }) => [
-          styles.deleteBtn,
-          { opacity: !confirmed ? disabledOpacity : pressed ? pressedOpacity : 1 },
-        ]}
-      >
-        <Trash2 size={18} color={colors.white} />
-        <Text style={[styles.buttonLabel, styles.deleteLabel]}>
-          Delete House
-        </Text>
-      </Pressable>
+        paddingVertical={14}
+        style={styles.action}
+      />
 
-      <Pressable
-        accessibilityRole="button"
+      <Button
+        text="Cancel"
+        textColor={colors.text}
+        backgroundColor="transparent"
+        borderColor={colors.borderColor}
         onPress={onCancel}
-        style={({ pressed }) => [styles.cancelBtn, pressed && styles.pressed]}
-      >
-        <Text style={styles.buttonLabel}>Cancel</Text>
-      </Pressable>
+        paddingVertical={14}
+        style={styles.action}
+      />
     </View>
   );
 }
@@ -97,8 +95,8 @@ const styles = StyleSheet.create({
     paddingTop: 24,
     paddingHorizontal: 22,
     paddingBottom: 20,
-    backgroundColor: colors.card,
-    borderRadius: radii.dialog,
+    backgroundColor: colors.cardBackground,
+    borderRadius: 24,
     boxShadow: [
       { offsetX: 0, offsetY: 12, blurRadius: 32, color: "#00000026" },
     ],
@@ -116,7 +114,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "400",
     lineHeight: 20,
-    color: colors.muted,
+    color: colors.textMuted,
   },
   // The mock separates the copy from the confirmation with a fixed 10pt spacer
   // rather than a larger gap, so the two text blocks stay grouped.
@@ -135,7 +133,7 @@ const styles = StyleSheet.create({
   hintText: {
     fontSize: 13,
     fontWeight: "400",
-    color: colors.muted,
+    color: colors.textMuted,
   },
   hintWord: {
     fontSize: 13,
@@ -145,8 +143,8 @@ const styles = StyleSheet.create({
   inputBox: {
     paddingVertical: 13,
     paddingHorizontal: 14,
-    backgroundColor: colors.fill,
-    borderRadius: radii.tile,
+    backgroundColor: colors.fillBackground,
+    borderRadius: 14,
   },
   input: {
     fontSize: 15,
@@ -154,34 +152,8 @@ const styles = StyleSheet.create({
     color: colors.text,
     padding: 0,
   },
-  deleteBtn: {
+  // The dialog centres its children; both buttons span it instead.
+  action: {
     alignSelf: "stretch",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 8,
-    padding: 14,
-    backgroundColor: colors.red,
-    borderRadius: radii.button,
-  },
-  cancelBtn: {
-    alignSelf: "stretch",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 14,
-    borderRadius: radii.button,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  buttonLabel: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.black,
-  },
-  deleteLabel: {
-    color: colors.white,
-  },
-  pressed: {
-    opacity: pressedOpacity,
   },
 });

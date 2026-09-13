@@ -1,6 +1,17 @@
-import { colors, pressedOpacity, radii } from "@/constants/design";
+import Colors from "@/constants/Colors";
 import { Minus, Tag } from "lucide-react-native";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+
+const colors = Colors.light;
+
+type ChargeRowProps = {
+  label: string;
+  amount: string;
+  onChangeLabel: (label: string) => void;
+  onChangeAmount: (amount: string) => void;
+  onRemove?: () => void;
+  labelPlaceholder?: string;
+};
 
 /**
  * One editable extra charge on a bill — "Water charge / ₹600" — with the button
@@ -17,18 +28,11 @@ export function ChargeRow({
   onChangeAmount,
   onRemove,
   labelPlaceholder = "Charge name",
-}: {
-  label: string;
-  amount: string;
-  onChangeLabel: (label: string) => void;
-  onChangeAmount: (amount: string) => void;
-  onRemove?: () => void;
-  labelPlaceholder?: string;
-}) {
+}: ChargeRowProps) {
   return (
     <View style={styles.row}>
       <View style={styles.labelBox}>
-        <Tag size={16} color={colors.muted} />
+        <Tag size={16} color={colors.textMuted} />
         <TextInput
           accessibilityLabel="Charge name"
           value={label}
@@ -58,7 +62,7 @@ export function ChargeRow({
         onPress={onRemove}
         style={({ pressed }) => [styles.removeBtn, pressed && styles.pressed]}
       >
-        <Minus size={18} color={colors.red} />
+        <Minus size={18} color={colors.error} />
       </Pressable>
     </View>
   );
@@ -77,8 +81,8 @@ const styles = StyleSheet.create({
     gap: 8,
     paddingVertical: 12,
     paddingHorizontal: 14,
-    backgroundColor: colors.card,
-    borderRadius: radii.tile,
+    backgroundColor: colors.cardBackground,
+    borderRadius: 14,
   },
   amountBox: {
     flexDirection: "row",
@@ -87,13 +91,13 @@ const styles = StyleSheet.create({
     width: 120,
     paddingVertical: 12,
     paddingHorizontal: 14,
-    backgroundColor: colors.card,
-    borderRadius: radii.tile,
+    backgroundColor: colors.cardBackground,
+    borderRadius: 14,
   },
   rupee: {
     fontSize: 15,
     fontWeight: "500",
-    color: colors.muted,
+    color: colors.textMuted,
   },
   input: {
     flex: 1,
@@ -107,10 +111,10 @@ const styles = StyleSheet.create({
     height: 32,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: colors.redTint,
+    backgroundColor: colors.errorBackground,
     borderRadius: 16,
   },
   pressed: {
-    opacity: pressedOpacity,
+    opacity: 0.8,
   },
 });

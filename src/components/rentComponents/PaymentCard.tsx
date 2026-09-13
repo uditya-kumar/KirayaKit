@@ -1,8 +1,18 @@
-import { InfoTile } from "@/components/InfoTile";
-import { colors, pressedOpacity, radii } from "@/constants/design";
-import { formatBillMonth, formatRupees } from "@/lib/format";
+import Colors from "@/constants/Colors";
+import { InfoTile } from "@/components/rentComponents/InfoTile";
+import { formatBillMonth, formatRupees } from "@/libs/format";
 import { ChevronRight } from "lucide-react-native";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+
+const colors = Colors.light;
+
+type PaymentCardProps = {
+  /** `bills.bill_month` ("2026-02-01"), or a ready-made label. */
+  month: string;
+  billed: number | string;
+  paid: number | string;
+  onPress?: () => void;
+};
 
 /** One month in a tenant's payment history. Fields line up with `bills`. */
 export function PaymentCard({
@@ -10,13 +20,7 @@ export function PaymentCard({
   billed,
   paid,
   onPress,
-}: {
-  /** `bills.bill_month` ("2026-02-01"), or a ready-made label. */
-  month: string;
-  billed: number | string;
-  paid: number | string;
-  onPress?: () => void;
-}) {
+}: PaymentCardProps) {
   const label = formatBillMonth(month);
 
   return (
@@ -28,7 +32,7 @@ export function PaymentCard({
     >
       <View style={styles.monthWrap}>
         <Text style={styles.month}>{label}</Text>
-        <ChevronRight size={20} color={colors.muted} />
+        <ChevronRight size={20} color={colors.textMuted} />
       </View>
 
       <View style={styles.infoRow}>
@@ -36,7 +40,7 @@ export function PaymentCard({
         <InfoTile
           label="Paid"
           value={formatRupees(paid)}
-          valueColor={colors.green}
+          valueColor={colors.success}
         />
       </View>
     </Pressable>
@@ -47,13 +51,13 @@ const styles = StyleSheet.create({
   card: {
     gap: 9,
     padding: 16,
-    backgroundColor: colors.card,
-    borderRadius: radii.card,
+    backgroundColor: colors.cardBackground,
+    borderRadius: 18,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: colors.borderColor,
   },
   pressed: {
-    opacity: pressedOpacity,
+    opacity: 0.8,
   },
   monthWrap: {
     flexDirection: "row",

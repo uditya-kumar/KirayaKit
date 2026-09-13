@@ -54,13 +54,15 @@ SELECT current_setting('app.seed_owner'), v.name, v.address, v.floors, v.upi, v.
     ('Meera Residency',    'Sector 12, Dwarka',  4::smallint, 'meera.residency@okicici', '+919810022101'),
     ('Lotus Villa',        'Greater Kailash II', 3::smallint, 'lotus.villa@okaxis',      NULL),
     ('Sunrise Apartments', 'Rohini, Block C',    6::smallint, NULL,                      '+919810022102'),
-    ('Green Nest',         'Vasant Kunj',        2::smallint, 'greennest@oksbi',         NULL)
+    ('Green Nest',         'Vasant Kunj',        2::smallint, 'greennest@oksbi',         NULL),
+    ('Shanti Kunj',        'Pitampura, Block A', 3::smallint, 'shantikunj@okpaytm',      NULL),
+    ('Ashoka Heights',     'Mayur Vihar Ph. 1',  5::smallint, NULL,                      '+919810022103')
   ) AS v(name, address, floors, upi, gpay);
 
 -- ---------------------------------------------------------------------------
--- Tenants. 15 active — 4/3/6/2, matching the tenant counts on the mock's house
--- cards (v_house_list counts only active, non-deleted tenants) — plus one
--- moved-out tenant so the inactive state has a row.
+-- Tenants. 23 active — 4/3/6/2 on the four houses the mock draws (v_house_list
+-- counts only active, non-deleted tenants), then 3/5 on the two extra ones —
+-- plus one moved-out tenant so the inactive state has a row.
 -- ---------------------------------------------------------------------------
 INSERT INTO tenants (owner_id, house_id, name, mobile_number, aadhaar_number,
                      floor_number, monthly_rent, electricity_rate,
@@ -91,7 +93,15 @@ SELECT current_setting('app.seed_owner'), h.id, v.name, v.mobile, v.aadhaar,
     ('Sunrise Apartments', 'Mr. Suresh Patil',   '+919811100405', NULL,           4::smallint,  5000::numeric, 5.5::numeric,  2090::numeric, NULL, 20, true,  NULL),
     ('Sunrise Apartments', 'Mr. Arjun Mehta',    '+919811100406', NULL,           5::smallint,  5200::numeric, 5.5::numeric,  2530::numeric, 3,     6, true,  'New tenant, first bill this month.'),
     ('Green Nest',         'Mrs. Lakshmi Iyer',  '+919811100501', NULL,           0::smallint,  9500::numeric, 8::numeric,     410::numeric, NULL, 24, true,  NULL),
-    ('Green Nest',         'Mr. Vikram Chauhan', '+919811100502', NULL,           1::smallint, 10500::numeric, 8::numeric,    1220::numeric, 4,    10, true,  NULL)
+    ('Green Nest',         'Mr. Vikram Chauhan', '+919811100502', NULL,           1::smallint, 10500::numeric, 8::numeric,    1220::numeric, 4,    10, true,  NULL),
+    ('Shanti Kunj',        'Mr. Mohit Ahuja',    '+919811100601', '223344556677', 0::smallint,  6300::numeric, 6.5::numeric,   870::numeric, 7,    15, true,  NULL),
+    ('Shanti Kunj',        'Mrs. Rekha Pillai',  '+919811100602', NULL,           1::smallint,  6600::numeric, 6.5::numeric,  1930::numeric, NULL, 21, true,  'Rent transferred by her son every month.'),
+    ('Shanti Kunj',        'Mr. Tarun Saxena',   '+919811100603', NULL,           2::smallint,  6900::numeric, 6.5::numeric,   540::numeric, 2,     5, true,  NULL),
+    ('Ashoka Heights',     'Mr. Zaid Ansari',    '+919811100701', NULL,           0::smallint,  8300::numeric, 7.5::numeric,   760::numeric, NULL, 19, true,  NULL),
+    ('Ashoka Heights',     'Ms. Priya Ranjan',   '+919811100702', NULL,           1::smallint,  8600::numeric, 7.5::numeric,  1480::numeric, 10,   12, true,  NULL),
+    ('Ashoka Heights',     'Mr. Gaurav Malhotra','+919811100703', '778899001122', 2::smallint,  8900::numeric, 7.5::numeric,  2310::numeric, NULL, 27, true,  'Keeps a second parking slot.'),
+    ('Ashoka Heights',     'Mrs. Neha Kulkarni', '+919811100704', NULL,           3::smallint,  9200::numeric, 7.5::numeric,   350::numeric, 1,     8, true,  'Agreement renewal due.'),
+    ('Ashoka Heights',     'Mr. Alok Nandy',     '+919811100705', NULL,           4::smallint,  9600::numeric, 7.5::numeric,  1150::numeric, 6,     3, true,  'New tenant, first bill this month.')
   ) AS v(house, name, mobile, aadhaar, floor, rent, rate, opening, expiry_months, tenure_months, active, notes)
   JOIN houses h ON h.name = v.house
                AND h.owner_id = current_setting('app.seed_owner');
@@ -112,7 +122,12 @@ SELECT current_setting('app.seed_owner'), h.id, v.label, v.amount
     ('Sunrise Apartments', 'Maintenance',  200::numeric),
     ('Sunrise Apartments', 'Lift',         150::numeric),
     ('Green Nest',         'Water charge', 700::numeric),
-    ('Green Nest',         'Maintenance',  400::numeric)
+    ('Green Nest',         'Maintenance',  400::numeric),
+    ('Shanti Kunj',        'Water charge', 550::numeric),
+    ('Shanti Kunj',        'Maintenance',  250::numeric),
+    ('Ashoka Heights',     'Water charge', 650::numeric),
+    ('Ashoka Heights',     'Maintenance',  350::numeric),
+    ('Ashoka Heights',     'Lift',         200::numeric)
   ) AS v(house, label, amount)
   JOIN houses h ON h.name = v.house
                AND h.owner_id = current_setting('app.seed_owner');

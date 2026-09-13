@@ -1,49 +1,34 @@
-import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
-import { Link, Tabs } from "expo-router";
-import React from "react";
-import { Pressable } from "react-native";
-import { House, User, MessageCircleMore } from "lucide-react-native";
+import { Tabs } from "expo-router";
+import { House, Settings } from "lucide-react-native";
+
+const colors = Colors.light;
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        tabBarShowLabel: false,
-        tabBarStyle: {
-          paddingTop: 10,
-          paddingBottom: 45,
-        }
+        headerShown: false,
+        tabBarActiveTintColor: colors.tabIconSelected,
+        tabBarInactiveTintColor: colors.tabIconDefault,
+        tabBarStyle: { backgroundColor: colors.tabBackground },
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="houses"
         options={{
-          title: "Campus Ride",
-          tabBarIcon: ({ color }) => <House size={21} color={color} />,
-          headerRight: () => (
-            <Link href="/message" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <MessageCircleMore
-                    size={25}
-                    color={Colors[colorScheme ?? "light"].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ),
+          title: "Home",
+          tabBarLabel: "Houses",
+          tabBarIcon: ({ color, size }) => <House color={color} size={size} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Profile",
-          tabBarIcon: ({ color }) => <User size={21} color={color} />,
+          title: "Settings",
+          tabBarIcon: ({ color, size }) => (
+            <Settings color={color} size={size} />
+          ),
         }}
       />
     </Tabs>

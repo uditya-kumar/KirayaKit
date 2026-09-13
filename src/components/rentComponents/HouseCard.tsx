@@ -1,6 +1,18 @@
-import { colors, pressedOpacity, radii } from "@/constants/design";
+import Colors from "@/constants/Colors";
 import { ChevronRight, MapPin, Users } from "lucide-react-native";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+
+const colors = Colors.light;
+
+type HouseCardProps = {
+  name: string;
+  /** Optional in the schema; the row is dropped when there is no address. */
+  address?: string | null;
+  tenantCount: number;
+  onPress?: () => void;
+  /** The mock opens its house menu from a long press on the card. */
+  onLongPress?: () => void;
+};
 
 /** A row on the houses list. Fields line up with `v_house_list`. */
 export function HouseCard({
@@ -9,15 +21,7 @@ export function HouseCard({
   tenantCount,
   onPress,
   onLongPress,
-}: {
-  name: string;
-  /** Optional in the schema; the row is dropped when there is no address. */
-  address?: string | null;
-  tenantCount: number;
-  onPress?: () => void;
-  /** The mock opens its house menu from a long press on the card. */
-  onLongPress?: () => void;
-}) {
+}: HouseCardProps) {
   return (
     <Pressable
       accessibilityRole="button"
@@ -31,7 +35,7 @@ export function HouseCard({
 
         {address ? (
           <View style={styles.addressRow}>
-            <MapPin size={15} color={colors.muted} />
+            <MapPin size={15} color={colors.textMuted} />
             <Text style={styles.address} numberOfLines={1}>
               {address}
             </Text>
@@ -39,14 +43,14 @@ export function HouseCard({
         ) : null}
 
         <View style={styles.pill}>
-          <Users size={13} color={colors.muted} />
+          <Users size={13} color={colors.textMuted} />
           <Text style={styles.pillText}>
-            {tenantCount === 1 ? "1 Tenant" : `${tenantCount} Tenants`}
+            {tenantCount === 1 ? "1 tenant" : `${tenantCount} tenants`}
           </Text>
         </View>
       </View>
 
-      <ChevronRight size={18} color={colors.muted} />
+      <ChevronRight size={18} color={colors.textMuted} />
     </Pressable>
   );
 }
@@ -57,13 +61,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 12,
     padding: 16,
-    backgroundColor: colors.card,
-    borderRadius: radii.card,
+    backgroundColor: colors.cardBackground,
+    borderRadius: 18,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: colors.borderColor,
   },
   pressed: {
-    opacity: pressedOpacity,
+    opacity: 0.8,
   },
   // Takes the slack so the chevron sits against the right edge.
   info: {
@@ -85,7 +89,7 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     fontSize: 13,
     fontWeight: "500",
-    color: colors.muted,
+    color: colors.textMuted,
   },
   pill: {
     flexDirection: "row",
@@ -93,12 +97,12 @@ const styles = StyleSheet.create({
     gap: 5,
     paddingVertical: 5,
     paddingHorizontal: 9,
-    backgroundColor: colors.pill,
-    borderRadius: radii.pill,
+    backgroundColor: colors.fillBackground,
+    borderRadius: 9,
   },
   pillText: {
     fontSize: 12,
     fontWeight: "500",
-    color: colors.muted,
+    color: colors.textMuted,
   },
 });

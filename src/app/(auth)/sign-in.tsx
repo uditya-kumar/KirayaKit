@@ -1,5 +1,10 @@
-import { AuthShell, Field, LinkButton, PrimaryButton } from "@/components/AuthForm";
-import { clerkErrorMessage } from "@/lib/clerk-errors";
+import {
+  AuthShell,
+  Field,
+  LinkButton,
+  PrimaryButton,
+} from "@/components/rentComponents/AuthForm";
+import { clerkErrorMessage } from "@/libs/clerk-errors";
 import { useSignIn } from "@clerk/expo";
 import { router } from "expo-router";
 import { useState } from "react";

@@ -1,6 +1,8 @@
-import { colors, pressedOpacity, radii } from "@/constants/design";
+import Colors from "@/constants/Colors";
 import type { LucideIcon } from "lucide-react-native";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+
+const colors = Colors.light;
 
 export type MenuItem = {
   key: string;
@@ -11,6 +13,10 @@ export type MenuItem = {
   onPress?: () => void;
 };
 
+type DropdownMenuProps = {
+  items: MenuItem[];
+};
+
 /**
  * The house actions menu. Note the ordering, which is unusual and deliberate:
  * the label comes first and the icon is pinned to the right edge.
@@ -19,12 +25,12 @@ export type MenuItem = {
  * transparent Modal, or in a popover — since where it hangs depends on what was
  * tapped.
  */
-export function DropdownMenu({ items }: { items: MenuItem[] }) {
+export function DropdownMenu({ items }: DropdownMenuProps) {
   return (
     <View style={styles.menu}>
       {items.map((item, index) => {
         const Icon = item.icon;
-        const tint = item.destructive ? colors.red : colors.text;
+        const tint = item.destructive ? colors.error : colors.text;
 
         return (
           <View key={item.key}>
@@ -48,11 +54,9 @@ const styles = StyleSheet.create({
   menu: {
     width: 220,
     padding: 6,
-    backgroundColor: colors.card,
-    borderRadius: radii.menu,
-    boxShadow: [
-      { offsetX: 0, offsetY: 0, blurRadius: 18, color: "#0000001A" },
-    ],
+    backgroundColor: colors.cardBackground,
+    borderRadius: 16,
+    boxShadow: [{ offsetX: 0, offsetY: 0, blurRadius: 18, color: "#0000001A" }],
   },
   item: {
     flexDirection: "row",
@@ -61,10 +65,10 @@ const styles = StyleSheet.create({
     gap: 12,
     paddingVertical: 11,
     paddingHorizontal: 12,
-    borderRadius: radii.button,
+    borderRadius: 10,
   },
   pressed: {
-    opacity: pressedOpacity,
+    opacity: 0.8,
   },
   label: {
     fontSize: 15,
@@ -72,6 +76,6 @@ const styles = StyleSheet.create({
   },
   divider: {
     height: 1,
-    backgroundColor: colors.border,
+    backgroundColor: colors.borderColor,
   },
 });

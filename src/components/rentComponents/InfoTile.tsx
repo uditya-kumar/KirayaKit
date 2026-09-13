@@ -1,6 +1,17 @@
-import { colors, radii } from "@/constants/design";
+import Colors from "@/constants/Colors";
 import type { LucideIcon } from "lucide-react-native";
 import { StyleSheet, Text, View } from "react-native";
+
+const colors = Colors.light;
+
+type InfoTileProps = {
+  label: string;
+  value: string;
+  /** The mock tints only the value: red for pending, green for paid. */
+  valueColor?: string;
+  /** Leading glyph, used on the tenant profile ("house", "zap"). */
+  icon?: LucideIcon;
+};
 
 /**
  * The small labelled stat box the mock reuses across four components —
@@ -16,17 +27,10 @@ export function InfoTile({
   value,
   valueColor = colors.text,
   icon: Icon,
-}: {
-  label: string;
-  value: string;
-  /** The mock tints only the value: red for pending, green for paid. */
-  valueColor?: string;
-  /** Leading glyph, used on the tenant profile ("house", "zap"). */
-  icon?: LucideIcon;
-}) {
+}: InfoTileProps) {
   return (
     <View style={styles.tile}>
-      {Icon ? <Icon size={16} color={colors.muted} /> : null}
+      {Icon ? <Icon size={16} color={colors.textMuted} /> : null}
       <View style={styles.textWrap}>
         <Text style={styles.label}>{label}</Text>
         <Text style={[styles.value, { color: valueColor }]}>{value}</Text>
@@ -40,8 +44,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: colors.fill,
-    borderRadius: radii.tile,
+    backgroundColor: colors.fillBackground,
+    borderRadius: 14,
     paddingVertical: 10,
     paddingHorizontal: 12,
   },
@@ -52,7 +56,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 11,
     fontWeight: "500",
-    color: colors.muted,
+    color: colors.textMuted,
   },
   value: {
     fontSize: 15,

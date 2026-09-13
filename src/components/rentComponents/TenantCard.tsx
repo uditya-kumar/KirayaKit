@@ -1,8 +1,19 @@
-import { InfoTile } from "@/components/InfoTile";
-import { colors, pressedOpacity, radii } from "@/constants/design";
-import { formatFloor, formatRupees } from "@/lib/format";
+import Colors from "@/constants/Colors";
+import { InfoTile } from "@/components/rentComponents/InfoTile";
+import { formatFloor, formatRupees } from "@/libs/format";
 import { ChevronRight } from "lucide-react-native";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+
+const colors = Colors.light;
+
+type TenantCardProps = {
+  name: string;
+  /** 0-indexed, as stored: 0 renders as "Ground Floor". */
+  floorNumber: number;
+  monthlyRent: number | string;
+  totalPending: number | string;
+  onPress?: () => void;
+};
 
 /** A row on a house's tenant list. Fields line up with `v_tenant_list`. */
 export function TenantCard({
@@ -11,14 +22,7 @@ export function TenantCard({
   monthlyRent,
   totalPending,
   onPress,
-}: {
-  name: string;
-  /** 0-indexed, as stored: 0 renders as "Ground Floor". */
-  floorNumber: number;
-  monthlyRent: number | string;
-  totalPending: number | string;
-  onPress?: () => void;
-}) {
+}: TenantCardProps) {
   return (
     <Pressable
       accessibilityRole="button"
@@ -31,7 +35,7 @@ export function TenantCard({
           <Text style={styles.name}>{name}</Text>
           <Text style={styles.floor}>{formatFloor(floorNumber)}</Text>
         </View>
-        <ChevronRight size={20} color={colors.muted} />
+        <ChevronRight size={20} color={colors.textMuted} />
       </View>
 
       <View style={styles.infoRow}>
@@ -39,7 +43,7 @@ export function TenantCard({
         <InfoTile
           label="Total Pending"
           value={formatRupees(totalPending)}
-          valueColor={colors.red}
+          valueColor={colors.error}
         />
       </View>
     </Pressable>
@@ -50,13 +54,13 @@ const styles = StyleSheet.create({
   card: {
     gap: 12,
     padding: 16,
-    backgroundColor: colors.card,
-    borderRadius: radii.card,
+    backgroundColor: colors.cardBackground,
+    borderRadius: 18,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: colors.borderColor,
   },
   pressed: {
-    opacity: pressedOpacity,
+    opacity: 0.8,
   },
   top: {
     flexDirection: "row",
@@ -75,7 +79,7 @@ const styles = StyleSheet.create({
   floor: {
     fontSize: 13,
     fontWeight: "500",
-    color: colors.muted,
+    color: colors.textMuted,
   },
   infoRow: {
     flexDirection: "row",
