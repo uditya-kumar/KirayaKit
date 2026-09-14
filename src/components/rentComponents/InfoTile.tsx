@@ -1,8 +1,7 @@
+import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
 import type { LucideIcon } from "lucide-react-native";
 import { StyleSheet, Text, View } from "react-native";
-
-const colors = Colors.light;
 
 type InfoTileProps = {
   label: string;
@@ -25,26 +24,31 @@ type InfoTileProps = {
 export function InfoTile({
   label,
   value,
-  valueColor = colors.text,
+  valueColor,
   icon: Icon,
 }: InfoTileProps) {
+  const colorScheme = useColorScheme() ?? "light";
+  const colors = Colors[colorScheme];
+
   return (
-    <View style={styles.tile}>
+    <View style={[styles.tile, { backgroundColor: colors.fillBackground }]}>
       {Icon ? <Icon size={16} color={colors.textMuted} /> : null}
       <View style={styles.textWrap}>
-        <Text style={styles.label}>{label}</Text>
-        <Text style={[styles.value, { color: valueColor }]}>{value}</Text>
+        <Text style={[styles.label, { color: colors.textMuted }]}>{label}</Text>
+        <Text style={[styles.value, { color: valueColor ?? colors.text }]}>
+          {value}
+        </Text>
       </View>
     </View>
   );
 }
 
+// Layout only — the colours are applied inline from the active scheme.
 const styles = StyleSheet.create({
   tile: {
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: colors.fillBackground,
     borderRadius: 14,
     paddingVertical: 10,
     paddingHorizontal: 12,
@@ -56,7 +60,6 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 11,
     fontWeight: "500",
-    color: colors.textMuted,
   },
   value: {
     fontSize: 15,

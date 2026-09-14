@@ -48,9 +48,11 @@ export default function HomeLayout() {
       {/* "New House" is the mock's bar title; the button on the form says
           "Add House". */}
       <Stack.Screen name="createHouse" options={{ title: "New House" }} />
-      {/* TODO: the title should be the house name once the detail screen (design
-          node hf8HL) loads it; the param is a uuid, so it can't be the title. */}
-      <Stack.Screen name="[houseId]/index" options={{ title: "House" }} />
+      {/* The Tenants screen sets its own title to the house name — it is the
+          only place that knows it, since the param is a uuid.
+          TODO: the mock's ⋮ in this bar opens the house menu (edit / delete);
+          nothing is wired to it yet, so no button is drawn. */}
+      <Stack.Screen name="[houseId]/index" />
     </Stack>
   );
 }
