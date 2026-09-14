@@ -22,6 +22,9 @@ import {
   View,
 } from "react-native";
 
+/** How many months the mock shows before "View all" takes over (design node MADxZ). */
+const RECENT_MONTHS = 2;
+
 /**
  * The month the app is running in, as "2026-09", to match against a bill's
  * `bill_month` ("2026-09-01").
@@ -109,6 +112,10 @@ export default function TenantDetailScreen() {
     (bill) => bill.bill_month.slice(0, 7) === thisMonth,
   );
 
+  // The whole ledger is already in hand — this screen simply shows the top of it
+  // and hands the rest to Payment History.
+  const recent = bills.slice(0, RECENT_MONTHS);
+
   function onConfirmDelete() {
     setDeleteError(null);
     deleteTenant(tenantId, {
@@ -175,13 +182,28 @@ export default function TenantDetailScreen() {
         paid={currentBill?.amount_paid ?? 0}
       />
 
-      {/* TODO: the mock's "View all" link belongs to Payment History (dam1y),
-          which is not built. Until it is, every month is listed here instead of
-          the mock's two — a tenant's ledger is a dozen rows a year. */}
       <View style={styles.historyHead}>
         <Text style={[styles.historyTitle, { color: colors.text }]}>
           Payment history
         </Text>
+        {/* Only worth offering when there is something the two cards below do not
+            already show — otherwise it leads to the same list. */}
+        {bills.length > RECENT_MONTHS ? (
+          <Button
+            text="View all"
+            textColor={colors.tint}
+            backgroundColor="transparent"
+            accessibilityLabel="View all payments"
+            onPress={() =>
+              router.push({
+                pathname: "/houses/[houseId]/tenants/[tenantId]/paymentHistory",
+                params: { houseId, tenantId },
+              })
+            }
+            paddingVertical={0}
+            paddingHorizontal={0}
+          />
+        ) : null}
       </View>
 
       {bills.length === 0 ? (
@@ -189,7 +211,7 @@ export default function TenantDetailScreen() {
           No bill has been raised for {tenant.name} yet.
         </Text>
       ) : (
-        bills.map((bill) => (
+        recent.map((bill) => (
           // TODO: tapping a month should open Bill Details (ioyXF); with nothing
           // to push the card deliberately takes no tap.
           <PaymentCard
@@ -276,6 +298,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    paddingTop: 16,
+    paddingBottom: 5,
   },
   historyTitle: {
     fontSize: 18,
@@ -288,6 +312,6 @@ const styles = StyleSheet.create({
   // than the 12 the rest of the column uses.
   delete: {
     alignSelf: "stretch",
-    marginTop: 13,
+    marginTop: 20,
   },
 });

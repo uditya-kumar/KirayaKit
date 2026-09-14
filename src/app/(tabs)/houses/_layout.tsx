@@ -62,6 +62,10 @@ export default function HomeLayout() {
         name="[houseId]/tenants/[tenantId]/index"
         options={{ title: "Tenant Detail" }}
       />
+      <Stack.Screen
+        name="[houseId]/tenants/[tenantId]/paymentHistory"
+        options={{ title: "Payment History" }}
+      />
     </Stack>
   );
 }
