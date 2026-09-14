@@ -1,7 +1,4 @@
-import {
-  LinkButton,
-  PrimaryButton,
-} from "@/components/rentComponents/AuthForm";
+import Button from "@/components/rentComponents/Button";
 import CustomTextInput from "@/components/rentComponents/CustomTextInput";
 import { Text, View } from "@/components/Themed";
 import { useColorScheme } from "@/components/useColorScheme";
@@ -75,15 +72,22 @@ export default function SignInScreen() {
         onSubmitEditing={onSignIn}
         returnKeyType="go"
       />
-      <PrimaryButton
-        label="Sign in"
+      <Button
+        text="Sign in"
+        textColor={theme.buttonText}
+        backgroundColor={theme.buttonBackground}
         onPress={onSignIn}
-        busy={busy}
+        loading={busy}
         disabled={!email || !password}
+        paddingVertical={14}
+        style={styles.primary}
       />
-      <LinkButton
-        label="No account? Sign up"
+      <Button
+        text="No account? Sign up"
+        textColor={theme.tint}
+        backgroundColor="transparent"
         onPress={() => router.push("/sign-up")}
+        paddingVertical={8}
       />
     </View>
   );
@@ -107,5 +111,10 @@ const styles = StyleSheet.create({
   },
   error: {
     fontSize: 14,
+  },
+  // Layout only; Button draws the rest.
+  primary: {
+    marginTop: 4,
+    minHeight: 48,
   },
 });

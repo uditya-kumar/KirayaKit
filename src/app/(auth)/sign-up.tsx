@@ -1,7 +1,4 @@
-import {
-  LinkButton,
-  PrimaryButton,
-} from "@/components/rentComponents/AuthForm";
+import Button from "@/components/rentComponents/Button";
 import CustomTextInput from "@/components/rentComponents/CustomTextInput";
 import { Text, View } from "@/components/Themed";
 import { useColorScheme } from "@/components/useColorScheme";
@@ -87,20 +84,27 @@ export default function SignUpScreen() {
           onSubmitEditing={onVerify}
           returnKeyType="go"
         />
-        <PrimaryButton
-          label="Verify"
+        <Button
+          text="Verify"
+          textColor={theme.buttonText}
+          backgroundColor={theme.buttonBackground}
           onPress={onVerify}
-          busy={busy}
+          loading={busy}
           disabled={!code}
+          paddingVertical={14}
+          style={styles.primary}
         />
-        <LinkButton
-          label="Use a different email"
+        <Button
+          text="Use a different email"
+          textColor={theme.tint}
+          backgroundColor="transparent"
           onPress={async () => {
             await signUp.reset();
             setAwaitingCode(false);
             setCode("");
             setError(null);
           }}
+          paddingVertical={8}
         />
       </View>
     );
@@ -133,15 +137,22 @@ export default function SignUpScreen() {
         onSubmitEditing={onSignUp}
         returnKeyType="go"
       />
-      <PrimaryButton
-        label="Sign up"
+      <Button
+        text="Sign up"
+        textColor={theme.buttonText}
+        backgroundColor={theme.buttonBackground}
         onPress={onSignUp}
-        busy={busy}
+        loading={busy}
         disabled={!email || !password}
+        paddingVertical={14}
+        style={styles.primary}
       />
-      <LinkButton
-        label="Already have an account? Sign in"
+      <Button
+        text="Already have an account? Sign in"
+        textColor={theme.tint}
+        backgroundColor="transparent"
         onPress={() => router.replace("/sign-in")}
+        paddingVertical={8}
       />
     </View>
   );
@@ -165,5 +176,10 @@ const styles = StyleSheet.create({
   },
   error: {
     fontSize: 14,
+  },
+  // Layout only; Button draws the rest.
+  primary: {
+    marginTop: 4,
+    minHeight: 48,
   },
 });
