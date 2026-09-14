@@ -136,13 +136,13 @@ export type BillReceipt = {
   electricity_amount: number;
   previous_balance: number;
   total_billed: number;
-  amount_paid: number;
-  balance_due: number;
   charges: BillCharge[];
 };
 
+// No amount_paid or balance_due: a receipt says what was billed, and the payment
+// side of the ledger is the tenant detail screen's business.
 const BILL_RECEIPT_COLUMNS =
-  "id, bill_month, tenant_name, floor_number, house_name, rent_amount, units_consumed, electricity_rate, electricity_amount, previous_balance, total_billed, amount_paid, balance_due, bill_charges(label, amount, sort_order)";
+  "id, bill_month, tenant_name, floor_number, house_name, rent_amount, units_consumed, electricity_rate, electricity_amount, previous_balance, total_billed, bill_charges(label, amount, sort_order)";
 
 /** The receipt's own fields — the row above without the charges hanging off it. */
 type BillFields = Omit<BillReceipt, "charges">;
@@ -173,9 +173,7 @@ function isBillReceipt(
     row.electricity_rate !== null &&
     row.electricity_amount !== null &&
     row.previous_balance !== null &&
-    row.total_billed !== null &&
-    row.amount_paid !== null &&
-    row.balance_due !== null
+    row.total_billed !== null
   );
 }
 

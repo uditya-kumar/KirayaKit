@@ -29,8 +29,9 @@ import {
  * The receipt as WhatsApp will carry it: the same lines the card draws, in text.
  *
  * Built from the lines rather than from the bill again, so the message can never
- * list something different from what is on screen. The asterisks are WhatsApp's
- * own bold markers — plain text everywhere else, which is all a chat can hold.
+ * list something different from what is on screen — which is also why it stops at
+ * the total: what has been paid and what is still owed are the owner's ledger, not
+ * part of the receipt. The asterisks are WhatsApp's own bold markers.
  */
 function receiptMessage(bill: BillReceipt, lines: ReceiptLine[]): string {
   return [
@@ -43,14 +44,6 @@ function receiptMessage(bill: BillReceipt, lines: ReceiptLine[]): string {
     ),
     "",
     `*Total billed: ${formatRupees(bill.total_billed)}*`,
-    // Only worth a line when there is something to say: a fully unpaid bill has
-    // its whole total in the balance, and a settled one has nothing left.
-    ...(bill.amount_paid > 0
-      ? [`Paid: ${formatRupees(bill.amount_paid)}`]
-      : []),
-    ...(bill.balance_due > 0
-      ? [`Balance due: ${formatRupees(bill.balance_due)}`]
-      : []),
   ].join("\n");
 }
 
