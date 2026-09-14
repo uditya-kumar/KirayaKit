@@ -77,6 +77,16 @@ export default function HomeScreen() {
     </View>
   );
 
+  const listHeader = (
+    <View style={styles.sectionHeader}>
+      <Text style={styles.sectionTitle}>
+        {isPending
+          ? "Properties"
+          : `${visible.length} ${visible.length === 1 ? "Property" : "Properties"}`}
+      </Text>
+    </View>
+  );
+
   return (
     <View style={styles.screen}>
       {/* The search field lives outside the list so it stays put while the
@@ -100,15 +110,7 @@ export default function HomeScreen() {
         keyboardShouldPersistTaps="handled"
         ItemSeparatorComponent={Separator}
         ListHeaderComponentStyle={styles.listHeaderSpacing}
-        ListHeaderComponent={
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>
-              {isPending
-                ? "Properties"
-                : `${visible.length} ${visible.length === 1 ? "Property" : "Properties"}`}
-            </Text>
-          </View>
-        }
+        ListHeaderComponent={listHeader}
         ListEmptyComponent={listEmpty}
         refreshControl={
           <RefreshControl
