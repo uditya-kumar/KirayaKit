@@ -248,7 +248,7 @@ function TenantForm({ houseId, tenant }: TenantFormProps) {
       />
 
       <CustomTextInput
-        labelText="Mobile number"
+        labelText="Mobile Number"
         value={mobileNumber}
         onChangeText={setMobileNumber}
         placeholder="98765 43210"
@@ -258,7 +258,7 @@ function TenantForm({ houseId, tenant }: TenantFormProps) {
       />
 
       <CustomTextInput
-        labelText="Aadhaar number"
+        labelText="Aadhaar Card"
         value={aadhaarNumber}
         onChangeText={setAadhaarNumber}
         placeholder="XXXX XXXX XXXX"
@@ -284,7 +284,7 @@ function TenantForm({ houseId, tenant }: TenantFormProps) {
 
       <View style={styles.row}>
         <CustomTextInput
-          labelText="Assign floor"
+          labelText="Assigned Floor"
           value={floor}
           onChangeText={setFloor}
           placeholder="0 for ground"
