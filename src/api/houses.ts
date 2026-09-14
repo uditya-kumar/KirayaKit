@@ -1,5 +1,6 @@
+import { ensureProfile } from "@/api/profile";
 import { neon } from "@/libs/neon";
-import type { Tables } from "@/types/database";
+import type { Tables, TablesInsert } from "@/types/database";
 
 /**
  * A house as the list needs it. The generator types every view column as
@@ -31,4 +32,40 @@ export async function fetchHouses(): Promise<House[]> {
   return data.filter(
     (row): row is House => row.id !== null && row.name !== null,
   );
+}
+
+/**
+ * What the Add House form collects. `owner_id` is left out on purpose — the
+ * column defaults to `auth.user_id()`, so the token decides the owner and the
+ * client cannot claim someone else's.
+ */
+export type NewHouse = Pick<
+  TablesInsert<"houses">,
+  "name" | "address" | "number_of_floors" | "upi_id" | "gpay_number"
+>;
+
+/** Postgres foreign-key violation: the owner has no `users` row yet. */
+const FOREIGN_KEY_VIOLATION = "23503";
+
+/**
+ * Creates a house and returns its id.
+ *
+ * The insert is tried first and `ensureProfile()` only runs if it fails on the
+ * owner FK, which is the very first write of a new account. Calling it up front
+ * every time would add a round trip to every create for a row that exists after
+ * the first one.
+ */
+export async function createHouse(house: NewHouse): Promise<string> {
+  const insert = () => neon.from("houses").insert(house).select("id").single();
+
+  let result = await insert();
+
+  if (result.error?.code === FOREIGN_KEY_VIOLATION) {
+    await ensureProfile();
+    result = await insert();
+  }
+
+  if (result.error) throw result.error;
+
+  return result.data.id;
 }

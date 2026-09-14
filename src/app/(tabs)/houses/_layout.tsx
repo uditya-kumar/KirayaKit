@@ -45,7 +45,9 @@ export default function HomeLayout() {
           headerRight,
         }}
       />
-      <Stack.Screen name="createHouse" options={{ title: "Add House" }} />
+      {/* "New House" is the mock's bar title; the button on the form says
+          "Add House". */}
+      <Stack.Screen name="createHouse" options={{ title: "New House" }} />
       {/* TODO: the title should be the house name once the detail screen (design
           node hf8HL) loads it; the param is a uuid, so it can't be the title. */}
       <Stack.Screen name="[houseId]/index" options={{ title: "House" }} />
