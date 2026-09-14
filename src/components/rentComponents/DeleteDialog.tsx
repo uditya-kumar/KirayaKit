@@ -15,9 +15,14 @@ import {
 
 const CONFIRM_WORD = "delete";
 
-type DeleteHouseDialogProps = {
+type DeleteDialogProps = {
   visible: boolean;
-  houseName: string;
+  /** "Delete this house?" */
+  title: string;
+  /** What goes with it, and that it cannot be undone. */
+  message: string;
+  /** The red button's label: "Delete House", "Delete Tenant". */
+  confirmText: string;
   onDelete: () => void;
   onCancel: () => void;
   /** The delete is in flight: the button spins and both actions stop taking taps. */
@@ -27,22 +32,25 @@ type DeleteHouseDialogProps = {
 };
 
 /**
- * Confirmation for deleting a house. Deleting one takes its tenants, bills and
- * charges with it, which is why the mock makes you type the word out.
+ * Confirmation for deleting something that takes other rows with it. Design node
+ * KGzqj draws it for a house; a tenant carries their whole billing history, so the
+ * same typed-word friction is right there too.
  *
  * The dialog presents itself: a caller passes `visible` and owns the delete, not
  * the scrim or the keyboard. The scrim takes no taps on purpose — a destructive
  * confirmation should only go away through Cancel, not a stray touch beside the
  * card.
  */
-export function DeleteHouseDialog({
+export function DeleteDialog({
   visible,
-  houseName,
+  title,
+  message,
+  confirmText,
   onDelete,
   onCancel,
   deleting = false,
   errorMessage,
-}: DeleteHouseDialogProps) {
+}: DeleteDialogProps) {
   const colorScheme = useColorScheme() ?? "light";
   const colors = Colors[colorScheme];
 
@@ -60,7 +68,9 @@ export function DeleteHouseDialog({
         {/* Its own component so that the word typed into a cancelled dialog
             leaves with it — a closed Modal renders nothing, so the state goes. */}
         <ConfirmCard
-          houseName={houseName}
+          title={title}
+          message={message}
+          confirmText={confirmText}
           onDelete={onDelete}
           onCancel={onCancel}
           deleting={deleting}
@@ -71,7 +81,7 @@ export function DeleteHouseDialog({
   );
 }
 
-type ConfirmCardProps = Omit<DeleteHouseDialogProps, "visible">;
+type ConfirmCardProps = Omit<DeleteDialogProps, "visible">;
 
 /**
  * The card itself. The typed word is held here — a half-finished confirmation is
@@ -79,7 +89,9 @@ type ConfirmCardProps = Omit<DeleteHouseDialogProps, "visible">;
  * case and surrounding space.
  */
 function ConfirmCard({
-  houseName,
+  title,
+  message,
+  confirmText,
   onDelete,
   onCancel,
   deleting = false,
@@ -96,12 +108,9 @@ function ConfirmCard({
   return (
     <View style={[styles.dialog, { backgroundColor: colors.cardBackground }]}>
       <View style={styles.textWrap}>
-        <Text style={[styles.title, { color: colors.text }]}>
-          Delete this house?
-        </Text>
+        <Text style={[styles.title, { color: colors.text }]}>{title}</Text>
         <Text style={[styles.message, { color: colors.textMuted }]}>
-          This will permanently remove {houseName} and all its tenants. This
-          action cannot be undone.
+          {message}
         </Text>
       </View>
 
@@ -133,7 +142,7 @@ function ConfirmCard({
       </View>
 
       <Button
-        text="Delete House"
+        text={confirmText}
         textColor={colors.buttonText}
         backgroundColor={colors.error}
         icon={<Trash2 size={18} color={colors.buttonText} />}

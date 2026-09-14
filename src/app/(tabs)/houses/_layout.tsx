@@ -52,10 +52,15 @@ export default function HomeLayout() {
           headerRight is the ⋮ actions button, and only that screen knows which
           house either belongs to. */}
       <Stack.Screen name="[houseId]/index" />
-      {/* "Create Tenant" is both the mock's bar title and its button label. */}
+      {/* One form for both jobs, so it sets its own title: "Create Tenant" when
+          someone is moving in, "Edit Tenant" when a tenantId param says whose
+          details are being corrected. */}
+      <Stack.Screen name="[houseId]/tenantForm" />
+      {/* The tenant's own name is already the first line of the screen, so the
+          bar keeps the mock's fixed title. */}
       <Stack.Screen
-        name="[houseId]/createTenant"
-        options={{ title: "Create Tenant" }}
+        name="[houseId]/tenants/[tenantId]/index"
+        options={{ title: "Tenant Detail" }}
       />
     </Stack>
   );

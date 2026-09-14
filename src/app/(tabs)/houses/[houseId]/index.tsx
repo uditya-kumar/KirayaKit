@@ -1,7 +1,7 @@
 import type { Tenant } from "@/api/tenants";
 import Button from "@/components/rentComponents/Button";
 import CustomTextInput from "@/components/rentComponents/CustomTextInput";
-import { DeleteHouseDialog } from "@/components/rentComponents/DeleteHouseDialog";
+import { DeleteDialog } from "@/components/rentComponents/DeleteDialog";
 import {
   DropdownMenu,
   type MenuItem,
@@ -83,11 +83,12 @@ export default function TenantsScreen() {
       key: "create-tenant",
       label: "Create Tenant",
       icon: UserPlus,
-      // The object form rather than a built string, so typed routes check the
-      // param name against the route.
+      // Create Tenant and Edit Tenant are one screen (design nodes sB7vt and
+      // lXpcT); with no tenantId param the form is a create. The object form
+      // rather than a built string, so typed routes check the param name.
       onPress: () =>
         router.push({
-          pathname: "/houses/[houseId]/createTenant",
+          pathname: "/houses/[houseId]/tenantForm",
           params: { houseId },
         }),
     },
@@ -128,15 +129,18 @@ export default function TenantsScreen() {
     </DropdownMenu>
   );
 
-  // TODO: the card's chevron should open the tenant profile once
-  // houses/[houseId]/tenants/[tenantId] exists — the folder is still empty, so
-  // there is nothing to push and the row deliberately has no onPress.
   const renderItem: ListRenderItem<Tenant> = ({ item }) => (
     <TenantCard
       name={item.name}
       floorNumber={item.floor_number}
       monthlyRent={item.monthly_rent}
       totalPending={item.total_pending}
+      onPress={() =>
+        router.push({
+          pathname: "/houses/[houseId]/tenants/[tenantId]",
+          params: { houseId, tenantId: item.id },
+        })
+      }
     />
   );
 
@@ -233,9 +237,11 @@ export default function TenantsScreen() {
         }
       />
 
-      <DeleteHouseDialog
+      <DeleteDialog
         visible={confirmingDelete}
-        houseName={house?.name ?? "this house"}
+        title="Delete this house?"
+        message={`This will permanently remove ${house?.name ?? "this house"} and all its tenants. This action cannot be undone.`}
+        confirmText="Delete House"
         onDelete={onConfirmDelete}
         onCancel={() => setConfirmingDelete(false)}
         deleting={isDeleting}

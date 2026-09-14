@@ -1,16 +1,17 @@
 import Button from "@/components/rentComponents/Button";
 import { InfoTile } from "@/components/rentComponents/InfoTile";
+import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
 import { formatRupees } from "@/utils/format";
 import { StyleSheet, Text, View } from "react-native";
-
-const colors = Colors.light;
 
 type BillBreakdownProps = {
   title?: string;
   billed: number | string;
   paid: number | string;
+  /** Left out while the Edit Bill screen is unbuilt, which dims the button. */
   onEdit?: () => void;
+  /** Left out while the Bill Details screen is unbuilt, which dims the button. */
   onViewDetails?: () => void;
 };
 
@@ -19,7 +20,8 @@ type BillBreakdownProps = {
  * that hang off it.
  *
  * The panel itself has no gap: each row carries its own vertical padding, which
- * is how the mock gets the tighter spacing under the title.
+ * is how the mock gets the tighter spacing under the title. A button with no
+ * handler is drawn dimmed rather than taking a tap and doing nothing.
  */
 export function BillBreakdown({
   title = "Current Month",
@@ -28,10 +30,21 @@ export function BillBreakdown({
   onEdit,
   onViewDetails,
 }: BillBreakdownProps) {
+  const colorScheme = useColorScheme() ?? "light";
+  const colors = Colors[colorScheme];
+
   return (
-    <View style={styles.panel}>
+    <View
+      style={[
+        styles.panel,
+        {
+          backgroundColor: colors.cardBackground,
+          borderColor: colors.borderColor,
+        },
+      ]}
+    >
       <View style={styles.head}>
-        <Text style={styles.title}>{title}</Text>
+        <Text style={[styles.title, { color: colors.text }]}>{title}</Text>
       </View>
 
       <View style={styles.amountRow}>
@@ -50,6 +63,7 @@ export function BillBreakdown({
           backgroundColor="transparent"
           borderColor={colors.borderColor}
           onPress={onEdit}
+          disabled={!onEdit}
           paddingVertical={14}
           style={styles.action}
         />
@@ -59,6 +73,7 @@ export function BillBreakdown({
           backgroundColor="transparent"
           borderColor={colors.borderColor}
           onPress={onViewDetails}
+          disabled={!onViewDetails}
           paddingVertical={14}
           style={styles.action}
         />
@@ -67,13 +82,12 @@ export function BillBreakdown({
   );
 }
 
+// Layout only — the colours are applied inline from the active scheme.
 const styles = StyleSheet.create({
   panel: {
     padding: 16,
-    backgroundColor: colors.cardBackground,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: colors.borderColor,
   },
   head: {
     flexDirection: "row",
@@ -84,7 +98,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 17,
     fontWeight: "700",
-    color: colors.text,
   },
   amountRow: {
     flexDirection: "row",

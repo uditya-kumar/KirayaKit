@@ -1,10 +1,9 @@
 import { InfoTile } from "@/components/rentComponents/InfoTile";
+import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
 import { formatBillMonth, formatRupees } from "@/utils/format";
 import { ChevronRight } from "lucide-react-native";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-
-const colors = Colors.light;
 
 type PaymentCardProps = {
   /** `bills.bill_month` ("2026-02-01"), or a ready-made label. */
@@ -21,6 +20,8 @@ export function PaymentCard({
   paid,
   onPress,
 }: PaymentCardProps) {
+  const colorScheme = useColorScheme() ?? "light";
+  const colors = Colors[colorScheme];
   const label = formatBillMonth(month);
 
   return (
@@ -28,10 +29,18 @@ export function PaymentCard({
       accessibilityRole="button"
       accessibilityLabel={label}
       onPress={onPress}
-      style={({ pressed }) => [styles.card, pressed && styles.pressed]}
+      disabled={!onPress}
+      style={({ pressed }) => [
+        styles.card,
+        {
+          backgroundColor: colors.cardBackground,
+          borderColor: colors.borderColor,
+        },
+        pressed && styles.pressed,
+      ]}
     >
       <View style={styles.monthWrap}>
-        <Text style={styles.month}>{label}</Text>
+        <Text style={[styles.month, { color: colors.text }]}>{label}</Text>
         <ChevronRight size={20} color={colors.textMuted} />
       </View>
 
@@ -47,14 +56,13 @@ export function PaymentCard({
   );
 }
 
+// Layout only — the colours are applied inline from the active scheme.
 const styles = StyleSheet.create({
   card: {
     gap: 9,
     padding: 16,
-    backgroundColor: colors.cardBackground,
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: colors.borderColor,
   },
   pressed: {
     opacity: 0.8,
@@ -67,7 +75,6 @@ const styles = StyleSheet.create({
   month: {
     fontSize: 16,
     fontWeight: "600",
-    color: colors.text,
   },
   infoRow: {
     flexDirection: "row",
