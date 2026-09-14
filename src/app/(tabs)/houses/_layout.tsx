@@ -69,6 +69,11 @@ export default function HomeLayout() {
       {/* One form for both jobs, so it sets its own title: "Create Bill" for a
           month that has never been billed, "Edit Bill" for one that has. */}
       <Stack.Screen name="[houseId]/tenants/[tenantId]/billForm" />
+      {/* The receipt names its own month, so the bar keeps the mock's title. */}
+      <Stack.Screen
+        name="[houseId]/tenants/[tenantId]/bills/[billId]"
+        options={{ title: "Bill Details" }}
+      />
     </Stack>
   );
 }

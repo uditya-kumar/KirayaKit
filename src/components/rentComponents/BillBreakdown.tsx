@@ -9,9 +9,8 @@ type BillBreakdownProps = {
   title?: string;
   billed: number | string;
   paid: number | string;
-  /** Left out while the Edit Bill screen is unbuilt, which dims the button. */
   onEdit?: () => void;
-  /** Left out while the Bill Details screen is unbuilt, which dims the button. */
+  /** Left out when the month has not been billed, so there is nothing to open. */
   onViewDetails?: () => void;
 };
 

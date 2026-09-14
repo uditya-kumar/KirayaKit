@@ -5,7 +5,7 @@ import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
 import { useBills } from "@/hooks/useBills";
 import { FlashList, type ListRenderItem } from "@shopify/flash-list";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import {
   ActivityIndicator,
   RefreshControl,
@@ -31,7 +31,11 @@ export default function PaymentHistoryScreen() {
   // inline; StyleSheet below keeps only the layout, which never changes.
   const colorScheme = useColorScheme() ?? "light";
   const colors = Colors[colorScheme];
-  const { tenantId } = useLocalSearchParams<{ tenantId: string }>();
+  const router = useRouter();
+  const { houseId, tenantId } = useLocalSearchParams<{
+    houseId: string;
+    tenantId: string;
+  }>();
   const {
     data: bills,
     error,
@@ -40,13 +44,17 @@ export default function PaymentHistoryScreen() {
     refetch,
   } = useBills(tenantId);
 
-  // TODO: tapping a month should open Bill Details (design node ioyXF), which is
-  // not built yet; with nothing to push the card deliberately takes no tap.
   const renderItem: ListRenderItem<Bill> = ({ item }) => (
     <PaymentCard
       month={item.bill_month}
       billed={item.total_billed}
       paid={item.amount_paid}
+      onPress={() =>
+        router.push({
+          pathname: "/houses/[houseId]/tenants/[tenantId]/bills/[billId]",
+          params: { houseId, tenantId, billId: item.id },
+        })
+      }
     />
   );
 

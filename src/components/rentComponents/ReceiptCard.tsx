@@ -1,9 +1,8 @@
+import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
 import { formatAmount, formatBillMonth, formatRupees } from "@/utils/format";
 import { CalendarDays } from "lucide-react-native";
 import { StyleSheet, Text, View } from "react-native";
-
-const colors = Colors.light;
 
 export type ReceiptLine = {
   label: string;
@@ -34,46 +33,78 @@ export function ReceiptCard({
   lines,
   total,
 }: ReceiptCardProps) {
+  const colorScheme = useColorScheme() ?? "light";
+  const colors = Colors[colorScheme];
+
+  const rowLabelStyle = [styles.rowLabel, { color: colors.text }];
+  const rowValueStyle = [styles.rowValue, { color: colors.text }];
+  const rowSubStyle = [styles.rowSub, { color: colors.textMuted }];
+
   return (
-    <View style={styles.card}>
-      <View style={styles.header}>
-        <Text style={styles.receiptLabel}>RENT RECEIPT</Text>
-        <Text style={styles.tenant}>{tenantName}</Text>
-        {address ? <Text style={styles.address}>{address}</Text> : null}
-        <View style={styles.monthPill}>
-          <CalendarDays size={14} color={colors.text} />
-          <Text style={styles.monthText}>{formatBillMonth(month)}</Text>
+    <View style={[styles.card, { backgroundColor: colors.cardBackground }]}>
+      <View
+        style={[styles.header, { backgroundColor: colors.receiptBackground }]}
+      >
+        <Text style={[styles.receiptLabel, { color: colors.textMuted }]}>
+          RENT RECEIPT
+        </Text>
+        <Text style={[styles.tenant, { color: colors.text }]}>
+          {tenantName}
+        </Text>
+        {address ? (
+          <Text style={[styles.address, { color: colors.textMuted }]}>
+            {address}
+          </Text>
+        ) : null}
+        <View
+          style={[
+            styles.monthPill,
+            { backgroundColor: colors.receiptMonthBackground },
+          ]}
+        >
+          <CalendarDays size={14} color={colors.receiptMonthIcon} />
+          <Text style={[styles.monthText, { color: colors.text }]}>
+            {formatBillMonth(month)}
+          </Text>
         </View>
       </View>
 
       <View style={styles.items}>
-        {lines.map((line) => (
-          <View key={line.label} style={styles.row}>
+        {/* Keyed by position: two extra charges can carry the same label, since
+            nothing stops an owner typing "Water" twice on the bill form. */}
+        {lines.map((line, index) => (
+          <View key={index} style={styles.row}>
             <View style={styles.rowLeft}>
-              <Text style={styles.rowLabel}>{line.label}</Text>
-              {line.sub ? <Text style={styles.rowSub}>{line.sub}</Text> : null}
+              <Text style={rowLabelStyle}>{line.label}</Text>
+              {line.sub ? <Text style={rowSubStyle}>{line.sub}</Text> : null}
             </View>
-            <Text style={styles.rowValue}>{formatRupees(line.amount)}</Text>
+            <Text style={rowValueStyle}>{formatRupees(line.amount)}</Text>
           </View>
         ))}
       </View>
 
-      <View style={styles.divider} />
+      <View style={[styles.divider, { backgroundColor: colors.divider }]} />
 
       <View style={styles.totalRow}>
-        <Text style={styles.totalLabel}>Total billed</Text>
+        <Text style={[styles.totalLabel, { color: colors.textMuted }]}>
+          Total billed
+        </Text>
         <View style={styles.totalValue}>
-          <Text style={styles.totalRupee}>₹</Text>
-          <Text style={styles.totalAmount}>{formatAmount(total)}</Text>
+          <Text style={[styles.totalRupee, { color: colors.textMuted }]}>
+            ₹
+          </Text>
+          <Text style={[styles.totalAmount, { color: colors.text }]}>
+            {formatAmount(total)}
+          </Text>
         </View>
       </View>
     </View>
   );
 }
 
+// Layout only — the colours are applied inline from the active scheme.
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: colors.cardBackground,
     borderRadius: 20,
     // Clips the mint header to the card's top corners.
     overflow: "hidden",
@@ -85,7 +116,6 @@ const styles = StyleSheet.create({
     paddingTop: 22,
     paddingHorizontal: 22,
     paddingBottom: 18,
-    backgroundColor: colors.receiptBackground,
     // The export rounds all four corners of the header; only the top two are
     // visible once it is clipped to the card, and the bottom two would leave
     // white notches against the body.
@@ -96,18 +126,15 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: "700",
     letterSpacing: 2,
-    color: colors.textMuted,
   },
   tenant: {
     fontSize: 22,
     fontWeight: "700",
     letterSpacing: -0.5,
-    color: colors.text,
   },
   address: {
     fontSize: 13,
     fontWeight: "500",
-    color: colors.textMuted,
   },
   monthPill: {
     flexDirection: "row",
@@ -115,13 +142,11 @@ const styles = StyleSheet.create({
     gap: 5,
     paddingVertical: 5,
     paddingHorizontal: 12,
-    backgroundColor: colors.receiptMonthBackground,
     borderRadius: 8,
   },
   monthText: {
     fontSize: 12,
     fontWeight: "600",
-    color: colors.text,
   },
   items: {
     paddingVertical: 8,
@@ -141,22 +166,18 @@ const styles = StyleSheet.create({
   rowLabel: {
     fontSize: 15,
     fontWeight: "400",
-    color: colors.text,
   },
   rowSub: {
     fontSize: 12,
     fontWeight: "400",
-    color: colors.textMuted,
   },
   rowValue: {
     fontSize: 15,
     fontWeight: "500",
     letterSpacing: -0.3,
-    color: colors.text,
   },
   divider: {
     height: 1,
-    backgroundColor: colors.divider,
   },
   totalRow: {
     flexDirection: "row",
@@ -169,7 +190,6 @@ const styles = StyleSheet.create({
   totalLabel: {
     fontSize: 14,
     fontWeight: "500",
-    color: colors.textMuted,
   },
   totalValue: {
     flexDirection: "row",
@@ -180,12 +200,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "600",
     letterSpacing: -0.5,
-    color: colors.textMuted,
   },
   totalAmount: {
     fontSize: 20,
     fontWeight: "700",
     letterSpacing: -0.8,
-    color: colors.text,
   },
 });

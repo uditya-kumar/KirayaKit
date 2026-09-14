@@ -116,6 +116,102 @@ export async function fetchBillDraft(
   };
 }
 
+/**
+ * One month's bill in the detail the receipt prints: every line of it, and who
+ * it is for.
+ *
+ * `charges` is the `bill_charges` rows rather than the view's
+ * `extra_charges_total`, because the receipt lists them one per line — "Water
+ * charge", "IGL (Gas)" — and a single total cannot be taken apart again.
+ */
+export type BillReceipt = {
+  id: string;
+  bill_month: string;
+  tenant_name: string;
+  floor_number: number;
+  house_name: string;
+  rent_amount: number;
+  units_consumed: number;
+  electricity_rate: number;
+  electricity_amount: number;
+  previous_balance: number;
+  total_billed: number;
+  amount_paid: number;
+  balance_due: number;
+  charges: BillCharge[];
+};
+
+const BILL_RECEIPT_COLUMNS =
+  "id, bill_month, tenant_name, floor_number, house_name, rent_amount, units_consumed, electricity_rate, electricity_amount, previous_balance, total_billed, amount_paid, balance_due, bill_charges(label, amount, sort_order)";
+
+/** The receipt's own fields — the row above without the charges hanging off it. */
+type BillFields = Omit<BillReceipt, "charges">;
+
+type BillReceiptRow = Pick<Tables<"v_bill_receipt">, keyof BillFields> & {
+  bill_charges: Pick<
+    Tables<"bill_charges">,
+    "label" | "amount" | "sort_order"
+  >[];
+};
+
+/**
+ * Every column the receipt prints is NOT NULL on `bills`, `tenants` or `houses`
+ * — the generator only types them nullable because they arrive through a view.
+ * The charge columns are NOT NULL on their own table, so they need no check.
+ */
+function isBillReceipt(
+  row: BillReceiptRow,
+): row is BillReceiptRow & BillFields {
+  return (
+    row.id !== null &&
+    row.bill_month !== null &&
+    row.tenant_name !== null &&
+    row.floor_number !== null &&
+    row.house_name !== null &&
+    row.rent_amount !== null &&
+    row.units_consumed !== null &&
+    row.electricity_rate !== null &&
+    row.electricity_amount !== null &&
+    row.previous_balance !== null &&
+    row.total_billed !== null &&
+    row.amount_paid !== null &&
+    row.balance_due !== null
+  );
+}
+
+/**
+ * One bill, with its extra charges, in a single request.
+ *
+ * The charges come down embedded: `bill_charges` points at the bill through a
+ * composite foreign key, which PostgREST can follow even from the view. They are
+ * ordered here rather than in the query because an embedded resource's order is
+ * a client-version-specific parameter, while `sort_order` is on the rows anyway.
+ *
+ * Addressed by bill id alone, as everywhere else — RLS decides whether the row
+ * exists for this owner, and a bill the tenant no longer has is simply absent.
+ */
+export async function fetchBillReceipt(billId: string): Promise<BillReceipt> {
+  const { data, error } = await neon
+    .from("v_bill_receipt")
+    .select(BILL_RECEIPT_COLUMNS)
+    .eq("id", billId)
+    .limit(1);
+
+  if (error) throw error;
+
+  const row = data.filter(isBillReceipt).at(0);
+  if (!row) throw new Error("This bill is no longer here.");
+
+  const { bill_charges, ...fields } = row;
+
+  return {
+    ...fields,
+    charges: [...bill_charges]
+      .sort((left, right) => left.sort_order - right.sort_order)
+      .map(({ label, amount }) => ({ label, amount })),
+  };
+}
+
 /** The fields the bill form actually writes; the rest the database derives. */
 export type BillWrite = {
   tenantId: string;

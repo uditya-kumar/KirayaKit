@@ -41,6 +41,10 @@ export default {
     warningBorder: "#FF950033",
     receiptBackground: "#EFFBF5",
     receiptMonthBackground: "#D8F6E0",
+    receiptMonthIcon: "#10762D",
+    // WhatsApp's own green, on the button that shares a receipt through it. A
+    // brand colour, so it does not shift with the device's light/dark setting.
+    whatsapp: "#17AD48",
   },
   dark: {
     text: "#FFFFFF",
@@ -66,5 +70,7 @@ export default {
     warningBorder: "#FF9F0A33",
     receiptBackground: "#12291D",
     receiptMonthBackground: "#1D3D28",
+    receiptMonthIcon: "#30D158",
+    whatsapp: "#17AD48",
   },
 };

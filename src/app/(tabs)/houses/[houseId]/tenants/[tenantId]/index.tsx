@@ -116,6 +116,13 @@ export default function TenantDetailScreen() {
   // and hands the rest to Payment History.
   const recent = bills.slice(0, RECENT_MONTHS);
 
+  function openBill(billId: string) {
+    router.push({
+      pathname: "/houses/[houseId]/tenants/[tenantId]/bills/[billId]",
+      params: { houseId, tenantId, billId },
+    });
+  }
+
   function onConfirmDelete() {
     setDeleteError(null);
     deleteTenant(tenantId, {
@@ -174,12 +181,13 @@ export default function TenantDetailScreen() {
         </Text>
       </View>
 
-      {/* TODO: Bill Details (design node ioyXF) is not built yet, so that action
-          draws dimmed. */}
       <BillBreakdown
         title="Current Month"
         billed={currentBill?.total_billed ?? 0}
         paid={currentBill?.amount_paid ?? 0}
+        // Nothing to view until the month has been billed, which is what dims the
+        // button while the card is showing zeros.
+        onViewDetails={currentBill ? () => openBill(currentBill.id) : undefined}
         // Edit doubles as "raise it": the same form creates this month's bill when
         // the card is showing zeros because there is nothing to edit yet.
         onEdit={() =>
@@ -220,13 +228,12 @@ export default function TenantDetailScreen() {
         </Text>
       ) : (
         recent.map((bill) => (
-          // TODO: tapping a month should open Bill Details (ioyXF); with nothing
-          // to push the card deliberately takes no tap.
           <PaymentCard
             key={bill.id}
             month={bill.bill_month}
             billed={bill.total_billed}
             paid={bill.amount_paid}
+            onPress={() => openBill(bill.id)}
           />
         ))
       )}
