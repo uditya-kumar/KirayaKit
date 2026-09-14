@@ -1,6 +1,7 @@
+import CustomTextInput from "@/components/rentComponents/CustomTextInput";
 import Colors from "@/constants/Colors";
 import { Minus, Tag } from "lucide-react-native";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 const colors = Colors.light;
 
@@ -31,30 +32,24 @@ export function ChargeRow({
 }: ChargeRowProps) {
   return (
     <View style={styles.row}>
-      <View style={styles.labelBox}>
-        <Tag size={16} color={colors.textMuted} />
-        <TextInput
-          accessibilityLabel="Charge name"
-          value={label}
-          onChangeText={onChangeLabel}
-          placeholder={labelPlaceholder}
-          placeholderTextColor={colors.placeholder}
-          style={styles.input}
-        />
-      </View>
+      <CustomTextInput
+        accessibilityLabel="Charge name"
+        value={label}
+        onChangeText={onChangeLabel}
+        placeholder={labelPlaceholder}
+        icon={<Tag size={16} color={colors.textMuted} />}
+        style={styles.labelField}
+      />
 
-      <View style={styles.amountBox}>
-        <Text style={styles.rupee}>₹</Text>
-        <TextInput
-          accessibilityLabel="Charge amount"
-          value={amount}
-          onChangeText={onChangeAmount}
-          placeholder="0"
-          placeholderTextColor={colors.placeholder}
-          keyboardType="numeric"
-          style={styles.input}
-        />
-      </View>
+      <CustomTextInput
+        accessibilityLabel="Charge amount"
+        value={amount}
+        onChangeText={onChangeAmount}
+        placeholder="0"
+        keyboardType="numeric"
+        icon={<Text style={styles.rupee}>₹</Text>}
+        style={styles.amountField}
+      />
 
       <Pressable
         accessibilityRole="button"
@@ -74,37 +69,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 10,
   },
-  labelBox: {
+  labelField: {
     flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 14,
-    backgroundColor: colors.cardBackground,
-    borderRadius: 14,
   },
-  amountBox: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
+  amountField: {
     width: 120,
-    paddingVertical: 12,
-    paddingHorizontal: 14,
-    backgroundColor: colors.cardBackground,
-    borderRadius: 14,
   },
   rupee: {
     fontSize: 15,
     fontWeight: "500",
     color: colors.textMuted,
-  },
-  input: {
-    flex: 1,
-    fontSize: 15,
-    fontWeight: "400",
-    color: colors.text,
-    padding: 0,
   },
   removeBtn: {
     width: 32,

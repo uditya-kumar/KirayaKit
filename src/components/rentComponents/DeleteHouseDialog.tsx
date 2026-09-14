@@ -1,8 +1,9 @@
 import Button from "@/components/rentComponents/Button";
+import CustomTextInput from "@/components/rentComponents/CustomTextInput";
 import Colors from "@/constants/Colors";
 import { Trash2 } from "lucide-react-native";
 import { useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 const colors = Colors.light;
 
@@ -49,18 +50,13 @@ export function DeleteHouseDialog({
           <Text style={styles.hintWord}>{CONFIRM_WORD}</Text>
           <Text style={styles.hintText}>to confirm</Text>
         </View>
-        <View style={styles.inputBox}>
-          <TextInput
-            accessibilityLabel={`Type ${CONFIRM_WORD} to confirm`}
-            value={typed}
-            onChangeText={setTyped}
-            placeholder={CONFIRM_WORD}
-            placeholderTextColor={colors.placeholder}
-            autoCapitalize="none"
-            autoCorrect={false}
-            style={styles.input}
-          />
-        </View>
+        <CustomTextInput
+          accessibilityLabel={`Type ${CONFIRM_WORD} to confirm`}
+          value={typed}
+          onChangeText={setTyped}
+          placeholder={CONFIRM_WORD}
+          autoCapitalize="none"
+        />
       </View>
 
       <Button
@@ -139,18 +135,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "700",
     color: colors.text,
-  },
-  inputBox: {
-    paddingVertical: 13,
-    paddingHorizontal: 14,
-    backgroundColor: colors.fillBackground,
-    borderRadius: 14,
-  },
-  input: {
-    fontSize: 15,
-    fontWeight: "400",
-    color: colors.text,
-    padding: 0,
   },
   // The dialog centres its children; both buttons span it instead.
   action: {

@@ -1,15 +1,19 @@
 import {
-  AuthShell,
-  Field,
   LinkButton,
   PrimaryButton,
 } from "@/components/rentComponents/AuthForm";
+import CustomTextInput from "@/components/rentComponents/CustomTextInput";
+import { Text, View } from "@/components/Themed";
+import { useColorScheme } from "@/components/useColorScheme";
+import Colors from "@/constants/Colors";
 import { clerkErrorMessage } from "@/libs/clerk-errors";
 import { useSignUp } from "@clerk/expo";
 import { router } from "expo-router";
 import { useState } from "react";
+import { StyleSheet } from "react-native";
 
 export default function SignUpScreen() {
+  const theme = Colors[useColorScheme() ?? "light"];
   const { signUp, fetchStatus } = useSignUp();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -65,12 +69,15 @@ export default function SignUpScreen() {
 
   if (awaitingCode) {
     return (
-      <AuthShell
-        title="Check your email"
-        subtitle={`We sent a 6-digit code to ${email.trim()}.`}
-        error={error}
-      >
-        <Field
+      <View style={styles.container}>
+        <Text style={styles.title}>Check your email</Text>
+        <Text style={styles.subtitle}>
+          We sent a 6-digit code to {email.trim()}.
+        </Text>
+        {error ? (
+          <Text style={[styles.error, { color: theme.error }]}>{error}</Text>
+        ) : null}
+        <CustomTextInput
           value={code}
           onChangeText={setCode}
           placeholder="Verification code"
@@ -95,13 +102,18 @@ export default function SignUpScreen() {
             setError(null);
           }}
         />
-      </AuthShell>
+      </View>
     );
   }
 
   return (
-    <AuthShell title="Create account" subtitle="RentTrack" error={error}>
-      <Field
+    <View style={styles.container}>
+      <Text style={styles.title}>Create account</Text>
+      <Text style={styles.subtitle}>RentTrack</Text>
+      {error ? (
+        <Text style={[styles.error, { color: theme.error }]}>{error}</Text>
+      ) : null}
+      <CustomTextInput
         value={email}
         onChangeText={setEmail}
         placeholder="Email"
@@ -110,7 +122,7 @@ export default function SignUpScreen() {
         keyboardType="email-address"
         textContentType="emailAddress"
       />
-      <Field
+      <CustomTextInput
         value={password}
         onChangeText={setPassword}
         placeholder="Password"
@@ -131,6 +143,27 @@ export default function SignUpScreen() {
         label="Already have an account? Sign in"
         onPress={() => router.replace("/sign-in")}
       />
-    </AuthShell>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    paddingHorizontal: 24,
+    gap: 12,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "bold",
+  },
+  subtitle: {
+    fontSize: 15,
+    opacity: 0.7,
+    marginBottom: 4,
+  },
+  error: {
+    fontSize: 14,
+  },
+});

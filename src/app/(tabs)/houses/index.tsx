@@ -1,10 +1,11 @@
 import type { House } from "@/api/houses";
 import Button from "@/components/rentComponents/Button";
+import CustomTextInput from "@/components/rentComponents/CustomTextInput";
 import { HouseCard } from "@/components/rentComponents/HouseCard";
-import { SearchBar } from "@/components/rentComponents/SearchBar";
 import Colors from "@/constants/Colors";
 import { useHouses } from "@/hooks/useHouses";
 import { FlashList, type ListRenderItem } from "@shopify/flash-list";
+import { Search } from "lucide-react-native";
 import { useMemo, useState } from "react";
 import {
   ActivityIndicator,
@@ -81,10 +82,14 @@ export default function HomeScreen() {
       {/* The search field lives outside the list so it stays put while the
           cards scroll under it; only the count header travels with the list. */}
       <View style={styles.search}>
-        <SearchBar
+        <CustomTextInput
           placeholder="Search property by name"
           value={query}
           onChangeText={setQuery}
+          icon={<Search size={18} color={colors.textMuted} />}
+          autoCapitalize="none"
+          returnKeyType="search"
+          clearButtonMode="while-editing"
         />
       </View>
       <FlashList
