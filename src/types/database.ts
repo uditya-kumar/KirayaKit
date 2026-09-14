@@ -75,7 +75,6 @@ export type Database = {
           previous_balance: number
           previous_reading: number
           rent_amount: number
-          shared_at: string | null
           tenant_id: string
           total_billed: number | null
           units_consumed: number | null
@@ -97,7 +96,6 @@ export type Database = {
           previous_balance?: number
           previous_reading?: number
           rent_amount?: number
-          shared_at?: string | null
           tenant_id: string
           total_billed?: number | null
           units_consumed?: number | null
@@ -119,7 +117,6 @@ export type Database = {
           previous_balance?: number
           previous_reading?: number
           rent_amount?: number
-          shared_at?: string | null
           tenant_id?: string
           total_billed?: number | null
           units_consumed?: number | null
@@ -370,7 +367,6 @@ export type Database = {
           payment_method: string | null
           previous_balance: number | null
           rent_amount: number | null
-          shared_at: string | null
           status: string | null
           tenant_id: string | null
           tenant_name: string | null

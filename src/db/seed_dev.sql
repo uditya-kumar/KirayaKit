@@ -229,15 +229,13 @@ END $$;
 -- which is what the UI keys "pending" off.
 UPDATE bills
    SET paid_on        = LEAST((bill_month + interval '4 days')::date, current_date),
-       payment_method = (ARRAY['upi', 'gpay', 'cash', 'bank'])[1 + (abs(hashtext(id::text)) % 4)],
-       shared_at      = LEAST((bill_month + interval '4 days')::date, current_date)
-                        + interval '18 hours'
+       payment_method = (ARRAY['upi', 'gpay', 'cash', 'bank'])[1 + (abs(hashtext(id::text)) % 4)]
  WHERE owner_id = current_setting('app.seed_owner')
    AND amount_paid > 0;
 
--- Sunita pays cash and wants a paper receipt, so hers is never shared.
+-- Sunita hands over cash, so the hashed method above is wrong for her.
 UPDATE bills b
-   SET shared_at = NULL, payment_method = 'cash'
+   SET payment_method = 'cash'
   FROM tenants t
  WHERE t.id = b.tenant_id
    AND b.owner_id = current_setting('app.seed_owner')

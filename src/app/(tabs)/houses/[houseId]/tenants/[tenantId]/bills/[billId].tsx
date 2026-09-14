@@ -112,8 +112,9 @@ export default function BillDetailScreen() {
   // before the guard has run.
   const message = encodeURIComponent(receiptMessage(bill, lines));
 
-  // TODO: `bills.shared_at` is meant to record that this went out, but nothing in
-  // the app reads it yet, so sharing deliberately writes nothing.
+  // Sharing records nothing: handing the text to WhatsApp is all the app can
+  // observe, and 0004 dropped bills.shared_at rather than keep a column that
+  // would have to guess whether the message was really sent.
   async function onShare() {
     setShareError(null);
     // wa.me rather than the whatsapp:// scheme: it is the documented link and it
