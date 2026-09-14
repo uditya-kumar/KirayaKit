@@ -69,3 +69,22 @@ export async function createHouse(house: NewHouse): Promise<string> {
 
   return result.data.id;
 }
+
+/**
+ * Removes a house from the app.
+ *
+ * A soft delete, which is what the schema is built for: the unique index on
+ * (owner_id, lower(name)) is scoped to `deleted_at IS NULL`, so the name is free
+ * again immediately, and `v_house_list` — the only way into a house — skips
+ * deleted rows, so the house and everything under it becomes unreachable. A real
+ * DELETE would cascade through the tenants, bills and receipts, which is more
+ * than a typed confirmation should be able to destroy.
+ */
+export async function deleteHouse(id: string): Promise<void> {
+  const { error } = await neon
+    .from("houses")
+    .update({ deleted_at: new Date().toISOString() })
+    .eq("id", id);
+
+  if (error) throw error;
+}

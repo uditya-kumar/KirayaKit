@@ -22,6 +22,9 @@ export default {
     fillBackground: "#F9F9FB",
     borderColor: "#E5E5EA",
     divider: "#C7C7CC",
+    // Behind a modal dialog. The mock draws its dialogs on their own, so this is
+    // the one colour here without a node to point at.
+    scrim: "#00000066",
     tint: tintColorLight,
     tabBackground: "#FFFFFF",
     tabIconDefault: "#8E8E93",
@@ -43,6 +46,7 @@ export default {
     fillBackground: "#2C2C2E",
     borderColor: "#38383A",
     divider: "#48484A",
+    scrim: "#000000A6",
     tint: tintColorDark,
     tabBackground: "#191919",
     tabIconDefault: "#98989F",
