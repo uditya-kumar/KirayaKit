@@ -1,14 +1,27 @@
 import type { Tenant } from "@/api/tenants";
 import Button from "@/components/rentComponents/Button";
 import CustomTextInput from "@/components/rentComponents/CustomTextInput";
+import { DeleteHouseDialog } from "@/components/rentComponents/DeleteHouseDialog";
+import {
+  DropdownMenu,
+  type MenuItem,
+} from "@/components/rentComponents/DropdownMenu";
 import { TenantCard } from "@/components/rentComponents/TenantCard";
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
+import { useDeleteHouse } from "@/hooks/useDeleteHouse";
 import { useHouses } from "@/hooks/useHouses";
 import { useTenants } from "@/hooks/useTenants";
+import { neonErrorMessage } from "@/libs/neon-errors";
 import { FlashList, type ListRenderItem } from "@shopify/flash-list";
-import { Stack, useLocalSearchParams } from "expo-router";
-import { Search } from "lucide-react-native";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import {
+  EllipsisVertical,
+  House,
+  Search,
+  Trash2,
+  UserPlus,
+} from "lucide-react-native";
 import { useMemo, useState } from "react";
 import {
   ActivityIndicator,
@@ -22,12 +35,20 @@ import {
 // the same function on every render instead of a fresh one.
 const keyExtractor = (tenant: Tenant) => tenant.id;
 
-/** Tenants: who lives in one house. Design node hf8HL. */
+/**
+ * Tenants: who lives in one house, and what can be done to the house itself.
+ * Design node hf8HL.
+ *
+ * The bar is set from here rather than in ../_layout.tsx: the title is the
+ * house's name and the ⋮ button opens the house menu, and this is the only place
+ * that knows which house that is — the route param is a uuid.
+ */
 export default function TenantsScreen() {
   // The palette follows the device setting, so anything coloured is applied
   // inline; StyleSheet below keeps only the layout, which never changes.
   const colorScheme = useColorScheme() ?? "light";
   const colors = Colors[colorScheme];
+  const router = useRouter();
   const { houseId } = useLocalSearchParams<{ houseId: string }>();
   const {
     data: tenants,
@@ -38,12 +59,74 @@ export default function TenantsScreen() {
   } = useTenants(houseId);
   const [query, setQuery] = useState("");
 
-  // The mock puts the house name in the title bar, and the param is a uuid. The
-  // name comes off the list query, which is already cached when you arrive by
-  // tapping a card; on a cold deep link it costs one small request and the bar
-  // reads "House" until it lands.
+  // The name for the title and the confirmation copy comes off the list query,
+  // already cached when you arrive by tapping a card; on a cold deep link it is
+  // one small request and the bar reads "House" until it lands.
   const { data: houses } = useHouses();
   const house = houses?.find((candidate) => candidate.id === houseId);
+
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const { mutate: deleteHouse, isPending: isDeleting } = useDeleteHouse();
+
+  const houseActions: MenuItem[] = [
+    {
+      key: "edit-house",
+      label: "Edit House",
+      icon: House,
+      // Add House and Edit House are one screen (design nodes umV64 and slGmE);
+      // the houseId param is what turns the form into an edit.
+      onPress: () =>
+        router.push({ pathname: "/houses/houseForm", params: { houseId } }),
+    },
+    {
+      key: "create-tenant",
+      label: "Create Tenant",
+      icon: UserPlus,
+      // The object form rather than a built string, so typed routes check the
+      // param name against the route.
+      onPress: () =>
+        router.push({
+          pathname: "/houses/[houseId]/createTenant",
+          params: { houseId },
+        }),
+    },
+    {
+      key: "delete-house",
+      label: "Delete House",
+      icon: Trash2,
+      destructive: true,
+      onPress: () => {
+        setDeleteError(null);
+        setConfirmingDelete(true);
+      },
+    },
+  ];
+
+  function onConfirmDelete() {
+    setDeleteError(null);
+    deleteHouse(houseId, {
+      onSuccess: () => {
+        setConfirmingDelete(false);
+        // This screen is showing a house that no longer exists, and the list it
+        // returns to has already been invalidated by the mutation. Deep-linked
+        // straight here there is nothing behind it, so the list takes its place.
+        if (router.canGoBack()) router.back();
+        else router.replace("/houses");
+      },
+      onError: (err) => setDeleteError(neonErrorMessage(err)),
+    });
+  }
+
+  const headerRight = () => (
+    <DropdownMenu
+      accessibilityLabel="House actions"
+      items={houseActions}
+      style={styles.headerButton}
+    >
+      <EllipsisVertical size={24} color={colors.text} />
+    </DropdownMenu>
+  );
 
   // TODO: the card's chevron should open the tenant profile once
   // houses/[houseId]/tenants/[tenantId] exists — the folder is still empty, so
@@ -116,9 +199,7 @@ export default function TenantsScreen() {
 
   return (
     <View style={[styles.screen, { backgroundColor: colors.background }]}>
-      {/* The title is set here rather than in ../_layout.tsx because only this
-          screen knows which house it is looking at. */}
-      <Stack.Screen options={{ title: house?.name ?? "House" }} />
+      <Stack.Screen options={{ title: house?.name ?? "House", headerRight }} />
 
       {/* The search field lives outside the list so it stays put while the
           cards scroll under it; only the count header travels with the list. */}
@@ -150,6 +231,15 @@ export default function TenantsScreen() {
             tintColor={colors.textMuted}
           />
         }
+      />
+
+      <DeleteHouseDialog
+        visible={confirmingDelete}
+        houseName={house?.name ?? "this house"}
+        onDelete={onConfirmDelete}
+        onCancel={() => setConfirmingDelete(false)}
+        deleting={isDeleting}
+        errorMessage={deleteError}
       />
     </View>
   );
@@ -205,5 +295,8 @@ const styles = StyleSheet.create({
   emptySubtext: {
     fontSize: 13,
     textAlign: "center",
+  },
+  headerButton: {
+    marginRight: 16,
   },
 });

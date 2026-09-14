@@ -35,14 +35,48 @@ export async function fetchHouses(): Promise<House[]> {
 }
 
 /**
- * What the Add House form collects. `owner_id` is left out on purpose — the
- * column defaults to `auth.user_id()`, so the token decides the owner and the
- * client cannot claim someone else's.
+ * What the House form collects, on a create and on a save alike — one screen
+ * fills both. `owner_id` is left out on purpose: the column defaults to
+ * `auth.user_id()`, so the token decides the owner, the client cannot claim
+ * someone else's, and a save cannot hand a house away.
  */
-export type NewHouse = Pick<
+export type HouseInput = Pick<
   TablesInsert<"houses">,
   "name" | "address" | "number_of_floors" | "upi_id" | "gpay_number"
 >;
+
+/**
+ * One house with everything the form fills in. `v_house_list` carries neither the
+ * floor count nor the payment details, so editing reads the table instead of the
+ * view.
+ */
+export type HouseDetails = Pick<
+  Tables<"houses">,
+  "id" | "name" | "address" | "number_of_floors" | "upi_id" | "gpay_number"
+>;
+
+const HOUSE_FORM_COLUMNS =
+  "id, name, address, number_of_floors, upi_id, gpay_number";
+
+/**
+ * The house behind the Edit House form.
+ *
+ * Deleted rows are excluded: the delete is soft, so the row still reads back
+ * fine, but it has disappeared from every list in the app and editing it would be
+ * a dead end. `.single()` turns that into an error the screen can show.
+ */
+export async function fetchHouse(id: string): Promise<HouseDetails> {
+  const { data, error } = await neon
+    .from("houses")
+    .select(HOUSE_FORM_COLUMNS)
+    .eq("id", id)
+    .is("deleted_at", null)
+    .single();
+
+  if (error) throw error;
+
+  return data;
+}
 
 /** Postgres foreign-key violation: the owner has no `users` row yet. */
 const FOREIGN_KEY_VIOLATION = "23503";
@@ -55,7 +89,7 @@ const FOREIGN_KEY_VIOLATION = "23503";
  * every time would add a round trip to every create for a row that exists after
  * the first one.
  */
-export async function createHouse(house: NewHouse): Promise<string> {
+export async function createHouse(house: HouseInput): Promise<string> {
   const insert = () => neon.from("houses").insert(house).select("id").single();
 
   let result = await insert();
@@ -68,6 +102,23 @@ export async function createHouse(house: NewHouse): Promise<string> {
   if (result.error) throw result.error;
 
   return result.data.id;
+}
+
+/**
+ * Saves an edited house.
+ *
+ * Addressed by id alone — RLS refuses to update a row the token does not own, so
+ * there is no owner check to write here and a forged id changes nothing. Unlike
+ * the create there is no `ensureProfile()` retry: the house exists, so its owner's
+ * profile row does too.
+ */
+export async function updateHouse(
+  id: string,
+  house: HouseInput,
+): Promise<void> {
+  const { error } = await neon.from("houses").update(house).eq("id", id);
+
+  if (error) throw error;
 }
 
 /**

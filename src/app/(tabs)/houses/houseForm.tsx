@@ -1,10 +1,13 @@
+import type { HouseDetails, HouseInput } from "@/api/houses";
 import Button from "@/components/rentComponents/Button";
 import CustomTextInput from "@/components/rentComponents/CustomTextInput";
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
 import { useCreateHouse } from "@/hooks/useCreateHouse";
+import { useHouse } from "@/hooks/useHouse";
+import { useUpdateHouse } from "@/hooks/useUpdateHouse";
 import { neonErrorMessage } from "@/libs/neon-errors";
-import { router } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import {
   House,
   Layers,
@@ -14,7 +17,13 @@ import {
   Wallet,
 } from "lucide-react-native";
 import { useState } from "react";
-import { ScrollView, StyleSheet, Text } from "react-native";
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 /** A blank field means "not given", which the column stores as NULL. */
 function orNull(value: string): string | null {
@@ -22,19 +31,79 @@ function orNull(value: string): string | null {
   return trimmed.length > 0 ? trimmed : null;
 }
 
-/** Add House: the form for creating a property. Design node umV64. */
-export default function CreateHouseScreen() {
+/**
+ * Add House and Edit House: the same form either way. Design nodes umV64 and
+ * slGmE, which differ only in the bar title and the button's label.
+ *
+ * A `houseId` query param is what makes it an edit. This wrapper waits for that
+ * house before mounting the form, so the fields can be seeded straight from
+ * `useState` — no effect syncing props into state, and a stale row can never be
+ * showing while the current one loads.
+ */
+export default function HouseFormScreen() {
+  const colorScheme = useColorScheme() ?? "light";
+  const colors = Colors[colorScheme];
+  const { houseId } = useLocalSearchParams<{ houseId?: string }>();
+  const { data: house, error, isPending, refetch } = useHouse(houseId);
+
+  // Without a houseId the query never runs, so its pending state means nothing
+  // here — only an edit has something to wait for.
+  const loading = houseId !== undefined && isPending;
+
+  return (
+    <>
+      <Stack.Screen
+        options={{ title: houseId === undefined ? "New House" : "Edit House" }}
+      />
+      {loading ? (
+        <View style={[styles.centered, { backgroundColor: colors.background }]}>
+          <ActivityIndicator size="large" color={colors.tint} />
+        </View>
+      ) : error ? (
+        <View style={[styles.centered, { backgroundColor: colors.background }]}>
+          <Text style={[styles.errorTitle, { color: colors.text }]}>
+            Couldn&apos;t load this house
+          </Text>
+          <Text style={[styles.error, { color: colors.textMuted }]} selectable>
+            {error.message}
+          </Text>
+          <Button
+            text="Try again"
+            textColor={colors.tint}
+            backgroundColor="transparent"
+            onPress={() => void refetch()}
+            paddingHorizontal={0}
+          />
+        </View>
+      ) : (
+        <HouseForm house={house ?? null} />
+      )}
+    </>
+  );
+}
+
+type HouseFormProps = {
+  /** The house being edited, or null when this is a new one. */
+  house: HouseDetails | null;
+};
+
+function HouseForm({ house }: HouseFormProps) {
   const colorScheme = useColorScheme() ?? "light";
   const colors = Colors[colorScheme];
 
-  const [name, setName] = useState("");
-  const [address, setAddress] = useState("");
-  const [floors, setFloors] = useState("");
-  const [upiId, setUpiId] = useState("");
-  const [gpayNumber, setGpayNumber] = useState("");
+  const [name, setName] = useState(house?.name ?? "");
+  const [address, setAddress] = useState(house?.address ?? "");
+  // Left blank on a create so the placeholder shows and the column's default of 1
+  // is what applies; an existing house always has a number to show.
+  const [floors, setFloors] = useState(
+    house ? String(house.number_of_floors) : "",
+  );
+  const [upiId, setUpiId] = useState(house?.upi_id ?? "");
+  const [gpayNumber, setGpayNumber] = useState(house?.gpay_number ?? "");
   const [error, setError] = useState<string | null>(null);
 
-  const { mutate: createHouse, isPending } = useCreateHouse();
+  const { mutate: createHouse, isPending: creating } = useCreateHouse();
+  const { mutate: updateHouse, isPending: saving } = useUpdateHouse();
 
   function onSubmit() {
     setError(null);
@@ -52,20 +121,22 @@ export default function CreateHouseScreen() {
       return;
     }
 
-    createHouse(
-      {
-        name: name.trim(),
-        address: orNull(address),
-        number_of_floors: numberOfFloors,
-        upi_id: orNull(upiId),
-        gpay_number: orNull(gpayNumber),
-      },
-      {
-        // Back to the list, which the mutation has already invalidated.
-        onSuccess: () => router.back(),
-        onError: (err) => setError(neonErrorMessage(err)),
-      },
-    );
+    const fields: HouseInput = {
+      name: name.trim(),
+      address: orNull(address),
+      number_of_floors: numberOfFloors,
+      upi_id: orNull(upiId),
+      gpay_number: orNull(gpayNumber),
+    };
+
+    // Back where the form was opened from — the list after a create, the house's
+    // own screen after a save. Both were invalidated by the mutation.
+    const onSuccess = () => router.back();
+    const onError = (err: unknown) => setError(neonErrorMessage(err));
+
+    if (house)
+      updateHouse({ id: house.id, house: fields }, { onSuccess, onError });
+    else createHouse(fields, { onSuccess, onError });
   }
 
   return (
@@ -126,19 +197,21 @@ export default function CreateHouseScreen() {
         onSubmitEditing={onSubmit}
       />
 
-      {/* The mock has no error state; this is the one place a failed insert can
+      {/* The mock has no error state; this is the one place a failed write can
           speak up, so it sits directly above the action that caused it. */}
       {error ? (
         <Text style={[styles.error, { color: colors.error }]}>{error}</Text>
       ) : null}
 
+      {/* The Edit mock draws the CTA without an icon, so the plus goes away with
+          the "Add House" label. */}
       <Button
-        text="Add House"
+        text={house ? "Save" : "Add House"}
         textColor={colors.buttonText}
         backgroundColor={colors.buttonBackground}
-        icon={<Plus size={18} color={colors.buttonText} />}
+        icon={house ? undefined : <Plus size={18} color={colors.buttonText} />}
         onPress={onSubmit}
-        loading={isPending}
+        loading={creating || saving}
         disabled={name.trim().length === 0}
         paddingVertical={15}
         style={styles.action}
@@ -157,6 +230,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 24,
     gap: 18,
+  },
+  centered: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 6,
+    paddingHorizontal: 20,
+  },
+  errorTitle: {
+    fontSize: 16,
+    fontWeight: "600",
   },
   error: {
     fontSize: 13,

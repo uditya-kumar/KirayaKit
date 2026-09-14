@@ -15,8 +15,8 @@ export default function HomeLayout() {
 
   // A Link rather than an onPress handler so the header action is a real
   // navigable target — long-press preview and web anchors come for free.
-  const headerRight = () => (
-    <Link href="/houses/createHouse" asChild>
+  const addHouseButton = () => (
+    <Link href="/houses/houseForm" asChild>
       <Pressable accessibilityRole="button" accessibilityLabel="Add house">
         {({ pressed }) => (
           <CirclePlus
@@ -42,17 +42,21 @@ export default function HomeLayout() {
         name="index"
         options={{
           title: "Home",
-          headerRight,
+          headerRight: addHouseButton,
         }}
       />
-      {/* "New House" is the mock's bar title; the button on the form says
-          "Add House". */}
-      <Stack.Screen name="createHouse" options={{ title: "New House" }} />
-      {/* The Tenants screen sets its own title to the house name — it is the
-          only place that knows it, since the param is a uuid.
-          TODO: the mock's ⋮ in this bar opens the house menu (edit / delete);
-          nothing is wired to it yet, so no button is drawn. */}
+      {/* One form for both jobs, so it sets its own title: "New House" when
+          adding, "Edit House" when a houseId param says which house to load. */}
+      <Stack.Screen name="houseForm" />
+      {/* Tenants fills in its own bar — the title is the house's name and
+          headerRight is the ⋮ actions button, and only that screen knows which
+          house either belongs to. */}
       <Stack.Screen name="[houseId]/index" />
+      {/* "Create Tenant" is both the mock's bar title and its button label. */}
+      <Stack.Screen
+        name="[houseId]/createTenant"
+        options={{ title: "Create Tenant" }}
+      />
     </Stack>
   );
 }

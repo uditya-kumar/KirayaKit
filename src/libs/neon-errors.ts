@@ -11,6 +11,11 @@ const MESSAGES: Record<string, string> = {
   houses_owner_name_key: "You already have a house with that name.",
   houses_name_not_blank: "The house needs a name.",
   houses_floors_sane: "Number of floors has to be between 1 and 50.",
+  tenants_active_floor_key: "That floor already has an active tenant.",
+  tenants_name_not_blank: "The tenant needs a name.",
+  tenants_aadhaar_shape: "Aadhaar has to be 12 digits.",
+  tenants_floor_non_neg: "The floor cannot be negative — 0 is the ground floor.",
+  tenants_money_non_neg: "Rent, rate and meter reading cannot be negative.",
 };
 
 export function neonErrorMessage(err: unknown): string {

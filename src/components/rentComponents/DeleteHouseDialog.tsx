@@ -1,42 +1,105 @@
 import Button from "@/components/rentComponents/Button";
 import CustomTextInput from "@/components/rentComponents/CustomTextInput";
+import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
 import { Trash2 } from "lucide-react-native";
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-
-const colors = Colors.light;
+import {
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 const CONFIRM_WORD = "delete";
 
 type DeleteHouseDialogProps = {
+  visible: boolean;
   houseName: string;
   onDelete: () => void;
   onCancel: () => void;
+  /** The delete is in flight: the button spins and both actions stop taking taps. */
+  deleting?: boolean;
+  /** Shown under the confirmation when the delete comes back rejected. */
+  errorMessage?: string | null;
 };
 
 /**
- * Confirmation for deleting a house. Deleting one cascades to its tenants,
- * bills and charges, which is why the mock makes you type the word out.
+ * Confirmation for deleting a house. Deleting one takes its tenants, bills and
+ * charges with it, which is why the mock makes you type the word out.
  *
- * The typed word is held internally — a half-finished confirmation is not state
- * any screen needs. Delete stays disabled until it matches, case-insensitively.
- *
- * This is the card only; present it inside a transparent Modal over a scrim.
+ * The dialog presents itself: a caller passes `visible` and owns the delete, not
+ * the scrim or the keyboard. The scrim takes no taps on purpose — a destructive
+ * confirmation should only go away through Cancel, not a stray touch beside the
+ * card.
  */
 export function DeleteHouseDialog({
+  visible,
   houseName,
   onDelete,
   onCancel,
+  deleting = false,
+  errorMessage,
 }: DeleteHouseDialogProps) {
+  const colorScheme = useColorScheme() ?? "light";
+  const colors = Colors[colorScheme];
+
+  return (
+    <Modal
+      visible={visible}
+      transparent
+      animationType="fade"
+      onRequestClose={onCancel}
+    >
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        style={[styles.scrim, { backgroundColor: colors.scrim }]}
+      >
+        {/* Its own component so that the word typed into a cancelled dialog
+            leaves with it — a closed Modal renders nothing, so the state goes. */}
+        <ConfirmCard
+          houseName={houseName}
+          onDelete={onDelete}
+          onCancel={onCancel}
+          deleting={deleting}
+          errorMessage={errorMessage}
+        />
+      </KeyboardAvoidingView>
+    </Modal>
+  );
+}
+
+type ConfirmCardProps = Omit<DeleteHouseDialogProps, "visible">;
+
+/**
+ * The card itself. The typed word is held here — a half-finished confirmation is
+ * not state any screen needs. Delete stays disabled until it matches, ignoring
+ * case and surrounding space.
+ */
+function ConfirmCard({
+  houseName,
+  onDelete,
+  onCancel,
+  deleting = false,
+  errorMessage,
+}: ConfirmCardProps) {
+  const colorScheme = useColorScheme() ?? "light";
+  const colors = Colors[colorScheme];
+
   const [typed, setTyped] = useState("");
   const confirmed = typed.trim().toLowerCase() === CONFIRM_WORD;
 
+  const hintTextStyle = [styles.hintText, { color: colors.textMuted }];
+
   return (
-    <View style={styles.dialog}>
+    <View style={[styles.dialog, { backgroundColor: colors.cardBackground }]}>
       <View style={styles.textWrap}>
-        <Text style={styles.title}>Delete this house?</Text>
-        <Text style={styles.message}>
+        <Text style={[styles.title, { color: colors.text }]}>
+          Delete this house?
+        </Text>
+        <Text style={[styles.message, { color: colors.textMuted }]}>
           This will permanently remove {houseName} and all its tenants. This
           action cannot be undone.
         </Text>
@@ -46,9 +109,11 @@ export function DeleteHouseDialog({
 
       <View style={styles.confirmWrap}>
         <View style={styles.hint}>
-          <Text style={styles.hintText}>Type</Text>
-          <Text style={styles.hintWord}>{CONFIRM_WORD}</Text>
-          <Text style={styles.hintText}>to confirm</Text>
+          <Text style={hintTextStyle}>Type</Text>
+          <Text style={[styles.hintWord, { color: colors.text }]}>
+            {CONFIRM_WORD}
+          </Text>
+          <Text style={hintTextStyle}>to confirm</Text>
         </View>
         <CustomTextInput
           accessibilityLabel={`Type ${CONFIRM_WORD} to confirm`}
@@ -56,7 +121,15 @@ export function DeleteHouseDialog({
           onChangeText={setTyped}
           placeholder={CONFIRM_WORD}
           autoCapitalize="none"
+          editable={!deleting}
         />
+        {/* The mock has no error state; a rejected delete has to say so
+            somewhere, and the dialog is still covering the screen. */}
+        {errorMessage ? (
+          <Text style={[styles.error, { color: colors.error }]}>
+            {errorMessage}
+          </Text>
+        ) : null}
       </View>
 
       <Button
@@ -66,6 +139,7 @@ export function DeleteHouseDialog({
         icon={<Trash2 size={18} color={colors.buttonText} />}
         onPress={onDelete}
         disabled={!confirmed}
+        loading={deleting}
         paddingVertical={14}
         style={styles.action}
       />
@@ -76,6 +150,7 @@ export function DeleteHouseDialog({
         backgroundColor="transparent"
         borderColor={colors.borderColor}
         onPress={onCancel}
+        disabled={deleting}
         paddingVertical={14}
         style={styles.action}
       />
@@ -83,7 +158,14 @@ export function DeleteHouseDialog({
   );
 }
 
+// Layout only — the colours are applied inline from the active scheme. The one
+// exception is the shadow, which is an elevation rather than a colour.
 const styles = StyleSheet.create({
+  scrim: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   dialog: {
     width: 320,
     alignItems: "center",
@@ -91,7 +173,6 @@ const styles = StyleSheet.create({
     paddingTop: 24,
     paddingHorizontal: 22,
     paddingBottom: 20,
-    backgroundColor: colors.cardBackground,
     borderRadius: 24,
     boxShadow: [
       { offsetX: 0, offsetY: 12, blurRadius: 32, color: "#00000026" },
@@ -104,13 +185,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 19,
     fontWeight: "700",
-    color: colors.text,
   },
   message: {
     fontSize: 14,
     fontWeight: "400",
     lineHeight: 20,
-    color: colors.textMuted,
   },
   // The mock separates the copy from the confirmation with a fixed 10pt spacer
   // rather than a larger gap, so the two text blocks stay grouped.
@@ -129,12 +208,13 @@ const styles = StyleSheet.create({
   hintText: {
     fontSize: 13,
     fontWeight: "400",
-    color: colors.textMuted,
   },
   hintWord: {
     fontSize: 13,
     fontWeight: "700",
-    color: colors.text,
+  },
+  error: {
+    fontSize: 13,
   },
   // The dialog centres its children; both buttons span it instead.
   action: {

@@ -1,5 +1,5 @@
 import { neon } from "@/libs/neon";
-import type { Tables } from "@/types/database";
+import type { Tables, TablesInsert } from "@/types/database";
 
 /**
  * A tenant as a house's list needs it. Narrowed the same way `House` is: the
@@ -46,4 +46,40 @@ export async function fetchTenants(houseId: string): Promise<Tenant[]> {
       row.monthly_rent !== null &&
       row.total_pending !== null,
   );
+}
+
+/**
+ * What the Create Tenant form collects. `owner_id` is left out on purpose — the
+ * column defaults to `auth.user_id()`, and the composite FK to `houses` then
+ * requires the house to belong to that same owner.
+ */
+export type NewTenant = Pick<
+  TablesInsert<"tenants">,
+  | "house_id"
+  | "name"
+  | "mobile_number"
+  | "aadhaar_number"
+  | "floor_number"
+  | "monthly_rent"
+  | "electricity_rate"
+  | "opening_meter_reading"
+  | "agreement_expiry"
+>;
+
+/**
+ * Creates a tenant and returns their id.
+ *
+ * No `ensureProfile()` repair here, unlike `createHouse`: a tenant hangs off a
+ * house, and the house could not have been created without the profile row.
+ */
+export async function createTenant(tenant: NewTenant): Promise<string> {
+  const { data, error } = await neon
+    .from("tenants")
+    .insert(tenant)
+    .select("id")
+    .single();
+
+  if (error) throw error;
+
+  return data.id;
 }
