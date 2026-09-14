@@ -1,7 +1,7 @@
 import Button from "@/components/rentComponents/Button";
 import { InfoTile } from "@/components/rentComponents/InfoTile";
 import Colors from "@/constants/Colors";
-import { formatRupees } from "@/libs/format";
+import { formatRupees } from "@/utils/format";
 import { StyleSheet, Text, View } from "react-native";
 
 const colors = Colors.light;

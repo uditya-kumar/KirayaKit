@@ -44,6 +44,14 @@ export default function RootLayout() {
   );
 }
 
+/**
+ * The root navigator, and the only place route access is decided.
+ *
+ * Stack.Protected is client-side navigation only — on web the bundle for a
+ * guarded route is still fetchable by anyone who knows the URL. It keeps the UI
+ * honest; the data is kept honest by Neon's row-level security, which checks the
+ * Clerk token on every request.
+ */
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
   // Clerk reads the cached session from expo-secure-store on startup. Until it
@@ -65,7 +73,13 @@ function RootLayoutNav() {
     <SafeAreaProvider>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <Stack>
+          {/* A denied route falls back to the anchor route, or to the first
+              screen still available if the anchor itself is guarded. `index` is
+              guarded with the rest so that a signed-out visitor cannot land on
+              it: it only redirects into (tabs), which would bounce straight
+              back. With it removed, (auth) is the first screen left. */}
           <Stack.Protected guard={isSignedIn}>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen
               name="message"
@@ -75,6 +89,9 @@ function RootLayoutNav() {
           <Stack.Protected guard={!isSignedIn}>
             <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           </Stack.Protected>
+          {/* +not-found stays outside both guards: a bad URL should show the
+              404 either way, and its "Go to home screen" link resolves through
+              the guards above. */}
         </Stack>
       </ThemeProvider>
     </SafeAreaProvider>

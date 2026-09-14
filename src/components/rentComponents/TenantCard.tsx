@@ -1,6 +1,6 @@
-import Colors from "@/constants/Colors";
 import { InfoTile } from "@/components/rentComponents/InfoTile";
-import { formatFloor, formatRupees } from "@/libs/format";
+import Colors from "@/constants/Colors";
+import { formatFloor, formatRupees } from "@/utils/format";
 import { ChevronRight } from "lucide-react-native";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 

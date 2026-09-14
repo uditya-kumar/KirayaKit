@@ -1,5 +1,5 @@
 import Colors from "@/constants/Colors";
-import { formatAmount, formatBillMonth, formatRupees } from "@/libs/format";
+import { formatAmount, formatBillMonth, formatRupees } from "@/utils/format";
 import { CalendarDays } from "lucide-react-native";
 import { StyleSheet, Text, View } from "react-native";
 
