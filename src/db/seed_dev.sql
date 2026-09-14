@@ -1,4 +1,4 @@
--- Rentica — development seed data.
+-- KirayaKit — development seed data.
 --
 -- Run it with:  npm run seed-dev [clerk_user_id]
 -- (with no argument it seeds the most recently created users row, i.e. whoever

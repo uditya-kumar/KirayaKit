@@ -1,4 +1,4 @@
--- Rentica — initial schema for Lakebase Postgres on Neon (PostgreSQL 18)
+-- KirayaKit — initial schema for Lakebase Postgres on Neon (PostgreSQL 18)
 --
 -- Model: a user (landlord) owns houses; each house has floors, each floor is
 -- occupied by a tenant. Every month a tenant gets one bill made of
@@ -35,7 +35,7 @@ CREATE EXTENSION IF NOT EXISTS pg_trgm;   -- "Search property/tenant by name"
 -- ---------------------------------------------------------------------------
 -- users — app profile for the landlord, keyed by the Clerk user id.
 -- Clerk owns name/email/avatar; fetch those client-side with useUser(). This
--- table holds only what Rentica adds on top.
+-- table holds only what KirayaKit adds on top.
 -- ---------------------------------------------------------------------------
 CREATE TABLE users (
   id             text PRIMARY KEY DEFAULT auth.user_id(),
@@ -472,7 +472,7 @@ CREATE POLICY charge_presets_owner ON charge_presets FOR ALL TO authenticated
 
 -- ---------------------------------------------------------------------------
 -- Grants. The Data API picks the role from the JWT: `authenticated` for a
--- signed-in user, `anonymous` otherwise. Rentica has no public data, so
+-- signed-in user, `anonymous` otherwise. KirayaKit has no public data, so
 -- `anonymous` is granted nothing.
 --
 -- The Clerk token MUST carry `"role": "authenticated"`. The Data API reads

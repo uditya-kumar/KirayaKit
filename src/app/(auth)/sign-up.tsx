@@ -113,7 +113,7 @@ export default function SignUpScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Create account</Text>
-      <Text style={styles.subtitle}>Rentica</Text>
+      <Text style={styles.subtitle}>KirayaKit</Text>
       {error ? (
         <Text style={[styles.error, { color: theme.error }]}>{error}</Text>
       ) : null}

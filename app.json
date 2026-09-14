@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "Rentica",
-    "slug": "Rentica",
+    "name": "KirayaKit",
+    "slug": "KirayaKit",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "rentica",
+    "scheme": "kirayakit",
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.rentica.app"
+      "bundleIdentifier": "com.kirayakit.app"
     },
     "android": {
       "adaptiveIcon": {
@@ -17,7 +17,7 @@
         "backgroundColor": "#ffffff"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.rentica.app"
+      "package": "com.kirayakit.app"
     },
     "web": {
       "bundler": "metro",

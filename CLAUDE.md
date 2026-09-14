@@ -1,4 +1,4 @@
-# Rentica
+# KirayaKit
 
 Expo (SDK 57) + expo-router app for landlords tracking houses, tenants, bills and
 receipts. Two moving parts only: **this client and a Neon Postgres database**.
@@ -192,7 +192,7 @@ tools only, never with Read or Grep. It is light-mode only, which is why
 `Colors.light` is what screens use. When a screen and the mock disagree, say so
 rather than quietly inventing layout.
 
-`requirements/Rent Track.txt` and `requirements/Rentica.xlsx` are the original
+`requirements/Rent Track.txt` and `requirements/KirayaKit.xlsx` are the original
 written requirements — the rent maths and the spreadsheet the app replaces.
 
 `.agents/skills/` holds vendor skills worth consulting before guessing —

@@ -1,6 +1,6 @@
 <div align="center">
 
-# Rentica
+# KirayaKit
 
 **A landlord's rent book, for the phone.** Houses, tenants, monthly bills with
 electricity readings and carried balances, and a receipt that goes out over
@@ -24,7 +24,7 @@ and gas, carry over whatever went unpaid, and type the total into WhatsApp. The
 messages in [`requirements/Rent Track.txt`](requirements/Rent%20Track.txt) are
 that workflow, and the spreadsheet beside them is the ledger it leaves behind.
 
-Rentica does the arithmetic, keeps the history per tenant, and produces the
+KirayaKit does the arithmetic, keeps the history per tenant, and produces the
 same message it used to replace.
 
 ## Architecture
@@ -117,8 +117,8 @@ Three consequences worth knowing before reading the code:
 ### 1. Install
 
 ```bash
-git clone https://github.com/<your-account>/Rentica.git
-cd Rentica
+git clone https://github.com/<your-account>/KirayaKit.git
+cd KirayaKit
 npm install
 ```
 
