@@ -16,6 +16,8 @@ type ButtonProps = {
   onPress?: () => void;
   paddingVertical?: number;
   paddingHorizontal?: number;
+  /** Only when the button has to match a card it sits with — 10 otherwise. */
+  borderRadius?: number;
   loading?: boolean;
   /** Greyed out and unpressable, with no spinner — a form that is not ready. */
   disabled?: boolean;
@@ -45,6 +47,7 @@ function Button({
   paddingVertical = 11,
   loading = false,
   paddingHorizontal = 15,
+  borderRadius = 10,
   disabled = false,
   accessibilityLabel,
   icon,
@@ -55,6 +58,7 @@ function Button({
   const buttonBaseStyle: ViewStyle = {
     paddingVertical,
     paddingHorizontal,
+    borderRadius,
     backgroundColor,
     borderColor,
     borderWidth: borderColor !== "transparent" ? 1 : 0,
@@ -101,7 +105,6 @@ const styles = StyleSheet.create({
   button: {
     flexDirection: "row",
     alignItems: "center",
-    borderRadius: 10,
     justifyContent: "center",
   },
   spinner: {

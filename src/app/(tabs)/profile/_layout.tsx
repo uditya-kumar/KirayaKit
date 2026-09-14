@@ -1,10 +1,12 @@
+import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
 import { Stack } from "expo-router";
 
-const colors = Colors.light;
-
-/** The Settings tab's stack — same shape as the Home tab's, room to push into. */
+/** The Profile tab's stack — same shape as the Home tab's, room to push into. */
 export default function ProfileLayout() {
+  const colorScheme = useColorScheme() ?? "light";
+  const colors = Colors[colorScheme];
+
   return (
     <Stack
       screenOptions={{
@@ -14,7 +16,7 @@ export default function ProfileLayout() {
         contentStyle: { backgroundColor: colors.background },
       }}
     >
-      <Stack.Screen name="index" options={{ title: "Settings" }} />
+      <Stack.Screen name="index" options={{ title: "Profile" }} />
     </Stack>
   );
 }

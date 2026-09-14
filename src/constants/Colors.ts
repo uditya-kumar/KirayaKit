@@ -4,9 +4,10 @@
  * rather than a colour.
  *
  * The light values come from the Pencil mock in requirements/design file, which
- * is drawn light-mode only; the dark ones are their sensible counterparts and
- * are so far read by AuthForm alone — the rest of the screens take `light`
- * directly. Wire useColorScheme() through them when dark mode is actually due.
+ * is drawn light-mode only; the dark ones are their sensible counterparts, so
+ * they are the half of this file with no node behind it. Screens pick between the
+ * two at runtime with `Colors[useColorScheme() ?? "light"]`, following the device
+ * unless the Appearance toggle on the Profile screen has overridden it.
  */
 
 const tintColorLight = "#007AFF";

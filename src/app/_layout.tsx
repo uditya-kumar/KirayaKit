@@ -1,6 +1,9 @@
 import { ClerkProvider, useAuth } from "@clerk/expo";
 import { tokenCache } from "@clerk/expo/token-cache";
-import { useColorScheme } from "@/components/useColorScheme";
+import {
+  AppearanceProvider,
+  useColorScheme,
+} from "@/components/useColorScheme";
 import { queryClient } from "@/libs/query-client";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from "expo-router";
@@ -37,7 +40,11 @@ export default function RootLayout() {
           cache must not outlive it. */}
       <QueryClientProvider client={queryClient}>
         <StrictMode>
-          <RootLayoutNav />
+          {/* Above the navigator, because the theme it picks and every screen's
+              colours read from the same choice. */}
+          <AppearanceProvider>
+            <RootLayoutNav />
+          </AppearanceProvider>
         </StrictMode>
       </QueryClientProvider>
     </ClerkProvider>

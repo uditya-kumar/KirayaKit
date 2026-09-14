@@ -1,10 +1,8 @@
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
 import { Tabs } from "expo-router";
-import { House, Settings } from "lucide-react-native";
+import { CircleUser, House } from "lucide-react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
-const colors = Colors.light;
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
@@ -33,9 +31,12 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Settings",
+          // "Profile" rather than the mock's "Settings" (node j95pf): the tab is
+          // the owner's own account, and an avatar says that where a gear says
+          // preferences.
+          title: "Profile",
           tabBarIcon: ({ color, size }) => (
-            <Settings color={color} size={size} />
+            <CircleUser color={color} size={size} />
           ),
         }}
       />

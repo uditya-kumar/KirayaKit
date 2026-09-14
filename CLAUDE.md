@@ -117,18 +117,22 @@ Match the surrounding file. In short:
   const colors = Colors[colorScheme];
   ```
 
-  `useColorScheme` is `@/components/useColorScheme`. Because `colors` is only
-  known inside the component, `StyleSheet.create` holds **layout only** and
-  colours are applied inline: `style={[styles.screen, { backgroundColor:
-  colors.background }]}`, or a named array above the JSX
+  `useColorScheme` is `@/components/useColorScheme`, whose `AppearanceProvider`
+  (mounted in the root layout) lets the Appearance toggle on the Profile screen
+  override the device setting. That override is kept in `expo-secure-store` and
+  read through `useAppearance()`, which nothing but the toggle should use.
+
+  Because `colors` is only known inside the component, `StyleSheet.create` holds
+  **layout only** and colours are applied inline: `style={[styles.screen, {
+  backgroundColor: colors.background }]}`, or a named array above the JSX
   (`const emptyTextStyle = [styles.emptyText, { color: colors.text }]`) when the
   same pair is used more than once. Never put a colour inside
   `StyleSheet.create`. No hex literals outside `Colors.ts` (box-shadow black with
   alpha is the one exception — that's an elevation, not a colour).
 
-  Older files still hold a module-scope `const colors = Colors.light;`
-  (`rentComponents/*`, the profile screen, the tab and stack layouts). That is
-  the shape being migrated away from — convert a file when you next touch it.
+  Older files still hold a module-scope `const colors = Colors.light;` (some of
+  `rentComponents/*`). That is the shape being migrated away from — convert a file
+  when you next touch it.
 - **No design-token file.** Radii, spacing and font sizes are written as plain
   numbers where they're used. `src/constants/design.ts` was deliberately deleted;
   don't reintroduce it.
