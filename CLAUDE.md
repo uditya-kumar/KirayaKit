@@ -88,6 +88,17 @@ src/
   `flex`, margins). Never hand-roll a `Pressable` with a `Text` inside it.
 - **`CustomTextInput`** — every text field. `labelText` and `icon` are optional;
   remaining `TextInputProps` pass through. `style` sizes the whole field.
+- **`DateField`** — every date in a form. It looks like `CustomTextInput` but the
+  box opens the platform's date picker, so a day is always picked and never
+  typed; it takes and returns `Date | null` and displays DD/MM/YYYY. Converting
+  that to what a `date` column stores is the screen's job — see `toDateColumn` in
+  `tenantForm.tsx`. Never put a date in a `CustomTextInput`.
+
+  It drives `@react-native-community/datetimepicker` directly —
+  `DateTimePickerAndroid.open()` on Android, the picker inside our own sheet on
+  iOS — with `onValueChange`. Don't reach for
+  `react-native-modal-datetime-picker`: its latest release still passes the
+  deprecated `onChange`, which warns on every mount.
 - Icon-only controls stay a plain `Pressable` with an accessible label.
 
 If a new shared primitive is genuinely needed, put it in `rentComponents/` and

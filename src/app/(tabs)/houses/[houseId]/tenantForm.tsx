@@ -1,6 +1,7 @@
 import type { NewTenant, TenantInput, TenantRecord } from "@/api/tenants";
 import Button from "@/components/rentComponents/Button";
 import CustomTextInput from "@/components/rentComponents/CustomTextInput";
+import { DateField } from "@/components/rentComponents/DateField";
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
 import { useCreateTenant } from "@/hooks/useCreateTenant";
@@ -40,28 +41,27 @@ function amount(value: string): number {
 }
 
 /**
- * "31/03/2027" -> "2027-03-31", the shape a `date` column takes. Null if that is
- * not a real day, which includes 31/02 — Date rolls those over into March, so the
- * round trip through toISOString is what catches them.
+ * A picked day as a `date` column stores it: "2027-03-31".
+ *
+ * Built from the local parts rather than sliced off toISOString, which is UTC:
+ * the picker hands back local midnight, and in IST that is half past six the
+ * evening before — the column would end up a day early.
  */
-function parseExpiry(text: string): string | null {
-  const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(text.trim());
-  if (!match) return null;
-
-  const iso = `${match[3]}-${match[2]}-${match[1]}`;
-  const date = new Date(`${iso}T00:00:00Z`);
-  if (Number.isNaN(date.getTime())) return null;
-
-  return date.toISOString().slice(0, 10) === iso ? iso : null;
+function toDateColumn(date: Date): string {
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${date.getFullYear()}-${month}-${day}`;
 }
 
 /**
- * "2027-03-31" -> "31/03/2027", so an edit shows the date the way the field asks
- * for it and `parseExpiry` reads its own output back.
+ * "2027-03-31" -> that day at local midnight, which is what the picker opens on.
+ *
+ * Split rather than passed to `new Date("2027-03-31")`, which JavaScript reads as
+ * UTC and would show the 30th to anyone behind it.
  */
-function formatExpiry(iso: string): string {
-  const [year, month, day] = iso.slice(0, 10).split("-");
-  return `${day}/${month}/${year}`;
+function dateFromColumn(iso: string): Date {
+  const [year, month, day] = iso.slice(0, 10).split("-").map(Number);
+  return new Date(year, month - 1, day);
 }
 
 /**
@@ -142,8 +142,8 @@ function TenantForm({ houseId, tenant }: TenantFormProps) {
   // Left blank on a create so the placeholder shows and the column's default
   // applies; an existing tenant always has a number to show, and 0 is a floor.
   const [floor, setFloor] = useState(tenant ? String(tenant.floor_number) : "");
-  const [agreementExpiry, setAgreementExpiry] = useState(
-    tenant?.agreement_expiry ? formatExpiry(tenant.agreement_expiry) : "",
+  const [agreementExpiry, setAgreementExpiry] = useState<Date | null>(
+    tenant?.agreement_expiry ? dateFromColumn(tenant.agreement_expiry) : null,
   );
   const [electricityRate, setElectricityRate] = useState(
     tenant ? String(tenant.electricity_rate) : "",
@@ -181,13 +181,6 @@ function TenantForm({ houseId, tenant }: TenantFormProps) {
       return;
     }
 
-    const expiry =
-      agreementExpiry.trim() === "" ? null : parseExpiry(agreementExpiry);
-    if (agreementExpiry.trim() !== "" && expiry === null) {
-      setError("Agreement expiry has to be a real date, written DD/MM/YYYY.");
-      return;
-    }
-
     const rent = amount(monthlyRent);
     const rate = amount(electricityRate);
     const meter = amount(openingMeter);
@@ -209,7 +202,9 @@ function TenantForm({ houseId, tenant }: TenantFormProps) {
       floor_number: floorNumber,
       monthly_rent: rent,
       electricity_rate: rate,
-      agreement_expiry: expiry,
+      // Nothing to validate: the picker cannot hand back a day that does not
+      // exist, which is what the old typed field had to guard against.
+      agreement_expiry: agreementExpiry ? toDateColumn(agreementExpiry) : null,
     };
 
     // Back where the form was opened from — the house's tenant list after a
@@ -293,14 +288,11 @@ function TenantForm({ houseId, tenant }: TenantFormProps) {
           returnKeyType="next"
           style={styles.field}
         />
-        <CustomTextInput
+        <DateField
           labelText="Agreement expiry"
           value={agreementExpiry}
-          onChangeText={setAgreementExpiry}
-          placeholder="DD/MM/YYYY"
+          onChange={setAgreementExpiry}
           icon={<Calendar size={18} color={colors.textMuted} />}
-          keyboardType="numbers-and-punctuation"
-          returnKeyType="next"
           style={styles.field}
         />
       </View>

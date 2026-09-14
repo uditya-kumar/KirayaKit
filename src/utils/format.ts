@@ -92,6 +92,19 @@ export function formatBillMonthShort(month: string): string {
   return name ? `${name.slice(0, 3)} ${m[1]}` : month;
 }
 
+/**
+ * A day as every form in the app writes one: "31/03/2027".
+ *
+ * Read off the local parts, which is what the date picker handed over — going
+ * through toISOString would print the day before for anyone east of UTC, since
+ * local midnight in IST is still the previous afternoon there.
+ */
+export function formatDay(date: Date): string {
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  return `${day}/${month}/${date.getFullYear()}`;
+}
+
 /** "129 units × ₹6" — the sub-line under Electricity on a receipt. */
 export function formatUnits(
   units: number | string,
