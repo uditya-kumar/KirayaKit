@@ -174,12 +174,20 @@ export default function TenantDetailScreen() {
         </Text>
       </View>
 
-      {/* TODO: Edit Bill (H68UY) and Bill Details (ioyXF) are not built yet, so
-          both actions draw dimmed. */}
+      {/* TODO: Bill Details (design node ioyXF) is not built yet, so that action
+          draws dimmed. */}
       <BillBreakdown
         title="Current Month"
         billed={currentBill?.total_billed ?? 0}
         paid={currentBill?.amount_paid ?? 0}
+        // Edit doubles as "raise it": the same form creates this month's bill when
+        // the card is showing zeros because there is nothing to edit yet.
+        onEdit={() =>
+          router.push({
+            pathname: "/houses/[houseId]/tenants/[tenantId]/billForm",
+            params: { houseId, tenantId, month: `${thisMonth}-01` },
+          })
+        }
       />
 
       <View style={styles.historyHead}>

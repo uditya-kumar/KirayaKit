@@ -34,6 +34,11 @@ export default {
     error: "#FF3B30",
     errorBackground: "#FFECEB",
     success: "#34C759",
+    // Electricity, on the bill form: the orange panel that shows the meter
+    // reading it worked the units out from (design node H68UY).
+    warning: "#FF9500",
+    warningBackground: "#FFF3E0",
+    warningBorder: "#FF950033",
     receiptBackground: "#EFFBF5",
     receiptMonthBackground: "#D8F6E0",
   },
@@ -56,6 +61,9 @@ export default {
     error: "#FF453A",
     errorBackground: "#3B1F1D",
     success: "#30D158",
+    warning: "#FF9F0A",
+    warningBackground: "#2B1E06",
+    warningBorder: "#FF9F0A33",
     receiptBackground: "#12291D",
     receiptMonthBackground: "#1D3D28",
   },

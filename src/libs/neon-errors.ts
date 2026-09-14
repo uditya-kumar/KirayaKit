@@ -14,8 +14,14 @@ const MESSAGES: Record<string, string> = {
   tenants_active_floor_key: "That floor already has an active tenant.",
   tenants_name_not_blank: "The tenant needs a name.",
   tenants_aadhaar_shape: "Aadhaar has to be 12 digits.",
-  tenants_floor_non_neg: "The floor cannot be negative — 0 is the ground floor.",
+  tenants_floor_non_neg:
+    "The floor cannot be negative — 0 is the ground floor.",
   tenants_money_non_neg: "Rent, rate and meter reading cannot be negative.",
+  bills_reading_forward:
+    "The current meter reading cannot be lower than the previous one.",
+  bills_money_non_neg: "The amounts on a bill cannot be negative.",
+  bill_charges_label_not_blank: "Give every charge a name.",
+  bill_charges_amount_non_neg: "A charge cannot be a negative amount.",
 };
 
 export function neonErrorMessage(err: unknown): string {

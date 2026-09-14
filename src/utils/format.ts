@@ -79,6 +79,19 @@ export function formatBillMonth(month: string): string {
   return `${MONTHS[Number(m[2]) - 1] ?? month} ${m[1]}`;
 }
 
+/**
+ * "2026-02-01" -> "Feb 2026", for a field too narrow for the full name.
+ *
+ * The first three letters are the abbreviation for all twelve months in English,
+ * so there is no second list to keep in step with MONTHS.
+ */
+export function formatBillMonthShort(month: string): string {
+  const m = /^(\d{4})-(\d{2})/.exec(month);
+  if (!m) return month;
+  const name = MONTHS[Number(m[2]) - 1];
+  return name ? `${name.slice(0, 3)} ${m[1]}` : month;
+}
+
 /** "129 units × ₹6" — the sub-line under Electricity on a receipt. */
 export function formatUnits(
   units: number | string,

@@ -467,6 +467,19 @@ export type Database = {
       }
     }
     Functions: {
+      bill_draft: {
+        Args: { p_month: string; p_tenant: string }
+        Returns: {
+          amount_paid: number
+          bill_id: string
+          charges: Json
+          current_reading: number
+          electricity_rate: number
+          previous_balance: number
+          previous_reading: number
+          rent_amount: number
+        }[]
+      }
       carry_forward_balance: {
         Args: { p_month: string; p_tenant: string }
         Returns: number
@@ -492,6 +505,16 @@ export type Database = {
       next_previous_reading: {
         Args: { p_month: string; p_tenant: string }
         Returns: number
+      }
+      save_bill: {
+        Args: {
+          p_amount_paid: number
+          p_charges?: Json
+          p_current_reading: number
+          p_month: string
+          p_tenant: string
+        }
+        Returns: string
       }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }

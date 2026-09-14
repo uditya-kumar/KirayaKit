@@ -1,9 +1,8 @@
 import CustomTextInput from "@/components/rentComponents/CustomTextInput";
+import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
 import { Minus, Tag } from "lucide-react-native";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-
-const colors = Colors.light;
 
 type ChargeRowProps = {
   label: string;
@@ -30,6 +29,9 @@ export function ChargeRow({
   onRemove,
   labelPlaceholder = "Charge name",
 }: ChargeRowProps) {
+  const colorScheme = useColorScheme() ?? "light";
+  const colors = Colors[colorScheme];
+
   return (
     <View style={styles.row}>
       <CustomTextInput
@@ -47,7 +49,9 @@ export function ChargeRow({
         onChangeText={onChangeAmount}
         placeholder="0"
         keyboardType="numeric"
-        icon={<Text style={styles.rupee}>₹</Text>}
+        icon={
+          <Text style={[styles.rupee, { color: colors.textMuted }]}>₹</Text>
+        }
         style={styles.amountField}
       />
 
@@ -55,7 +59,11 @@ export function ChargeRow({
         accessibilityRole="button"
         accessibilityLabel={`Remove ${label || "charge"}`}
         onPress={onRemove}
-        style={({ pressed }) => [styles.removeBtn, pressed && styles.pressed]}
+        style={({ pressed }) => [
+          styles.removeBtn,
+          { backgroundColor: colors.errorBackground },
+          pressed && styles.pressed,
+        ]}
       >
         <Minus size={18} color={colors.error} />
       </Pressable>
@@ -63,6 +71,7 @@ export function ChargeRow({
   );
 }
 
+// Layout only — the colours are applied inline from the active scheme.
 const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
@@ -78,14 +87,12 @@ const styles = StyleSheet.create({
   rupee: {
     fontSize: 15,
     fontWeight: "500",
-    color: colors.textMuted,
   },
   removeBtn: {
     width: 32,
     height: 32,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: colors.errorBackground,
     borderRadius: 16,
   },
   pressed: {

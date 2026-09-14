@@ -46,6 +46,113 @@ export async function fetchBills(tenantId: string): Promise<Bill[]> {
   );
 }
 
+/** One "Extra charges (Optional)" row: a `bill_charges` record, without its ids. */
+export type BillCharge = {
+  label: string;
+  amount: number;
+};
+
+/**
+ * One month of a tenant's bill as the form edits it — the bill that exists, or
+ * the bill that would exist if it were raised now.
+ *
+ * `bill_draft` decides which of those it is, so the screen seeds the same fields
+ * either way and never works out a previous reading or a carried balance itself.
+ */
+export type BillDraft = {
+  /** null when the month has not been billed yet, which makes the form a create. */
+  billId: string | null;
+  /** Snapshotted on the bill, so an old month keeps the rent it was raised with. */
+  rentAmount: number;
+  electricityRate: number;
+  previousReading: number;
+  previousBalance: number;
+  currentReading: number;
+  amountPaid: number;
+  charges: BillCharge[];
+};
+
+/**
+ * `bill_charges` comes back as a jsonb array, which the generator types as `Json`
+ * — the widest thing a column can hold. Rows that do not look like a charge are
+ * dropped rather than defaulted, the same way the view rows are narrowed above.
+ */
+function toCharges(value: unknown): BillCharge[] {
+  if (!Array.isArray(value)) return [];
+
+  return value.flatMap((row) => {
+    if (typeof row !== "object" || row === null) return [];
+    const { label, amount } = row as { label?: unknown; amount?: unknown };
+    return typeof label === "string" ? [{ label, amount: Number(amount) }] : [];
+  });
+}
+
+/**
+ * What the bill form fills its fields with, for one tenant and one month.
+ *
+ * `month` is the first of the month ("2026-09-01"), which is a bill's identity —
+ * see `bills_tenant_month_key`. Numbers are coerced because Postgres `numeric`
+ * arrives as a string whenever it cannot survive JSON exactly.
+ */
+export async function fetchBillDraft(
+  tenantId: string,
+  month: string,
+): Promise<BillDraft> {
+  const { data, error } = await neon
+    .rpc("bill_draft", { p_tenant: tenantId, p_month: month })
+    .single();
+
+  if (error) throw error;
+
+  return {
+    billId: data.bill_id,
+    rentAmount: Number(data.rent_amount),
+    electricityRate: Number(data.electricity_rate),
+    previousReading: Number(data.previous_reading),
+    previousBalance: Number(data.previous_balance),
+    currentReading: Number(data.current_reading),
+    amountPaid: Number(data.amount_paid),
+    charges: toCharges(data.charges),
+  };
+}
+
+/** The fields the bill form actually writes; the rest the database derives. */
+export type BillWrite = {
+  tenantId: string;
+  /** First of the month. Saving a month that is already billed corrects that bill. */
+  month: string;
+  currentReading: number;
+  amountPaid: number;
+  charges: BillCharge[];
+};
+
+/**
+ * Raises or corrects one month's bill and its charge rows, and answers with the
+ * bill's id.
+ *
+ * A bill plus its charges is several statements, so it goes through the `save_bill`
+ * function: one round trip, and either all of it lands or none of it does. The
+ * rent, the rate, the previous reading and the carried balance are all decided
+ * there — a form that has been sitting open cannot write a stale one.
+ */
+export async function saveBill(bill: BillWrite): Promise<string> {
+  const { data, error } = await neon.rpc("save_bill", {
+    p_tenant: bill.tenantId,
+    p_month: bill.month,
+    p_current_reading: bill.currentReading,
+    p_amount_paid: bill.amountPaid,
+    p_charges: bill.charges,
+  });
+
+  if (error) throw error;
+
+  // No id means the tenant matched nothing the owner policy would show — deleted
+  // in another session, or never theirs. Nothing was written.
+  if (data === null) throw new Error("That tenant is no longer here.");
+
+  return data;
+}
+
 /**
  * What a tenant still owes, from their bills newest-first.
  *

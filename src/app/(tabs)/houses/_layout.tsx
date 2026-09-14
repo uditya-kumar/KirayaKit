@@ -66,6 +66,9 @@ export default function HomeLayout() {
         name="[houseId]/tenants/[tenantId]/paymentHistory"
         options={{ title: "Payment History" }}
       />
+      {/* One form for both jobs, so it sets its own title: "Create Bill" for a
+          month that has never been billed, "Edit Bill" for one that has. */}
+      <Stack.Screen name="[houseId]/tenants/[tenantId]/billForm" />
     </Stack>
   );
 }
