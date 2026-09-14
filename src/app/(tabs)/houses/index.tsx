@@ -2,9 +2,11 @@ import type { House } from "@/api/houses";
 import Button from "@/components/rentComponents/Button";
 import CustomTextInput from "@/components/rentComponents/CustomTextInput";
 import { HouseCard } from "@/components/rentComponents/HouseCard";
+import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
 import { useHouses } from "@/hooks/useHouses";
 import { FlashList, type ListRenderItem } from "@shopify/flash-list";
+import { useRouter } from "expo-router";
 import { Search } from "lucide-react-native";
 import { useMemo, useState } from "react";
 import {
@@ -15,25 +17,40 @@ import {
   View,
 } from "react-native";
 
-const colors = Colors.light;
-
-// Outside the component on purpose: they close over nothing, so FlashList gets
-// the same functions on every render instead of fresh ones.
+// Outside the component on purpose: it closes over nothing, so FlashList gets
+// the same function on every render instead of a fresh one.
 const keyExtractor = (house: House) => house.id;
-
-const renderItem: ListRenderItem<House> = ({ item }) => (
-  <HouseCard
-    name={item.name}
-    address={item.address}
-    tenantCount={item.tenant_count ?? 0}
-    // TODO: the Tenants screen (design node hf8HL) is not built yet.
-  />
-);
 
 /** Home: the landlord's properties. */
 export default function HomeScreen() {
+  // The palette follows the device setting, so anything coloured is applied
+  // inline; StyleSheet below keeps only the layout, which never changes.
+  const colorScheme = useColorScheme() ?? "light";
+  const colors = Colors[colorScheme];
   const { data: houses, error, isPending, isRefetching, refetch } = useHouses();
   const [query, setQuery] = useState("");
+  const router = useRouter();
+
+  // The object form rather than a built string so typed routes check the param
+  // name against the route.
+  const handleHousePress = (house: House) => {
+    router.push({
+      pathname: "/houses/[houseId]",
+      params: { houseId: house.id },
+    });
+  };
+
+  // Inside the component because the row needs the screen's press handler.
+  // FlashList gets a new function each render as a result; the list is short
+  // enough that it costs nothing measurable.
+  const renderItem: ListRenderItem<House> = ({ item }) => (
+    <HouseCard
+      name={item.name}
+      address={item.address}
+      tenantCount={item.tenant_count ?? 0}
+      onPress={() => handleHousePress(item)}
+    />
+  );
 
   const needle = query.trim().toLowerCase();
   const visible = useMemo(() => {
@@ -44,6 +61,9 @@ export default function HomeScreen() {
     return houses.filter((house) => house.name.toLowerCase().includes(needle));
   }, [houses, needle]);
 
+  const emptyTextStyle = [styles.emptyText, { color: colors.text }];
+  const emptySubtextStyle = [styles.emptySubtext, { color: colors.textMuted }];
+
   // All three states live here rather than replacing the screen, so the search
   // bar and the count stay put while the list loads or fails.
   const listEmpty = isPending ? (
@@ -52,8 +72,8 @@ export default function HomeScreen() {
     </View>
   ) : error ? (
     <View style={styles.listCentered}>
-      <Text style={styles.emptyText}>Couldn&apos;t load your properties</Text>
-      <Text style={styles.emptySubtext} selectable>
+      <Text style={emptyTextStyle}>Couldn&apos;t load your properties</Text>
+      <Text style={emptySubtextStyle} selectable>
         {error.message}
       </Text>
       <Button
@@ -66,10 +86,10 @@ export default function HomeScreen() {
     </View>
   ) : (
     <View style={styles.listCentered}>
-      <Text style={styles.emptyText}>
+      <Text style={emptyTextStyle}>
         {needle ? "No property matches" : "No properties yet"}
       </Text>
-      <Text style={styles.emptySubtext}>
+      <Text style={emptySubtextStyle}>
         {needle
           ? `Nothing named “${query.trim()}”. Try a different spelling.`
           : "Tap + to add your first one."}
@@ -79,7 +99,7 @@ export default function HomeScreen() {
 
   const listHeader = (
     <View style={styles.sectionHeader}>
-      <Text style={styles.sectionTitle}>
+      <Text style={[styles.sectionTitle, { color: colors.text }]}>
         {isPending
           ? "Properties"
           : `${visible.length} ${visible.length === 1 ? "Property" : "Properties"}`}
@@ -88,7 +108,7 @@ export default function HomeScreen() {
   );
 
   return (
-    <View style={styles.screen}>
+    <View style={[styles.screen, { backgroundColor: colors.background }]}>
       {/* The search field lives outside the list so it stays put while the
           cards scroll under it; only the count header travels with the list. */}
       <View style={styles.search}>
@@ -128,10 +148,10 @@ function Separator() {
   return <View style={styles.separator} />;
 }
 
+// Layout only — the colours are applied inline from the active scheme.
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: colors.background,
   },
   content: {
     paddingHorizontal: 20,
@@ -159,7 +179,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: "600",
-    color: colors.text,
   },
   listCentered: {
     flex: 1,
@@ -171,11 +190,9 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 16,
     fontWeight: "600",
-    color: colors.text,
   },
   emptySubtext: {
     fontSize: 13,
-    color: colors.textMuted,
     textAlign: "center",
   },
 });

@@ -1,8 +1,7 @@
+import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
 import { ChevronRight, MapPin, Users } from "lucide-react-native";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-
-const colors = Colors.light;
 
 type HouseCardProps = {
   name: string;
@@ -22,29 +21,44 @@ export function HouseCard({
   onPress,
   onLongPress,
 }: HouseCardProps) {
+  // The palette follows the device setting, so anything coloured is applied
+  // inline; the StyleSheet below keeps only the layout.
+  const colorScheme = useColorScheme() ?? "light";
+  const colors = Colors[colorScheme];
+
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={name}
       onPress={onPress}
       onLongPress={onLongPress}
-      style={({ pressed }) => [styles.card, pressed && styles.pressed]}
+      style={({ pressed }) => [
+        styles.card,
+        {
+          backgroundColor: colors.cardBackground,
+          borderColor: colors.borderColor,
+        },
+        pressed && styles.pressed,
+      ]}
     >
       <View style={styles.info}>
-        <Text style={styles.name}>{name}</Text>
+        <Text style={[styles.name, { color: colors.text }]}>{name}</Text>
 
         {address ? (
           <View style={styles.addressRow}>
             <MapPin size={15} color={colors.textMuted} />
-            <Text style={styles.address} numberOfLines={1}>
+            <Text
+              style={[styles.address, { color: colors.textMuted }]}
+              numberOfLines={1}
+            >
               {address}
             </Text>
           </View>
         ) : null}
 
-        <View style={styles.pill}>
+        <View style={[styles.pill, { backgroundColor: colors.fillBackground }]}>
           <Users size={13} color={colors.textMuted} />
-          <Text style={styles.pillText}>
+          <Text style={[styles.pillText, { color: colors.textMuted }]}>
             {tenantCount === 1 ? "1 tenant" : `${tenantCount} tenants`}
           </Text>
         </View>
@@ -55,16 +69,15 @@ export function HouseCard({
   );
 }
 
+// Layout only — the colours are applied inline from the active scheme.
 const styles = StyleSheet.create({
   card: {
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
     padding: 16,
-    backgroundColor: colors.cardBackground,
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: colors.borderColor,
   },
   pressed: {
     opacity: 0.8,
@@ -78,7 +91,6 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 17,
     fontWeight: "700",
-    color: colors.text,
   },
   addressRow: {
     flexDirection: "row",
@@ -89,7 +101,6 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     fontSize: 13,
     fontWeight: "500",
-    color: colors.textMuted,
   },
   pill: {
     flexDirection: "row",
@@ -97,12 +108,10 @@ const styles = StyleSheet.create({
     gap: 5,
     paddingVertical: 5,
     paddingHorizontal: 9,
-    backgroundColor: colors.fillBackground,
     borderRadius: 9,
   },
   pillText: {
     fontSize: 12,
     fontWeight: "500",
-    color: colors.textMuted,
   },
 });

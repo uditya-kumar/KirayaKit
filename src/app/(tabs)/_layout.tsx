@@ -1,3 +1,4 @@
+import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
 import { Tabs } from "expo-router";
 import { House, Settings } from "lucide-react-native";
@@ -7,6 +8,8 @@ const colors = Colors.light;
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
+  const colorScheme = useColorScheme() ?? "light";
+  const colors = Colors[colorScheme];
   return (
     <Tabs
       screenOptions={{
