@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "RentTrack",
-    "slug": "RentTrack",
+    "name": "Rentica",
+    "slug": "Rentica",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "renttrack",
+    "scheme": "rentica",
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.renttrack.app"
+      "bundleIdentifier": "com.rentica.app"
     },
     "android": {
       "adaptiveIcon": {
@@ -17,7 +17,7 @@
         "backgroundColor": "#ffffff"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.renttrack.app"
+      "package": "com.rentica.app"
     },
     "web": {
       "bundler": "metro",

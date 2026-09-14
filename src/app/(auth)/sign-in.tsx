@@ -48,7 +48,7 @@ export default function SignInScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sign in</Text>
-      <Text style={styles.subtitle}>RentTrack</Text>
+      <Text style={styles.subtitle}>Rentica</Text>
       {error ? (
         <Text style={[styles.error, { color: theme.error }]}>{error}</Text>
       ) : null}

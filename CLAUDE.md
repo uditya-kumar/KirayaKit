@@ -1,4 +1,4 @@
-# RentTrack
+# Rentica
 
 Expo (SDK 57) + expo-router app for landlords tracking houses, tenants, bills and
 receipts. Two moving parts only: **this client and a Neon Postgres database**.
@@ -99,6 +99,7 @@ src/
   iOS — with `onValueChange`. Don't reach for
   `react-native-modal-datetime-picker`: its latest release still passes the
   deprecated `onChange`, which warns on every mount.
+
 - Icon-only controls stay a plain `Pressable` with an accessible label.
 
 If a new shared primitive is genuinely needed, put it in `rentComponents/` and
@@ -124,7 +125,7 @@ Match the surrounding file. In short:
 
   Because `colors` is only known inside the component, `StyleSheet.create` holds
   **layout only** and colours are applied inline: `style={[styles.screen, {
-  backgroundColor: colors.background }]}`, or a named array above the JSX
+backgroundColor: colors.background }]}`, or a named array above the JSX
   (`const emptyTextStyle = [styles.emptyText, { color: colors.text }]`) when the
   same pair is used more than once. Never put a colour inside
   `StyleSheet.create`. No hex literals outside `Colors.ts` (box-shadow black with
@@ -133,6 +134,7 @@ Match the surrounding file. In short:
   Older files still hold a module-scope `const colors = Colors.light;` (some of
   `rentComponents/*`). That is the shape being migrated away from — convert a file
   when you next touch it.
+
 - **No design-token file.** Radii, spacing and font sizes are written as plain
   numbers where they're used. `src/constants/design.ts` was deliberately deleted;
   don't reintroduce it.
@@ -190,7 +192,7 @@ tools only, never with Read or Grep. It is light-mode only, which is why
 `Colors.light` is what screens use. When a screen and the mock disagree, say so
 rather than quietly inventing layout.
 
-`requirements/Rent Track.txt` and `requirements/RentTrack.xlsx` are the original
+`requirements/Rent Track.txt` and `requirements/Rentica.xlsx` are the original
 written requirements — the rent maths and the spreadsheet the app replaces.
 
 `.agents/skills/` holds vendor skills worth consulting before guessing —
