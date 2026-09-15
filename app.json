@@ -45,6 +45,18 @@
       "typedRoutes": true,
       "tsconfigPaths": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "52950adf-dd1b-4ddf-a913-f5d0cf79be7f"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/52950adf-dd1b-4ddf-a913-f5d0cf79be7f"
     }
   }
 }
