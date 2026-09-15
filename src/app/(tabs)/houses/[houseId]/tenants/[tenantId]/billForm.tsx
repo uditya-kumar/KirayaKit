@@ -13,6 +13,7 @@ import {
   formatBillMonthShort,
   formatRupees,
 } from "@/utils/format";
+import { MAX_AMOUNT } from "@/utils/validate";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import {
   CalendarDays,
@@ -233,16 +234,25 @@ function BillForm({ tenantId, month, onChangeMonth, draft }: BillFormProps) {
   function onSubmit() {
     setError(null);
 
-    if (!Number.isFinite(reading) || reading < draft.previousReading) {
+    // Ten digits is where numeric(12,2) stops, and past it the column refuses the
+    // row and says so in terms of precision and scale. Every figure this form sends
+    // lands in one of those columns, so every one of them is held to MAX_AMOUNT.
+    if (
+      !Number.isFinite(reading) ||
+      reading < draft.previousReading ||
+      reading > MAX_AMOUNT
+    ) {
       setError(
-        `The current reading has to be a number, and at least last month's ${formatAmount(draft.previousReading)}.`,
+        `The current reading has to be a number, at least last month's ${formatAmount(draft.previousReading)}, and no more than ten digits.`,
       );
       return;
     }
 
     const paid = amount(amountPaid);
-    if (!Number.isFinite(paid) || paid < 0) {
-      setError("Paid this month has to be a number, and not negative.");
+    if (!Number.isFinite(paid) || paid < 0 || paid > MAX_AMOUNT) {
+      setError(
+        "Paid this month has to be a number, not negative, and no more than ten digits.",
+      );
       return;
     }
 
@@ -258,10 +268,24 @@ function BillForm({ tenantId, month, onChangeMonth, draft }: BillFormProps) {
     if (
       filled.some((charge) => {
         const value = amount(charge.amount);
-        return !Number.isFinite(value) || value < 0;
+        return !Number.isFinite(value) || value < 0 || value > MAX_AMOUNT;
       })
     ) {
-      setError("A charge amount has to be a number, and not negative.");
+      setError(
+        "A charge amount has to be a number, not negative, and no more than ten digits.",
+      );
+      return;
+    }
+
+    // Every figure above can fit and the sum still not: total_billed is a
+    // generated numeric(12,2), and a long reading against a rate multiplies into
+    // it. Checked against the total under the button, which is already the same
+    // arithmetic the column does — otherwise the insert comes back rejected with
+    // nothing on the form to point at.
+    if (total > MAX_AMOUNT) {
+      setError(
+        "This bill adds up to more than the ledger holds — check the reading and the charges.",
+      );
       return;
     }
 

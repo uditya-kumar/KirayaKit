@@ -112,6 +112,15 @@ function HouseForm({ house }: HouseFormProps) {
   function onSubmit() {
     setError(null);
 
+    // The button below is disabled without a name, but the GPay field's return key
+    // calls this directly and does not consult it. Without this the blank name
+    // travels, and houses_name_not_blank sends back the same sentence after a
+    // round trip.
+    if (name.trim() === "") {
+      setError("The house needs a name.");
+      return;
+    }
+
     // Blank means "one floor", which is also the column's default. Anything
     // typed has to be a whole number in range, or the CHECK constraint would
     // bounce it after a round trip.

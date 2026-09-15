@@ -19,9 +19,17 @@
 --
 -- Also drops five indexes nothing can use — see the end of the file.
 --
--- Apply with the runner, which wraps the file in one transaction and reloads the
--- Data API's schema cache afterwards — v_owner_summary 404s until it does:
+-- Apply with the runner, which wraps the file in one transaction:
 --   npm run migrate src/db/migrations/0005_pending_and_summary.sql
+--
+-- Then refresh the Data API's schema cache for the branch you applied it to, or
+-- every read of v_owner_summary comes back "not found in the schema cache" while
+-- the view sits there working: PostgREST answers .from() out of a cache it built
+-- at startup. The runner sends NOTIFY pgrst, which is PostgREST's own mechanism
+-- and does nothing on Neon's managed Data API — use the "Refresh schema cache"
+-- button on the branch's Data API page, or PATCH its data-api endpoint. Applying
+-- this to a branch and forgetting that step is what makes the Profile screen
+-- look broken.
 
 -- ---------------------------------------------------------------------------
 -- A tenant's debt is one row, not a sum

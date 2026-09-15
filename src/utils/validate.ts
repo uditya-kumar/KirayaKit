@@ -45,3 +45,24 @@ export function isUpiId(raw: string): boolean {
     raw.trim(),
   );
 }
+
+/**
+ * The largest figure the money and meter columns will take: they are
+ * numeric(12,2), so ten digits in front of the point.
+ *
+ * Unlike the checks above, this one is enforced — not by a CHECK but by the
+ * column's own type, which is why it is worth stating here. Postgres rejects
+ * anything larger as SQLSTATE 22003, whose text is "A field with precision 12,
+ * scale 2 must round to an absolute value less than 10^10": true, and no use to
+ * someone who pressed a key twice. The forms compare against this so the number
+ * is refused where it was typed, and `neonErrorMessage` translates 22003 for the
+ * paths a form cannot see — `bills.total_billed` is generated, so a sum can
+ * overflow it while every figure going in fits.
+ */
+export const MAX_AMOUNT = 9_999_999_999.99;
+
+/**
+ * The same for `electricity_rate`, the one numeric(10,2) column: eight digits in
+ * front of the point rather than ten.
+ */
+export const MAX_RATE = 99_999_999.99;

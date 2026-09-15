@@ -9,7 +9,7 @@ import { useHouse } from "@/hooks/useHouse";
 import { useTenantRecord } from "@/hooks/useTenantRecord";
 import { useUpdateTenant } from "@/hooks/useUpdateTenant";
 import { neonErrorMessage } from "@/libs/neon-errors";
-import { normaliseMobile } from "@/utils/validate";
+import { MAX_AMOUNT, MAX_RATE, normaliseMobile } from "@/utils/validate";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import {
   Calendar,
@@ -170,6 +170,15 @@ function TenantForm({ houseId, tenant }: TenantFormProps) {
   function onSubmit() {
     setError(null);
 
+    // The button below is disabled without a name, but the rent field's return key
+    // calls this directly and does not consult it. Without this the blank name
+    // travels, and tenants_name_not_blank sends back the same sentence after a
+    // round trip.
+    if (name.trim() === "") {
+      setError("The tenant needs a name.");
+      return;
+    }
+
     // The floor is the one number with no default: the database has to know
     // which one is being occupied, and 0 is the ground floor.
     const floorNumber = Number(floor.trim());
@@ -191,6 +200,16 @@ function TenantForm({ houseId, tenant }: TenantFormProps) {
       setError(
         `The highest floor in this house is ${topFloor}, counting the ground floor as 0.`,
       );
+      return;
+    }
+
+    // The fallback for a house that has not arrived yet, which is the only way past
+    // the check above: no house can have more than 50 floors (houses_floors_sane),
+    // so 49 is the highest floor there is. Worth having because floor_number is a
+    // smallint — a slipped keypress past 32767 would otherwise come back as an
+    // error about smallint range rather than about floors.
+    if (floorNumber > 49) {
+      setError("A house has at most 50 floors, so 49 is the highest floor.");
       return;
     }
 
@@ -221,6 +240,17 @@ function TenantForm({ houseId, tenant }: TenantFormProps) {
     ) {
       setError(
         "Rent, rate and meter reading have to be numbers, and not negative.",
+      );
+      return;
+    }
+
+    // The other end of the same three fields. Rent and the meter are numeric(12,2)
+    // and the rate numeric(10,2), so past those the column refuses the row and says
+    // so in terms of precision and scale — said here as the cause it actually is,
+    // because nobody charges a lakh crore in rent, they pressed a key twice.
+    if (rent > MAX_AMOUNT || meter > MAX_AMOUNT || rate > MAX_RATE) {
+      setError(
+        "That rent, rate or meter reading is too large by a digit or more.",
       );
       return;
     }

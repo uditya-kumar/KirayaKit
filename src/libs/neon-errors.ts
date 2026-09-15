@@ -34,12 +34,28 @@ const MESSAGES: Record<string, string> = {
  */
 const INVALID_TEXT = "22P02";
 
+/**
+ * Postgres 22003, a number too big for its column. The forms bound what they send
+ * (see MAX_AMOUNT in `utils/validate`), so this is for the figures they cannot
+ * check: `bills.total_billed` is generated, and `save_bill` walks the months after
+ * the one it saved and recomputes their carried balance, so a correction can push
+ * a later month's total past numeric(12,2) with every typed figure in range.
+ *
+ * Postgres says it as a sentence about precision and scale, or as "smallint out of
+ * range" for a floor, and neither belongs under a Save button.
+ */
+const OUT_OF_RANGE = "22003";
+
 export function neonErrorMessage(err: unknown): string {
   if (err && typeof err === "object" && "message" in err) {
     const { code, message } = err as { code?: string; message: string };
 
     if (code === INVALID_TEXT) {
       return "That link doesn't point at anything in KirayaKit.";
+    }
+
+    if (code === OUT_OF_RANGE) {
+      return "That number is too large — check for an extra digit.";
     }
 
     // 23505 unique violation, 23514 check violation — both name the constraint
