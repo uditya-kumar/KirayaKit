@@ -3,6 +3,7 @@ import CustomTextInput from "@/components/rentComponents/CustomTextInput";
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
 import { clerkAttempt } from "@/libs/clerk-errors";
+import { MIN_PASSWORD_LENGTH, isEmailAddress } from "@/utils/validate";
 import { useSignUp } from "@clerk/expo";
 import { router } from "expo-router";
 import {
@@ -57,6 +58,21 @@ export default function SignUpScreen() {
     setError(null);
     setNotice(null);
 
+    // Both are checked here so a typo is answered as the button is pressed.
+    // Clerk rejects them too, but a round trip later and in its own words — a
+    // mistyped address comes back as "Identifier is invalid", which names a field
+    // this screen does not have.
+    if (!isEmailAddress(email)) {
+      setError("That doesn't look like an email address.");
+      return;
+    }
+    if (password.length < MIN_PASSWORD_LENGTH) {
+      setError(
+        `Choose a password of at least ${MIN_PASSWORD_LENGTH} characters.`,
+      );
+      return;
+    }
+
     const notCreated = await clerkAttempt(() =>
       signUp.password({ emailAddress: email.trim(), password }),
     );
@@ -80,12 +96,19 @@ export default function SignUpScreen() {
     setError(null);
     setNotice(null);
 
-    const notVerified = await clerkAttempt(() =>
-      signUp.verifications.verifyEmailCode({ code: code.trim() }),
-    );
-    if (notVerified) {
-      setError(notVerified);
-      return;
+    // Skipped once the code has already been accepted. A verification can only be
+    // attempted once, and a second attempt is answered with "You need to send a
+    // verification code before attempting to verify" — so pressing the button
+    // again after finalize() failed, off Wi-Fi say, would ask for a new code
+    // instead of just finishing.
+    if (signUp.status !== "complete") {
+      const notVerified = await clerkAttempt(() =>
+        signUp.verifications.verifyEmailCode({ code: code.trim() }),
+      );
+      if (notVerified) {
+        setError(notVerified);
+        return;
+      }
     }
     if (signUp.status !== "complete") {
       setError(`Sign-up needs another step (${signUp.status}).`);
@@ -126,7 +149,9 @@ export default function SignUpScreen() {
   const subheadingStyle = [styles.subheading, { color: colors.textMuted }];
 
   // An icon carries each message instead of a tinted panel, so a rejected email
-  // still reads as more than another line of grey text.
+  // still reads as more than another line of grey text. Rendered in both branches
+  // directly above the button that produced it, which is where the eye already is
+  // when nothing happens.
   const messages = (
     <>
       {error ? (
@@ -201,7 +226,6 @@ export default function SignUpScreen() {
 
         {/* Groups the fields for spacing only — it draws nothing. */}
         <View style={styles.form}>
-          {messages}
           {awaitingCode ? (
             <>
               <CustomTextInput
@@ -216,6 +240,7 @@ export default function SignUpScreen() {
                 onSubmitEditing={onVerify}
                 returnKeyType="go"
               />
+              {messages}
               <Button
                 text="Verify and continue"
                 textColor={colors.buttonText}
@@ -281,6 +306,7 @@ export default function SignUpScreen() {
                 onSubmitEditing={onSignUp}
                 returnKeyType="go"
               />
+              {messages}
               <Button
                 text="Create account"
                 textColor={colors.buttonText}

@@ -6,6 +6,10 @@
  * of storing one only shows up months later when a receipt goes to nobody. So
  * the form is the only place they can be caught, which is why the rules live
  * here rather than in a migration.
+ *
+ * The two auth checks at the end are here for the same reason from the other
+ * direction: Clerk does check them, but its answer is a round trip away and
+ * comes back naming a field the screen never showed.
  */
 
 /**
@@ -66,3 +70,29 @@ export const MAX_AMOUNT = 9_999_999_999.99;
  * front of the point rather than ten.
  */
 export const MAX_RATE = 99_999_999.99;
+
+/**
+ * Whether a typed email address is shaped like one: something, an @, then a
+ * domain with a dot in it.
+ *
+ * Deliberately loose. The only thing worth catching before the request goes out
+ * is a typo — a missing @, a trailing comma, "gmail" with no ".com" — and
+ * whether the address can actually receive mail is settled by the code Clerk
+ * sends to it, not by a longer pattern here.
+ */
+export function isEmailAddress(raw: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(raw.trim());
+}
+
+/**
+ * The shortest password Clerk's default settings accept.
+ *
+ * Checked on the device so that choosing a short one is answered as you press
+ * the button rather than after a round trip. Clerk stays the authority: if the
+ * instance is later set stricter, the server's `form_password_length_too_short`
+ * is what a landlord sees, and only this early nudge is out of date.
+ *
+ * Sign-in never checks it — an account made under an older rule may hold a
+ * shorter password, and refusing to send it would lock that landlord out.
+ */
+export const MIN_PASSWORD_LENGTH = 8;

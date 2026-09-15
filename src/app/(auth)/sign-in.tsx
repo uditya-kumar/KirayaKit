@@ -3,6 +3,7 @@ import CustomTextInput from "@/components/rentComponents/CustomTextInput";
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
 import { clerkAttempt } from "@/libs/clerk-errors";
+import { isEmailAddress } from "@/utils/validate";
 import { useSignIn } from "@clerk/expo";
 import { router } from "expo-router";
 import {
@@ -70,6 +71,16 @@ export default function SignInScreen() {
     setError(null);
     setNotice(null);
 
+    // Checked here so a typo is answered as the button is pressed. Clerk rejects
+    // it too, but a round trip later and as "Identifier is invalid", which names a
+    // field this screen does not have. The password is not checked for length:
+    // an account made under an older rule may hold a shorter one, and refusing to
+    // send it would lock that landlord out of their own ledger.
+    if (!isEmailAddress(email)) {
+      setError("That doesn't look like an email address.");
+      return;
+    }
+
     const failed = await clerkAttempt(() =>
       signIn.password({ identifier: email.trim(), password }),
     );
@@ -110,12 +121,19 @@ export default function SignInScreen() {
     setError(null);
     setNotice(null);
 
-    const failed = await clerkAttempt(() =>
-      signIn.mfa.verifyEmailCode({ code: code.trim() }),
-    );
-    if (failed) {
-      setError(failed);
-      return;
+    // Skipped once the code has already been accepted. A verification can only be
+    // attempted once, and a second attempt is answered with "You need to send a
+    // verification code before attempting to verify" — so pressing the button
+    // again after finalize() failed, off Wi-Fi say, would ask for a new code
+    // instead of just finishing.
+    if (signIn.status !== "complete") {
+      const failed = await clerkAttempt(() =>
+        signIn.mfa.verifyEmailCode({ code: code.trim() }),
+      );
+      if (failed) {
+        setError(failed);
+        return;
+      }
     }
     if (signIn.status !== "complete") {
       setError(`Sign-in needs another step (${signIn.status}).`);
@@ -154,7 +172,9 @@ export default function SignInScreen() {
   const subheadingStyle = [styles.subheading, { color: colors.textMuted }];
 
   // An icon carries each message instead of a tinted panel, so a failed sign-in
-  // still reads as more than another line of grey text.
+  // still reads as more than another line of grey text. Rendered in both branches
+  // directly above the button that produced it, which is where the eye already is
+  // when nothing happens.
   const messages = (
     <>
       {error ? (
@@ -229,7 +249,6 @@ export default function SignInScreen() {
 
         {/* Groups the fields for spacing only — it draws nothing. */}
         <View style={styles.form}>
-          {messages}
           {awaitingCode ? (
             <>
               <CustomTextInput
@@ -244,6 +263,7 @@ export default function SignInScreen() {
                 onSubmitEditing={onVerify}
                 returnKeyType="go"
               />
+              {messages}
               <Button
                 text="Verify and continue"
                 textColor={colors.buttonText}
@@ -325,6 +345,7 @@ export default function SignInScreen() {
                 paddingHorizontal={0}
                 style={styles.forgot}
               />
+              {messages}
               <Button
                 text="Sign in"
                 textColor={colors.buttonText}

@@ -50,8 +50,19 @@ export default function RootLayout() {
               what makes a focused field move on Android at all: the app is
               edge-to-edge, so the window is no longer resized when the keyboard
               opens and React Native's own KeyboardAvoidingView has nothing to
-              react to. */}
-          <KeyboardProvider>
+              react to.
+
+              Both props tell it that: without them it assumes the app is not
+              edge-to-edge and gives the whole thing a top margin the height of
+              the status bar and a bottom one the height of the navigation bar, to
+              imitate an ordinary window. Every screen here already offsets itself
+              — stack headers through safe-area-context, the tab bar through
+              insets.bottom — so those margins stack on insets already applied and
+              leave a second status bar's worth of blank space above every header.
+              The library does detect edge-to-edge itself, but only from React
+              Native's feature flag, which is off on Android 14 and older however
+              the app is really laid out. */}
+          <KeyboardProvider statusBarTranslucent navigationBarTranslucent>
             {/* Above the navigator, because the theme it picks and every screen's
                 colours read from the same choice. */}
             <AppearanceProvider>

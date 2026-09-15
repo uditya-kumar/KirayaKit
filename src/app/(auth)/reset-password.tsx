@@ -4,6 +4,7 @@ import { Text, View } from "@/components/Themed";
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
 import { clerkAttempt } from "@/libs/clerk-errors";
+import { MIN_PASSWORD_LENGTH, isEmailAddress } from "@/utils/validate";
 import { useSignIn } from "@clerk/expo";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
@@ -70,6 +71,13 @@ export default function ResetPasswordScreen() {
     setError(null);
     setNotice(null);
 
+    // Checked here so a typo is answered as the button is pressed, rather than
+    // coming back from Clerk as "Identifier is invalid".
+    if (!isEmailAddress(email)) {
+      setError("That doesn't look like an email address.");
+      return;
+    }
+
     const failed = await sendCode();
     if (failed) {
       setError(failed);
@@ -95,12 +103,30 @@ export default function ResetPasswordScreen() {
     setError(null);
     setNotice(null);
 
-    const notVerified = await clerkAttempt(() =>
-      signIn.resetPasswordEmailCode.verifyCode({ code: code.trim() }),
-    );
-    if (notVerified) {
-      setError(notVerified);
+    // Checked before the code goes off to be verified. Otherwise a short password
+    // is only rejected on the second call, and a message arriving after the code
+    // was accepted reads as though the code were the problem.
+    if (password.length < MIN_PASSWORD_LENGTH) {
+      setError(
+        `Choose a password of at least ${MIN_PASSWORD_LENGTH} characters.`,
+      );
       return;
+    }
+
+    // Only while the sign-in is still waiting for a first factor. Once the code
+    // has been accepted the sign-in moves on to needs_new_password and the
+    // verification is spent, so sending the same code again is answered with "You
+    // need to send a verification code before attempting to verify" — which is
+    // what a second press used to say when Clerk had refused the password, and it
+    // reads as though a new code were needed when the code was never the problem.
+    if (signIn.status === "needs_first_factor") {
+      const notVerified = await clerkAttempt(() =>
+        signIn.resetPasswordEmailCode.verifyCode({ code: code.trim() }),
+      );
+      if (notVerified) {
+        setError(notVerified);
+        return;
+      }
     }
 
     const notSet = await clerkAttempt(() =>
@@ -137,6 +163,8 @@ export default function ResetPasswordScreen() {
     setPassword("");
   }
 
+  // Rendered in both branches directly above the button that produced it, which
+  // is where the eye already is when nothing appears to happen.
   const messages = (
     <>
       {error ? (
@@ -165,7 +193,6 @@ export default function ResetPasswordScreen() {
           <Text style={styles.subtitle}>
             We sent a 6-digit code to {email.trim()}.
           </Text>
-          {messages}
           <CustomTextInput
             value={code}
             onChangeText={setCode}
@@ -186,6 +213,7 @@ export default function ResetPasswordScreen() {
             onSubmitEditing={onReset}
             returnKeyType="go"
           />
+          {messages}
           <Button
             text="Reset password"
             textColor={theme.buttonText}
@@ -218,7 +246,6 @@ export default function ResetPasswordScreen() {
           <Text style={styles.subtitle}>
             We&apos;ll email you a code to set a new one.
           </Text>
-          {messages}
           <CustomTextInput
             value={email}
             onChangeText={setEmail}
@@ -230,6 +257,7 @@ export default function ResetPasswordScreen() {
             onSubmitEditing={onSendCode}
             returnKeyType="go"
           />
+          {messages}
           <Button
             text="Send code"
             textColor={theme.buttonText}
