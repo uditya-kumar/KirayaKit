@@ -23,6 +23,11 @@ type CustomTextInputProps = {
   labelText?: string;
   /** Drawn inside the box, ahead of the text: a search glyph, a ₹ sign. */
   icon?: ReactNode;
+  /**
+   * Drawn inside the box, after the text — a control that belongs to the field
+   * rather than to the form, like the eye that reveals a password.
+   */
+  trailing?: ReactNode;
 } & Omit<
   TextInputProps,
   "value" | "onChangeText" | "placeholder" | "style" | "keyboardType"
@@ -41,6 +46,7 @@ function CustomTextInput({
   keyboardType,
   labelText,
   icon,
+  trailing,
   ...inputProps
 }: CustomTextInputProps) {
   const colorScheme = useColorScheme() ?? "light";
@@ -74,6 +80,7 @@ function CustomTextInput({
           {...inputProps}
           style={[styles.input, { color: colors.text }]}
         />
+        {trailing}
       </View>
     </View>
   );
