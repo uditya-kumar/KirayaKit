@@ -24,47 +24,32 @@ export type OwnerSummary = {
 };
 
 /**
- * The portfolio totals for the signed-in landlord.
+ * The portfolio totals for the signed-in landlord — one row, one request.
  *
- * Two requests because no view carries a portfolio-wide total: the houses list
- * already counts active tenants per house, and the pending figure has to be
- * reduced from bills. `v_tenant_list.total_pending` is not usable for it — it sums
- * every month, and an unpaid month is carried into the next bill and billed again,
- * so a tenant's debt would be counted once per month it has been owed.
+ * `v_owner_summary` (0005) does the counting. It used to be done here, from every
+ * bill in the account: the reduce needed the newest bill per tenant, so the client
+ * downloaded all of them and threw most away — unbounded as the months add up, and
+ * silently short the moment the Data API's row cap cut the list off.
  *
- * TODO: a v_owner_summary view (one row per owner) would make this one request
- * and put the maths where the rest of it lives, in SQL.
+ * An account with no `users` row yet — signed up, no house created, so
+ * `ensureProfile` has never run — matches no row at all. That is a real state and
+ * an empty portfolio is the honest reading of it, not an error.
  */
 export async function fetchOwnerSummary(): Promise<OwnerSummary> {
-  const [houses, bills] = await Promise.all([
-    // Row count is the number of properties, hence no columns beyond the one
-    // being totalled.
-    neon.from("v_house_list").select("tenant_count"),
-    neon
-      .from("v_bill_receipt")
-      .select("tenant_id, balance_due")
-      .order("bill_month", { ascending: false }),
-  ]);
+  const { data, error } = await neon
+    .from("v_owner_summary")
+    .select("properties, tenants, pending")
+    .limit(1);
 
-  if (houses.error) throw houses.error;
-  if (bills.error) throw bills.error;
+  if (error) throw error;
 
-  const tenants = houses.data.reduce(
-    (total, house) => total + (house.tenant_count ?? 0),
-    0,
-  );
+  const row = data.at(0);
 
-  // The newest bill's balance is the whole debt, so only the first row seen for
-  // each tenant counts — and the rows arrive newest first, which is what makes
-  // "first seen" mean "newest". Overpayment is a credit against that tenant
-  // alone, so it is clamped rather than deducted from what the others owe.
-  const counted = new Set<string>();
-  let pending = 0;
-  for (const bill of bills.data) {
-    if (!bill.tenant_id || counted.has(bill.tenant_id)) continue;
-    counted.add(bill.tenant_id);
-    pending += Math.max(0, Number(bill.balance_due ?? 0));
-  }
-
-  return { properties: houses.data.length, tenants, pending };
+  // The view's columns are nullable to the generator because it cannot see that
+  // count() and a COALESCEd sum() never are.
+  return {
+    properties: Number(row?.properties ?? 0),
+    tenants: Number(row?.tenants ?? 0),
+    pending: Number(row?.pending ?? 0),
+  };
 }

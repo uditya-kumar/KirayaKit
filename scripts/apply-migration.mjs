@@ -63,13 +63,32 @@ try {
   await client.query(readFileSync(file, "utf8"));
   await client.query("COMMIT");
 
-  // The Data API serves .rpc() and .from() out of a cached schema, so a new
-  // function is "not found in the schema cache" until PostgREST is told to look
-  // again. Cheap to send even when the migration added nothing callable.
+  // The Data API serves .rpc() and .from() out of a cached schema, so a new view
+  // or function is "not found in the schema cache" until PostgREST rebuilds it.
+  // NOTIFY is PostgREST's own mechanism and is left in because it costs nothing,
+  // but it does not work on Neon's managed Data API — 0005 was applied and the
+  // Profile screen still 404'd on v_owner_summary until the refresh below was
+  // sent. Neon's supported paths are the "Refresh schema cache" button on the
+  // Data API page, or an empty PATCH to
+  // /projects/{project}/branches/{branch}/data-api/{database}, which this script
+  // cannot send without a Neon API key. Hence the reminder rather than the call.
   await client.query("NOTIFY pgrst, 'reload schema'");
 
-  console.log(`Applied ${file}.`);
+  // Which branch this went to, because the answer is not always the one you are
+  // testing: DATABASE_URL_UNPOOLED points at production while the app reads
+  // EXPO_PUBLIC_NEON_DATA_API_URL, and those two named different branches for
+  // long enough to cost an afternoon. Printed last so it is the line still on
+  // screen when the migration is done.
+  const { rows } = await client.query(
+    "SELECT current_setting('neon.branch_id', true) AS branch",
+  );
+
+  console.log(`Applied ${file} to branch ${rows[0]?.branch ?? "unknown"}.`);
   console.log("Now run:  npm run gen-types");
+  console.log(
+    "Then refresh the Data API schema cache for that branch, or the app will\n" +
+      "still be told the new view does not exist.",
+  );
 } catch (err) {
   await client.query("ROLLBACK");
   // The message names the statement that failed; the connection string is not

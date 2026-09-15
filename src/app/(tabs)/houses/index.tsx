@@ -5,6 +5,7 @@ import { HouseCard } from "@/components/rentComponents/HouseCard";
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
 import { useHouses } from "@/hooks/useHouses";
+import { neonErrorMessage } from "@/libs/neon-errors";
 import { FlashList, type ListRenderItem } from "@shopify/flash-list";
 import { useRouter } from "expo-router";
 import { Search } from "lucide-react-native";
@@ -73,8 +74,10 @@ export default function HomeScreen() {
   ) : error ? (
     <View style={styles.listCentered}>
       <Text style={emptyTextStyle}>Couldn&apos;t load your properties</Text>
+      {/* Through the same translator every other failure in the app goes
+          through, so a rejected read and a rejected write read alike. */}
       <Text style={emptySubtextStyle} selectable>
-        {error.message}
+        {neonErrorMessage(error)}
       </Text>
       <Button
         text="Try again"

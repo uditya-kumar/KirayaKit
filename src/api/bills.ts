@@ -123,6 +123,10 @@ export async function fetchBillDraft(
  * `charges` is the `bill_charges` rows rather than the view's
  * `extra_charges_total`, because the receipt lists them one per line — "Water
  * charge", "IGL (Gas)" — and a single total cannot be taken apart again.
+ *
+ * `upi_id` and `gpay_number` are the house's, and both are nullable: they are
+ * plain text columns an owner may leave empty, which is why they are outside
+ * `isBillReceipt` rather than being checked with the rest.
  */
 export type BillReceipt = {
   id: string;
@@ -136,13 +140,17 @@ export type BillReceipt = {
   electricity_amount: number;
   previous_balance: number;
   total_billed: number;
+  upi_id: string | null;
+  gpay_number: string | null;
   charges: BillCharge[];
 };
 
 // No amount_paid or balance_due: a receipt says what was billed, and the payment
-// side of the ledger is the tenant detail screen's business.
+// side of the ledger is the tenant detail screen's business. The two payment
+// handles are here because the receipt is what asks to be paid — every message
+// in the requirements ends with them.
 const BILL_RECEIPT_COLUMNS =
-  "id, bill_month, tenant_name, floor_number, house_name, rent_amount, units_consumed, electricity_rate, electricity_amount, previous_balance, total_billed, bill_charges(label, amount, sort_order)";
+  "id, bill_month, tenant_name, floor_number, house_name, rent_amount, units_consumed, electricity_rate, electricity_amount, previous_balance, total_billed, upi_id, gpay_number, bill_charges(label, amount, sort_order)";
 
 /** The receipt's own fields — the row above without the charges hanging off it. */
 type BillFields = Omit<BillReceipt, "charges">;
@@ -252,8 +260,13 @@ export async function saveBill(bill: BillWrite): Promise<string> {
  *
  * The newest bill's balance is the entire debt, not just that month's: an unpaid
  * month is carried into the next bill's `previous_balance` and billed again, so
- * adding the older balances up would charge the same rupees twice over. That is
- * exactly what v_tenant_list.total_pending does — see the TODO in api/tenants.ts.
+ * adding the older balances up would charge the same rupees twice over. This is
+ * the same figure `v_tenant_list.total_pending` carries, with one difference —
+ * the view clamps at zero because a card labelled "pending" cannot show a credit,
+ * and this returns it signed so the screen can say so in words.
+ *
+ * Negative means the tenant is in credit: they paid past the total, and the
+ * surplus travels into the next bill as a negative previous_balance.
  */
 export function outstandingAmount(bills: Bill[]): number {
   return bills.at(0)?.balance_due ?? 0;

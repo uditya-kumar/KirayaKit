@@ -7,6 +7,7 @@ import { useCreateHouse } from "@/hooks/useCreateHouse";
 import { useHouse } from "@/hooks/useHouse";
 import { useUpdateHouse } from "@/hooks/useUpdateHouse";
 import { neonErrorMessage } from "@/libs/neon-errors";
+import { isUpiId, normaliseMobile } from "@/utils/validate";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import {
   House,
@@ -65,7 +66,10 @@ export default function HouseFormScreen() {
             Couldn&apos;t load this house
           </Text>
           <Text style={[styles.error, { color: colors.textMuted }]} selectable>
-            {error.message}
+            {/* Translated, because this screen is reachable by link: a houseId
+                that lost a character arrives as Postgres 22P02, whose raw text
+                is a complaint about uuid syntax rather than about the link. */}
+            {neonErrorMessage(error)}
           </Text>
           <Button
             text="Try again"
@@ -121,12 +125,30 @@ function HouseForm({ house }: HouseFormProps) {
       return;
     }
 
+    // Both payment fields are optional, and both are the whole point of the
+    // receipt a tenant gets: a wrong one silently sends money nowhere, so the
+    // shape is checked here — the columns are plain text and will take anything.
+    const upi = orNull(upiId);
+    if (upi !== null && !isUpiId(upi)) {
+      setError("A UPI ID looks like name@bank — check what you typed.");
+      return;
+    }
+
+    const gpay = orNull(gpayNumber);
+    const gpayDigits = gpay === null ? null : normaliseMobile(gpay);
+    if (gpay !== null && gpayDigits === null) {
+      setError("A GPay number is the 10 digits of an Indian mobile number.");
+      return;
+    }
+
     const fields: HouseInput = {
       name: name.trim(),
       address: orNull(address),
       number_of_floors: numberOfFloors,
-      upi_id: orNull(upiId),
-      gpay_number: orNull(gpayNumber),
+      upi_id: upi,
+      // Stored as bare digits so the same number typed two different ways is
+      // the same number on the receipt.
+      gpay_number: gpayDigits,
     };
 
     // Back where the form was opened from — the list after a create, the house's
@@ -145,6 +167,12 @@ function HouseForm({ house }: HouseFormProps) {
       contentContainerStyle={styles.form}
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode="on-drag"
+      // The last two fields sit under the keyboard on a short phone. Android
+      // resizes the window for it already (softwareKeyboardLayoutMode defaults
+      // to "resize"), so only iOS needs telling — and this prop is the iOS-only
+      // one that adds the inset, rather than a KeyboardAvoidingView wrapper that
+      // would have to be told the header height.
+      automaticallyAdjustKeyboardInsets
     >
       <CustomTextInput
         labelText="House name"

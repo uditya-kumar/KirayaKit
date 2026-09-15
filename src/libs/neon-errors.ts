@@ -17,16 +17,30 @@ const MESSAGES: Record<string, string> = {
   tenants_floor_non_neg:
     "The floor cannot be negative — 0 is the ground floor.",
   tenants_money_non_neg: "Rent, rate and meter reading cannot be negative.",
+  // Both directions, because a bill is between two others: the reading has to be
+  // at least last month's, and correcting an old month walks the new figure
+  // forward into the next one, where it must not exceed that month's reading.
   bills_reading_forward:
-    "The current meter reading cannot be lower than the previous one.",
+    "That meter reading doesn't fit between the months around it — check the readings on the bills before and after.",
   bills_money_non_neg: "The amounts on a bill cannot be negative.",
   bill_charges_label_not_blank: "Give every charge a name.",
   bill_charges_amount_non_neg: "A charge cannot be a negative amount.",
 };
 
+/**
+ * Postgres 22P02, invalid text representation. Every id in the app is a uuid, so
+ * in practice this is a link that carries something that is not one — a shared
+ * URL that lost a segment arrives as the literal "undefined" and gets this far.
+ */
+const INVALID_TEXT = "22P02";
+
 export function neonErrorMessage(err: unknown): string {
   if (err && typeof err === "object" && "message" in err) {
     const { code, message } = err as { code?: string; message: string };
+
+    if (code === INVALID_TEXT) {
+      return "That link doesn't point at anything in KirayaKit.";
+    }
 
     // 23505 unique violation, 23514 check violation — both name the constraint
     // they broke somewhere in the message.

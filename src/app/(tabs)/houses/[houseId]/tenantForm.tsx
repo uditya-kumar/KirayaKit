@@ -5,9 +5,11 @@ import { DateField } from "@/components/rentComponents/DateField";
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
 import { useCreateTenant } from "@/hooks/useCreateTenant";
+import { useHouse } from "@/hooks/useHouse";
 import { useTenantRecord } from "@/hooks/useTenantRecord";
 import { useUpdateTenant } from "@/hooks/useUpdateTenant";
 import { neonErrorMessage } from "@/libs/neon-errors";
+import { normaliseMobile } from "@/utils/validate";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import {
   Calendar,
@@ -105,7 +107,10 @@ export default function TenantFormScreen() {
             Couldn&apos;t load this tenant
           </Text>
           <Text style={[styles.error, { color: colors.textMuted }]} selectable>
-            {error.message}
+            {/* Translated, because this screen is reachable by link: a tenantId
+                that lost a character arrives as Postgres 22P02, whose raw text
+                is a complaint about uuid syntax rather than about the link. */}
+            {neonErrorMessage(error)}
           </Text>
           <Button
             text="Try again"
@@ -132,6 +137,12 @@ type TenantFormProps = {
 function TenantForm({ houseId, tenant }: TenantFormProps) {
   const colorScheme = useColorScheme() ?? "light";
   const colors = Colors[colorScheme];
+
+  // Only for the floor check below, so the form does not wait on it: a trigger
+  // rejects an out-of-range floor either way, and this just says so before the
+  // round trip. Cached under the same key the House form reads.
+  const { data: house } = useHouse(houseId);
+  const topFloor = house ? house.number_of_floors - 1 : null;
 
   const [name, setName] = useState(tenant?.name ?? "");
   const [mobileNumber, setMobileNumber] = useState(tenant?.mobile_number ?? "");
@@ -173,6 +184,25 @@ function TenantForm({ houseId, tenant }: TenantFormProps) {
       return;
     }
 
+    // Worded exactly as the database's own trigger words it, so a landlord who
+    // gets it from the server on a slow load and from here on a fast one reads
+    // the same sentence twice.
+    if (topFloor !== null && floorNumber > topFloor) {
+      setError(
+        `The highest floor in this house is ${topFloor}, counting the ground floor as 0.`,
+      );
+      return;
+    }
+
+    // Optional, but it is how a landlord reaches this tenant, so a number that
+    // cannot be dialled is worth catching — the column itself is plain text.
+    const mobile = orNull(mobileNumber);
+    const mobileDigits = mobile === null ? null : normaliseMobile(mobile);
+    if (mobile !== null && mobileDigits === null) {
+      setError("A mobile number is the 10 digits of an Indian mobile number.");
+      return;
+    }
+
     // Typed with spaces, stored as twelve digits — the column's CHECK allows
     // nothing else.
     const aadhaar = aadhaarNumber.replace(/\s/g, "");
@@ -197,7 +227,8 @@ function TenantForm({ houseId, tenant }: TenantFormProps) {
 
     const fields: TenantInput = {
       name: name.trim(),
-      mobile_number: orNull(mobileNumber),
+      // Bare digits, so the same number typed two different ways is one number.
+      mobile_number: mobileDigits,
       aadhaar_number: aadhaar === "" ? null : aadhaar,
       floor_number: floorNumber,
       monthly_rent: rent,
@@ -231,6 +262,12 @@ function TenantForm({ houseId, tenant }: TenantFormProps) {
       contentContainerStyle={styles.form}
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode="on-drag"
+      // The rent and rate row sits under the keyboard on a short phone. Android
+      // resizes the window for it already (softwareKeyboardLayoutMode defaults
+      // to "resize"), so only iOS needs telling — and this prop is the iOS-only
+      // one that adds the inset, rather than a KeyboardAvoidingView wrapper that
+      // would have to be told the header height.
+      automaticallyAdjustKeyboardInsets
     >
       <CustomTextInput
         labelText="Tenant name"

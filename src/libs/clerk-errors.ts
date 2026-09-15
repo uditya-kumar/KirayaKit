@@ -17,3 +17,25 @@ export function clerkErrorMessage(err: unknown): string {
   }
   return "Something went wrong.";
 }
+
+/**
+ * Runs one signals-API call and answers with a sentence to show, or null when it
+ * worked.
+ *
+ * The signals API resolves to `{ error }` instead of throwing, but not always:
+ * its guard clauses run outside that wrapper, so
+ * `signIn.resetPasswordEmailCode.sendCode()` with no sign-in in progress throws a
+ * plain Error. Off Wi-Fi, `fetch` rejecting has the same shape. Either one
+ * unhandled is an unhandled rejection and a screen that sits there spinning,
+ * which is why every call in the auth screens goes through here.
+ */
+export async function clerkAttempt(
+  call: () => Promise<{ error: unknown }>,
+): Promise<string | null> {
+  try {
+    const { error } = await call();
+    return error ? clerkErrorMessage(error) : null;
+  } catch (err) {
+    return clerkErrorMessage(err);
+  }
+}

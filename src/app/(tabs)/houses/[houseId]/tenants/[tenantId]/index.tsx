@@ -41,9 +41,10 @@ function currentBillMonth(): string {
  * Tenant Detail: who they are, what they owe, and their month-by-month history.
  * Design node MADxZ.
  *
- * The pending figure is derived from the bills rather than read from
- * `v_tenant_list.total_pending` — see `outstandingAmount`, and the TODO in
- * api/tenants.ts explaining why the view's number is too big.
+ * The pending figure is derived from the bills already in hand rather than read
+ * from `v_tenant_list.total_pending`, which is the same number: the ledger is
+ * fetched for the history below anyway, and taking it from there keeps the figure
+ * and the months it is made of on one round trip. See `outstandingAmount`.
  */
 export default function TenantDetailScreen() {
   // The palette follows the device setting, so anything coloured is applied
@@ -86,7 +87,10 @@ export default function TenantDetailScreen() {
           style={[styles.errorText, { color: colors.textMuted }]}
           selectable
         >
-          {error?.message ?? "The tenant is no longer here."}
+          {/* Translated, because this screen is reachable by link: an id that
+              lost a character arrives as Postgres 22P02, whose raw text is a
+              complaint about uuid syntax rather than about the link. */}
+          {error ? neonErrorMessage(error) : "The tenant is no longer here."}
         </Text>
         <Button
           text="Try again"
@@ -115,6 +119,14 @@ export default function TenantDetailScreen() {
   // The whole ledger is already in hand — this screen simply shows the top of it
   // and hands the rest to Payment History.
   const recent = bills.slice(0, RECENT_MONTHS);
+
+  // Signed, so overpayment can be said rather than hidden: paying past the total
+  // leaves a credit that the next bill takes off, and showing it as "-₹500
+  // pending" in the same red as a debt would read as an alarm about the opposite
+  // of what happened. Red is kept for money actually owed, which is also why a
+  // settled ₹0 is not red either.
+  const outstanding = outstandingAmount(bills);
+  const inCredit = outstanding < 0;
 
   function openBill(billId: string) {
     router.push({
@@ -174,10 +186,15 @@ export default function TenantDetailScreen() {
         ]}
       >
         <Text style={[styles.pendingLabel, { color: colors.text }]}>
-          Total pending
+          {inCredit ? "In credit" : "Total pending"}
         </Text>
-        <Text style={[styles.pendingAmount, { color: colors.error }]}>
-          {formatRupees(outstandingAmount(bills))}
+        <Text
+          style={[
+            styles.pendingAmount,
+            { color: outstanding > 0 ? colors.error : colors.success },
+          ]}
+        >
+          {formatRupees(Math.abs(outstanding))}
         </Text>
       </View>
 
@@ -254,7 +271,11 @@ export default function TenantDetailScreen() {
       <DeleteDialog
         visible={confirmingDelete}
         title="Delete this tenant?"
-        message={`This will permanently remove ${tenant.name} and their whole billing history. This action cannot be undone.`}
+        // What the delete really does: the row is kept so the bills it owns are
+        // not cascaded away, but the tenant and their history leave the app for
+        // good, and the floor is free for whoever moves in. Promising permanent
+        // destruction would be a claim the delete does not make.
+        message={`${tenant.name} and their billing history will be removed from KirayaKit, and their floor freed. This cannot be undone.`}
         confirmText="Delete Tenant"
         onDelete={onConfirmDelete}
         onCancel={() => setConfirmingDelete(false)}

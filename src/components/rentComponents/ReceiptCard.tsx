@@ -18,6 +18,10 @@ type ReceiptCardProps = {
   month: string;
   lines: ReceiptLine[];
   total: number | string;
+  /** The house's UPI ID, when it has one. */
+  upiId?: string | null;
+  /** The house's GPay number, when it has one. */
+  gpayNumber?: string | null;
 };
 
 /**
@@ -25,6 +29,11 @@ type ReceiptCardProps = {
  * what gets shared. Lines are passed in rather than derived here, because which
  * ones exist depends on the bill: rent and electricity always, then whatever
  * `bill_charges` holds, then a previous balance when there is one.
+ *
+ * The pay-to block under the total is not in the mock (node pjKTB stops at the
+ * total), but every receipt in `requirements/Rent Track.txt` ends with the UPI
+ * ID and the GPay number — without them the bill says what is owed and gives no
+ * way to settle it. It disappears entirely when the house has neither.
  */
 export function ReceiptCard({
   tenantName,
@@ -32,6 +41,8 @@ export function ReceiptCard({
   month,
   lines,
   total,
+  upiId,
+  gpayNumber,
 }: ReceiptCardProps) {
   const colorScheme = useColorScheme() ?? "light";
   const colors = Colors[colorScheme];
@@ -39,6 +50,14 @@ export function ReceiptCard({
   const rowLabelStyle = [styles.rowLabel, { color: colors.text }];
   const rowValueStyle = [styles.rowValue, { color: colors.text }];
   const rowSubStyle = [styles.rowSub, { color: colors.textMuted }];
+  const payToValueStyle = [styles.payToValue, { color: colors.text }];
+
+  // Only the handles the house actually has, so a house with neither drops the
+  // block rather than printing an empty heading.
+  const payTo = [
+    upiId ? { label: "UPI ID", value: upiId } : null,
+    gpayNumber ? { label: "GPay", value: gpayNumber } : null,
+  ].filter((row): row is { label: string; value: string } => row !== null);
 
   return (
     <View style={[styles.card, { backgroundColor: colors.cardBackground }]}>
@@ -90,7 +109,7 @@ export function ReceiptCard({
           Total billed
         </Text>
         <View style={styles.totalValue}>
-          <Text style={[styles.totalRupee, { color: colors.textMuted }]}>
+          <Text style={[styles.totalRupee, { color: colors.text }]}>
             ₹
           </Text>
           <Text style={[styles.totalAmount, { color: colors.text }]}>
@@ -98,6 +117,24 @@ export function ReceiptCard({
           </Text>
         </View>
       </View>
+
+      {payTo.length > 0 ? (
+        <View style={[styles.payTo, { borderTopColor: colors.divider }]}>
+          <Text style={[styles.payToLabel, { color: colors.textMuted }]}>
+            PAY TO
+          </Text>
+          {payTo.map(({ label, value }) => (
+            <View key={label} style={styles.payToRow}>
+              <Text style={rowSubStyle}>{label}</Text>
+              {/* Selectable so a tenant handed the phone can copy the handle
+                  rather than reading it back digit by digit. */}
+              <Text style={payToValueStyle} selectable>
+                {value}
+              </Text>
+            </View>
+          ))}
+        </View>
+      ) : null}
     </View>
   );
 }
@@ -205,5 +242,29 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "700",
     letterSpacing: -0.8,
+  },
+  // Its own hairline rather than the shared `divider` rectangle above the total,
+  // so the block can be absent without leaving a rule at the bottom of the card.
+  payTo: {
+    gap: 6,
+    paddingTop: 14,
+    paddingHorizontal: 22,
+    paddingBottom: 18,
+    borderTopWidth: 1,
+  },
+  payToLabel: {
+    fontSize: 10,
+    fontWeight: "700",
+    letterSpacing: 1.5,
+  },
+  payToRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 12,
+  },
+  payToValue: {
+    fontSize: 13,
+    fontWeight: "500",
   },
 });

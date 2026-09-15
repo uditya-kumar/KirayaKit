@@ -167,8 +167,11 @@ export default function TenantsScreen() {
   ) : error ? (
     <View style={styles.listCentered}>
       <Text style={emptyTextStyle}>Couldn&apos;t load the tenants</Text>
+      {/* Translated, because this screen is reachable by link: an id that lost a
+          character arrives as Postgres 22P02, whose raw text is a complaint
+          about uuid syntax rather than about the link. */}
       <Text style={emptySubtextStyle} selectable>
-        {error.message}
+        {neonErrorMessage(error)}
       </Text>
       <Button
         text="Try again"
@@ -240,7 +243,11 @@ export default function TenantsScreen() {
       <DeleteDialog
         visible={confirmingDelete}
         title="Delete this house?"
-        message={`This will permanently remove ${house?.name ?? "this house"} and all its tenants. This action cannot be undone.`}
+        // "and its tenants" is now true: 0005 stamps them deleted with the house,
+        // which is what stopped a deleted house's debts from turning up in the
+        // Profile totals. Not "permanently" though — nothing is destroyed, it
+        // leaves the app, which is the part that matters to the person deciding.
+        message={`${house?.name ?? "This house"} will be removed from KirayaKit, along with its tenants and their billing history. This cannot be undone.`}
         confirmText="Delete House"
         onDelete={onConfirmDelete}
         onCancel={() => setConfirmingDelete(false)}

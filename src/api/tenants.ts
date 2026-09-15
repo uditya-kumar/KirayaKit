@@ -18,13 +18,6 @@ export type Tenant = Pick<Tables<"v_tenant_list">, "mobile_number"> & {
 const TENANT_LIST_COLUMNS =
   "id, name, floor_number, mobile_number, monthly_rent, total_pending";
 
-// TODO: v_tenant_list.total_pending adds every month's balance together, which
-// counts a carried-forward debt once for every bill it appears in — the seeded
-// Mr. Rakesh reads ₹8,923.60 when he owes ₹6,374, and Mrs. Sunita Devi reads
-// ₹6,820 when she owes nothing. The tenant detail screen sidesteps it with
-// outstandingAmount() in api/bills.ts; fixing it properly means one LATERAL in
-// the view (and the same one-row shape in carry_forward_balance).
-
 /**
  * The tenants of one house, ground floor first.
  *

@@ -9,8 +9,6 @@ type HouseCardProps = {
   address?: string | null;
   tenantCount: number;
   onPress?: () => void;
-  /** The mock opens its house menu from a long press on the card. */
-  onLongPress?: () => void;
 };
 
 /** A row on the houses list. Fields line up with `v_house_list`. */
@@ -19,7 +17,6 @@ export function HouseCard({
   address,
   tenantCount,
   onPress,
-  onLongPress,
 }: HouseCardProps) {
   // The palette follows the device setting, so anything coloured is applied
   // inline; the StyleSheet below keeps only the layout.
@@ -31,7 +28,6 @@ export function HouseCard({
       accessibilityRole="button"
       accessibilityLabel={name}
       onPress={onPress}
-      onLongPress={onLongPress}
       style={({ pressed }) => [
         styles.card,
         {

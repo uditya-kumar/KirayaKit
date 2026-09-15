@@ -4,6 +4,7 @@ import { PaymentCard } from "@/components/rentComponents/PaymentCard";
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
 import { useBills } from "@/hooks/useBills";
+import { neonErrorMessage } from "@/libs/neon-errors";
 import { FlashList, type ListRenderItem } from "@shopify/flash-list";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import {
@@ -68,8 +69,11 @@ export default function PaymentHistoryScreen() {
   ) : error ? (
     <View style={styles.listCentered}>
       <Text style={emptyTextStyle}>Couldn&apos;t load the history</Text>
+      {/* Translated, because this screen is reachable by link: an id that lost a
+          character arrives as Postgres 22P02, whose raw text is a complaint
+          about uuid syntax rather than about the link. */}
       <Text style={emptySubtextStyle} selectable>
-        {error.message}
+        {neonErrorMessage(error)}
       </Text>
       <Button
         text="Try again"

@@ -2,6 +2,8 @@ import Button from "@/components/rentComponents/Button";
 import { useAppearance, useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
 import { useOwnerSummary } from "@/hooks/useOwnerSummary";
+import { clerkErrorMessage } from "@/libs/clerk-errors";
+import { neonErrorMessage } from "@/libs/neon-errors";
 import { queryClient } from "@/libs/query-client";
 import { formatAmount } from "@/utils/format";
 import { useAuth } from "@clerk/expo";
@@ -15,6 +17,7 @@ import {
   Moon,
   Users,
 } from "lucide-react-native";
+import { useState } from "react";
 import {
   Pressable,
   StyleSheet,
@@ -40,6 +43,32 @@ export default function ProfileScreen() {
   const { setScheme } = useAppearance();
   const { signOut } = useAuth();
   const { data: summary, error, refetch } = useOwnerSummary();
+  const [signingOut, setSigningOut] = useState(false);
+  const [signOutError, setSignOutError] = useState<string | null>(null);
+
+  /**
+   * Signing out revokes the session with Clerk, so it is a request that can be
+   * slow or fail. Both are worth saying: without the spinner the only exit from
+   * the app looks broken while it waits, and a failure that says nothing leaves
+   * someone believing they have signed out on a device where they have not.
+   */
+  async function onSignOut() {
+    if (signingOut) return;
+    setSigningOut(true);
+    setSignOutError(null);
+    try {
+      await signOut();
+      // The cache holds rows RLS returned for this session; the next person to
+      // sign in on this device must not see them. After the await, because a
+      // failed sign-out leaves that session live and its rows still valid.
+      queryClient.clear();
+    } catch (err) {
+      // The screen stays mounted on failure — the guard only swaps it out once
+      // Clerk reports the session gone.
+      setSignOutError(clerkErrorMessage(err));
+      setSigningOut(false);
+    }
+  }
 
   // An em dash rather than a zero until the numbers arrive: "0 Properties" is a
   // claim, and a wrong one for anyone who has some.
@@ -62,7 +91,13 @@ export default function ProfileScreen() {
     },
   ];
 
-  const cardStyle: ViewStyle = { backgroundColor: colors.cardBackground };
+  // Every panel on this screen sits on a background barely darker than its own
+  // fill, so each one is outlined to read as a separate block; the widths live in
+  // the layout styles, this only supplies the colours.
+  const cardStyle: ViewStyle = {
+    backgroundColor: colors.cardBackground,
+    borderColor: colors.borderColor,
+  };
   const rowLabelStyle = [styles.rowLabel, { color: colors.text }];
 
   return (
@@ -94,11 +129,16 @@ export default function ProfileScreen() {
       </View>
 
       {/* Only worth saying when the numbers are missing — the tiles already show
-          the dashes, this says why and offers the way out. */}
+          the dashes, this says why and offers the way out. The cause is printed
+          rather than hidden behind the friendly line: "couldn't load" alone gives
+          nobody anything to act on, and it is what someone can send us. */}
       {error ? (
         <View style={styles.statsError}>
-          <Text style={[styles.statsErrorText, { color: colors.textMuted }]}>
-            Couldn&apos;t load your totals.
+          <Text
+            style={[styles.statsErrorText, { color: colors.textMuted }]}
+            selectable
+          >
+            Couldn&apos;t load your totals. {neonErrorMessage(error)}
           </Text>
           <Button
             text="Try again"
@@ -150,17 +190,20 @@ export default function ProfileScreen() {
         </Pressable>
       </View>
 
+      {signOutError ? (
+        <Text style={[styles.signOutError, { color: colors.error }]} selectable>
+          {signOutError}
+        </Text>
+      ) : null}
+
       <Button
         text="Sign out"
         textColor={colors.error}
         backgroundColor={colors.cardBackground}
+        borderColor={colors.error}
         icon={<LogOut size={18} color={colors.error} />}
-        onPress={async () => {
-          await signOut();
-          // The cache holds rows RLS returned for this session; the next person
-          // to sign in on this device must not see them.
-          queryClient.clear();
-        }}
+        onPress={() => void onSignOut()}
+        loading={signingOut}
         paddingVertical={14}
         borderRadius={20}
       />
@@ -188,6 +231,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 12,
     borderRadius: 14,
+    borderWidth: 1,
   },
   // Equal halves, whatever the numbers in them are.
   tileHalf: {
@@ -201,22 +245,33 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: "500",
   },
+  // Stacked, not a row: the cause on the end of the sentence can run to a couple
+  // of lines, and beside the button it would squeeze it to nothing.
   statsError: {
-    flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-start",
     gap: 8,
   },
   statsErrorText: {
     fontSize: 13,
   },
+  // Sits directly above the button it belongs to, so it needs no row of its own.
+  signOutError: {
+    fontSize: 13,
+  },
   card: {
     borderRadius: 20,
+    borderWidth: 1,
   },
+  // A height rather than vertical padding, so the two rows match: the Switch is
+  // taller than the text beside it and taller again on Android than on iOS, and
+  // padding alone would leave Appearance the deeper of the two on every device.
+  // minHeight, not height, so the rows still grow at large font scales.
   row: {
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
-    paddingVertical: 14,
+    minHeight: 56,
+    paddingVertical: 6,
     paddingHorizontal: 16,
   },
   // Takes the slack, which pins whatever follows it to the right edge.

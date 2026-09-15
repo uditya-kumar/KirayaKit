@@ -26,12 +26,16 @@ export {
 } from "expo-router";
 
 export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
+  // The anchor a denied route falls back to, and what a deep link into a nested
+  // screen gets behind it so Back leads into the app rather than out of it.
   initialRouteName: "(tabs)",
 };
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+// Held until Clerk has read the cached session, so a returning user never sees
+// the sign-in screen flash past. The promise rejects when the splash screen has
+// already gone — a fast refresh re-runs this module — and that is nothing to act
+// on, so it is swallowed rather than left to become an unhandled rejection.
+SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function RootLayout() {
   return (
@@ -68,7 +72,10 @@ function RootLayoutNav() {
 
   useEffect(() => {
     if (isLoaded) {
-      SplashScreen.hideAsync();
+      // Swallowed for the same reason as preventAutoHideAsync above, and one
+      // more: StrictMode runs this effect twice in development, and the second
+      // call rejects because the splash screen is already gone.
+      SplashScreen.hideAsync().catch(() => {});
     }
   }, [isLoaded]);
 
@@ -88,10 +95,6 @@ function RootLayoutNav() {
           <Stack.Protected guard={isSignedIn}>
             <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen
-              name="message"
-              options={{ presentation: "modal", title: "Message" }}
-            />
           </Stack.Protected>
           <Stack.Protected guard={!isSignedIn}>
             <Stack.Screen name="(auth)" options={{ headerShown: false }} />

@@ -230,6 +230,13 @@ export type Database = {
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "houses_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_summary"
+            referencedColumns: ["owner_id"]
+          },
         ]
       }
       tenants: {
@@ -395,6 +402,13 @@ export type Database = {
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "houses_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_summary"
+            referencedColumns: ["owner_id"]
+          },
         ]
       }
       v_house_month_summary: {
@@ -419,7 +433,35 @@ export type Database = {
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "houses_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_summary"
+            referencedColumns: ["owner_id"]
+          },
         ]
+      }
+      v_owner_summary: {
+        Row: {
+          owner_id: string | null
+          pending: number | null
+          properties: number | null
+          tenants: number | null
+        }
+        Insert: {
+          owner_id?: string | null
+          pending?: never
+          properties?: never
+          tenants?: never
+        }
+        Update: {
+          owner_id?: string | null
+          pending?: never
+          properties?: never
+          tenants?: never
+        }
+        Relationships: []
       }
       v_tenant_list: {
         Row: {

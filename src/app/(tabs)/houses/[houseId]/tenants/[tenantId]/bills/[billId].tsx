@@ -7,6 +7,7 @@ import {
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
 import { useBillReceipt } from "@/hooks/useBillReceipt";
+import { neonErrorMessage } from "@/libs/neon-errors";
 import {
   formatBillMonth,
   formatFloor,
@@ -32,8 +33,17 @@ import {
  * list something different from what is on screen — which is also why it stops at
  * the total: what has been paid and what is still owed are the owner's ledger, not
  * part of the receipt. The asterisks are WhatsApp's own bold markers.
+ *
+ * The two payment handles close the message because that is how the owner has
+ * always sent it — every receipt in `requirements/Rent Track.txt` ends "UPI ID->
+ * … / GPay Number-> …". A house with neither simply ends at the total.
  */
 function receiptMessage(bill: BillReceipt, lines: ReceiptLine[]): string {
+  const payTo = [
+    bill.upi_id ? `UPI ID-> ${bill.upi_id}` : null,
+    bill.gpay_number ? `GPay Number-> ${bill.gpay_number}` : null,
+  ].filter((line): line is string => line !== null);
+
   return [
     `*RENT RECEIPT*`,
     `${bill.tenant_name} — ${formatBillMonth(bill.bill_month)}`,
@@ -44,6 +54,7 @@ function receiptMessage(bill: BillReceipt, lines: ReceiptLine[]): string {
     ),
     "",
     `*Total billed: ${formatRupees(bill.total_billed)}*`,
+    ...(payTo.length > 0 ? ["", ...payTo] : []),
   ].join("\n");
 }
 
@@ -79,7 +90,10 @@ export default function BillDetailScreen() {
           Couldn&apos;t load this bill
         </Text>
         <Text style={[styles.error, { color: colors.textMuted }]} selectable>
-          {error?.message ?? "The bill is no longer here."}
+          {/* Translated, because this screen is reachable by link: an id that
+              lost a character arrives as Postgres 22P02, whose raw text is a
+              complaint about uuid syntax rather than about the link. */}
+          {error ? neonErrorMessage(error) : "The bill is no longer here."}
         </Text>
         <Button
           text="Try again"
@@ -119,8 +133,8 @@ export default function BillDetailScreen() {
     setShareError(null);
     // wa.me rather than the whatsapp:// scheme: it is the documented link and it
     // falls back to the browser instead of failing when WhatsApp is not
-    // installed. No recipient in it — mobile numbers are stored as the owner
-    // typed them, and wa.me needs a country code it cannot assume.
+    // installed. No recipient in it — the tenant's number is optional, and
+    // opening the picker lets the owner send to whoever actually pays.
     try {
       await Linking.openURL(`https://wa.me/?text=${message}`);
     } catch {
@@ -140,6 +154,8 @@ export default function BillDetailScreen() {
           month={bill.bill_month}
           lines={lines}
           total={bill.total_billed}
+          upiId={bill.upi_id}
+          gpayNumber={bill.gpay_number}
         />
       </ScrollView>
 
