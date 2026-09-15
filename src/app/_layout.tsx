@@ -9,6 +9,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StrictMode, useEffect } from "react";
+import { KeyboardProvider } from "react-native-keyboard-controller";
 import "react-native-reanimated";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
@@ -44,11 +45,19 @@ export default function RootLayout() {
           cache must not outlive it. */}
       <QueryClientProvider client={queryClient}>
         <StrictMode>
-          {/* Above the navigator, because the theme it picks and every screen's
-              colours read from the same choice. */}
-          <AppearanceProvider>
-            <RootLayoutNav />
-          </AppearanceProvider>
+          {/* Every form in the app reaches the keyboard through this one native
+              listener, so it is mounted once here rather than per screen. It is
+              what makes a focused field move on Android at all: the app is
+              edge-to-edge, so the window is no longer resized when the keyboard
+              opens and React Native's own KeyboardAvoidingView has nothing to
+              react to. */}
+          <KeyboardProvider>
+            {/* Above the navigator, because the theme it picks and every screen's
+                colours read from the same choice. */}
+            <AppearanceProvider>
+              <RootLayoutNav />
+            </AppearanceProvider>
+          </KeyboardProvider>
         </StrictMode>
       </QueryClientProvider>
     </ClerkProvider>

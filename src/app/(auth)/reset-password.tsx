@@ -7,7 +7,8 @@ import { clerkAttempt } from "@/libs/clerk-errors";
 import { useSignIn } from "@clerk/expo";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { KeyboardAvoidingView, Platform, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 /**
  * Forgot password: email a code, then set a new one.
@@ -149,11 +150,14 @@ export default function ResetPasswordScreen() {
 
   return (
     // The fields sit in the middle of the screen, which is exactly where the
-    // keyboard lands. Android shrinks the window itself, so iOS is the one that
-    // has to be told; there is no header here to offset against.
-    <KeyboardAvoidingView
+    // keyboard lands, and the code and the new password are collected together —
+    // so the focused one has to be scrolled back into sight. `bottomOffset`
+    // leaves room under the caret for the button that submits the pair.
+    <KeyboardAwareScrollView
       style={styles.fill}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      contentContainerStyle={styles.fillContent}
+      keyboardShouldPersistTaps="handled"
+      bottomOffset={90}
     >
       {awaitingCode ? (
         <View style={styles.container}>
@@ -251,13 +255,18 @@ export default function ResetPasswordScreen() {
           />
         </View>
       )}
-    </KeyboardAvoidingView>
+    </KeyboardAwareScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   fill: {
     flex: 1,
+  },
+  // The content fills the screen when it is shorter than one, so the centred
+  // block stays centred and the themed background reaches the bottom edge.
+  fillContent: {
+    flexGrow: 1,
   },
   container: {
     flex: 1,

@@ -39,6 +39,7 @@ import {
   type StyleProp,
   type ViewStyle,
 } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 /** How far back the picker's year stepper reaches, which is further than a rent ledger is ever corrected. */
 const YEARS_BACK = 5;
@@ -313,17 +314,17 @@ function BillForm({ tenantId, month, onChangeMonth, draft }: BillFormProps) {
   const computedValueStyle = [styles.computedValue, { color: colors.text }];
 
   return (
-    <ScrollView
+    <KeyboardAwareScrollView
       style={[styles.screen, { backgroundColor: colors.background }]}
       contentContainerStyle={styles.form}
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode="on-drag"
       // The charge rows and the total sit under the keyboard on a short phone.
-      // Android resizes the window for it already (softwareKeyboardLayoutMode
-      // defaults to "resize"), so only iOS needs telling — and this prop is the
-      // iOS-only one that adds the inset, rather than a KeyboardAvoidingView
-      // wrapper that would have to be told the header height.
-      automaticallyAdjustKeyboardInsets
+      // This scroll view adds the keyboard's height to the scrollable area and
+      // lifts the focused field clear of it on both platforms — the app is
+      // edge-to-edge, so Android no longer resizes the window and has to be told
+      // as well as iOS.
+      bottomOffset={24}
     >
       <View style={styles.row}>
         {/* Not a CustomTextInput: a month is chosen, not typed, and the mock draws
@@ -564,7 +565,7 @@ function BillForm({ tenantId, month, onChangeMonth, draft }: BillFormProps) {
         }}
         onCancel={() => setPickingMonth(false)}
       />
-    </ScrollView>
+    </KeyboardAwareScrollView>
   );
 }
 

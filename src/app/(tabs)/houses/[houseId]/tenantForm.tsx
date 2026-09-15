@@ -23,13 +23,8 @@ import {
   Zap,
 } from "lucide-react-native";
 import { useState } from "react";
-import {
-  ActivityIndicator,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 /** A blank field means "not given", which the column stores as NULL. */
 function orNull(value: string): string | null {
@@ -287,17 +282,16 @@ function TenantForm({ houseId, tenant }: TenantFormProps) {
   }
 
   return (
-    <ScrollView
+    <KeyboardAwareScrollView
       style={[styles.screen, { backgroundColor: colors.background }]}
       contentContainerStyle={styles.form}
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode="on-drag"
-      // The rent and rate row sits under the keyboard on a short phone. Android
-      // resizes the window for it already (softwareKeyboardLayoutMode defaults
-      // to "resize"), so only iOS needs telling — and this prop is the iOS-only
-      // one that adds the inset, rather than a KeyboardAvoidingView wrapper that
-      // would have to be told the header height.
-      automaticallyAdjustKeyboardInsets
+      // The rent and rate row sits under the keyboard on a short phone. This
+      // scroll view adds the keyboard's height to the scrollable area and lifts
+      // the focused field clear of it on both platforms — the app is edge-to-edge,
+      // so Android no longer resizes the window and has to be told as well as iOS.
+      bottomOffset={24}
     >
       <CustomTextInput
         labelText="Tenant name"
@@ -407,7 +401,7 @@ function TenantForm({ houseId, tenant }: TenantFormProps) {
         paddingVertical={15}
         style={styles.action}
       />
-    </ScrollView>
+    </KeyboardAwareScrollView>
   );
 }
 

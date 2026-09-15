@@ -16,15 +16,8 @@ import {
   ShieldCheck,
 } from "lucide-react-native";
 import { useState } from "react";
-import {
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 /**
@@ -188,182 +181,183 @@ export default function SignInScreen() {
   return (
     <View style={[styles.screen, { backgroundColor: colors.background }]}>
       {/* The form sits in the middle of the screen, which is exactly where the
-          keyboard lands. Android shrinks the window itself, so iOS is the one
-          that has to be told; there is no header here to offset against. The
-          ScrollView is what saves the short screens, where the fields and the
-          keyboard together are taller than the window. */}
-      <KeyboardAvoidingView
-        style={styles.fill}
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
+          keyboard lands. This scroll view is the keyboard-aware one: it extends
+          the scrollable area by the keyboard's height and scrolls the focused
+          field back into sight on both platforms, which a KeyboardAvoidingView
+          cannot do here — the app is edge-to-edge, so Android no longer resizes
+          the window when the keyboard opens.
+          `bottomOffset` leaves room under the caret for the submit button, so
+          the thing you press next is never the thing that is covered. */}
+      <KeyboardAwareScrollView
+        contentContainerStyle={styles.scroll}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        bottomOffset={90}
       >
-        <ScrollView
-          contentContainerStyle={styles.scroll}
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
-        >
-          <View style={styles.header}>
-            {/* The brand is a line of type rather than a mark, so it is set
-                small and wide and left to sit above the greeting. */}
-            <Text style={[styles.eyebrow, { color: colors.tint }]}>
-              KirayaKit
-            </Text>
-            {awaitingCode ? (
-              <View style={styles.headingRow}>
-                <ShieldCheck size={22} color={colors.text} />
-                <Text style={[styles.heading, { color: colors.text }]}>
-                  Verify this device
-                </Text>
-              </View>
-            ) : (
-              <Text style={[styles.heading, { color: colors.text }]}>
-                Welcome back
-              </Text>
-            )}
-            {awaitingCode ? (
-              <Text style={subheadingStyle}>
-                This is a new device, so we sent a 6-digit code to{" "}
-                <Text style={[styles.emphasis, { color: colors.text }]}>
-                  {email.trim()}
-                </Text>
-                .
-              </Text>
-            ) : (
-              <Text style={subheadingStyle}>
-                Sign in to pick up where you left off.
-              </Text>
-            )}
-          </View>
-
-          {/* Groups the fields for spacing only — it draws nothing. */}
-          <View style={styles.form}>
-            {messages}
-            {awaitingCode ? (
-              <>
-                <CustomTextInput
-                  value={code}
-                  onChangeText={setCode}
-                  labelText="Verification code"
-                  placeholder="6-digit code"
-                  icon={<KeyRound size={17} color={colors.textMuted} />}
-                  keyboardType="number-pad"
-                  autoComplete="one-time-code"
-                  textContentType="oneTimeCode"
-                  onSubmitEditing={onVerify}
-                  returnKeyType="go"
-                />
-                <Button
-                  text="Verify and continue"
-                  textColor={colors.buttonText}
-                  backgroundColor={colors.buttonBackground}
-                  onPress={onVerify}
-                  loading={busy}
-                  disabled={!code}
-                  paddingVertical={15}
-                  borderRadius={14}
-                  style={styles.primary}
-                />
-                <Button
-                  text="Resend code"
-                  textColor={colors.tint}
-                  backgroundColor="transparent"
-                  onPress={onResend}
-                  disabled={busy}
-                  paddingVertical={2}
-                  paddingHorizontal={0}
-                  style={styles.quiet}
-                />
-              </>
-            ) : (
-              <>
-                <CustomTextInput
-                  value={email}
-                  onChangeText={setEmail}
-                  labelText="Email"
-                  placeholder="you@example.com"
-                  icon={<Mail size={17} color={colors.textMuted} />}
-                  autoCapitalize="none"
-                  autoComplete="email"
-                  keyboardType="email-address"
-                  textContentType="emailAddress"
-                  returnKeyType="next"
-                />
-                <CustomTextInput
-                  value={password}
-                  onChangeText={setPassword}
-                  labelText="Password"
-                  placeholder="Your password"
-                  icon={<Lock size={17} color={colors.textMuted} />}
-                  trailing={
-                    <Pressable
-                      accessibilityRole="button"
-                      accessibilityLabel={
-                        revealPassword ? "Hide password" : "Show password"
-                      }
-                      onPress={() => setRevealPassword((shown) => !shown)}
-                      hitSlop={10}
-                    >
-                      {revealPassword ? (
-                        <EyeOff size={18} color={colors.textMuted} />
-                      ) : (
-                        <Eye size={18} color={colors.textMuted} />
-                      )}
-                    </Pressable>
-                  }
-                  autoCapitalize="none"
-                  autoComplete="current-password"
-                  textContentType="password"
-                  secureTextEntry={!revealPassword}
-                  onSubmitEditing={onSignIn}
-                  returnKeyType="go"
-                />
-                <Button
-                  text="Forgot password?"
-                  textColor={colors.tint}
-                  backgroundColor="transparent"
-                  // The email already typed travels with it, so the reset screen
-                  // does not ask for it a second time.
-                  onPress={() =>
-                    router.push({
-                      pathname: "/reset-password",
-                      params: { email: email.trim() },
-                    })
-                  }
-                  paddingVertical={2}
-                  paddingHorizontal={0}
-                  style={styles.forgot}
-                />
-                <Button
-                  text="Sign in"
-                  textColor={colors.buttonText}
-                  backgroundColor={colors.buttonBackground}
-                  onPress={onSignIn}
-                  loading={busy}
-                  disabled={!email || !password}
-                  paddingVertical={15}
-                  borderRadius={14}
-                  style={styles.primary}
-                />
-              </>
-            )}
-          </View>
-        </ScrollView>
-
-        {/* Outside the ScrollView so it stays on the bottom edge rather than
-            trailing the form, and clear of the home indicator. */}
-        <View style={[styles.footer, { paddingBottom: insets.bottom + 30 }]}>
-          <Text style={[styles.footerText, { color: colors.textMuted }]}>
-            {awaitingCode ? "Wrong account?" : "New to KirayaKit?"}
+        <View style={styles.header}>
+          {/* The brand is a line of type rather than a mark, so it is set
+              small and wide and left to sit above the greeting. */}
+          <Text style={[styles.eyebrow, { color: colors.tint }]}>
+            KirayaKit
           </Text>
-          <Button
-            text={awaitingCode ? "Back to sign in" : "Create an account"}
-            textColor={colors.tint}
-            backgroundColor="transparent"
-            onPress={awaitingCode ? onStartOver : () => router.push("/sign-up")}
-            paddingVertical={2}
-            paddingHorizontal={0}
-          />
+          {awaitingCode ? (
+            <View style={styles.headingRow}>
+              <ShieldCheck size={22} color={colors.text} />
+              <Text style={[styles.heading, { color: colors.text }]}>
+                Verify this device
+              </Text>
+            </View>
+          ) : (
+            <Text style={[styles.heading, { color: colors.text }]}>
+              Welcome back
+            </Text>
+          )}
+          {awaitingCode ? (
+            <Text style={subheadingStyle}>
+              This is a new device, so we sent a 6-digit code to{" "}
+              <Text style={[styles.emphasis, { color: colors.text }]}>
+                {email.trim()}
+              </Text>
+              .
+            </Text>
+          ) : (
+            <Text style={subheadingStyle}>
+              Sign in to pick up where you left off.
+            </Text>
+          )}
         </View>
-      </KeyboardAvoidingView>
+
+        {/* Groups the fields for spacing only — it draws nothing. */}
+        <View style={styles.form}>
+          {messages}
+          {awaitingCode ? (
+            <>
+              <CustomTextInput
+                value={code}
+                onChangeText={setCode}
+                labelText="Verification code"
+                placeholder="6-digit code"
+                icon={<KeyRound size={17} color={colors.textMuted} />}
+                keyboardType="number-pad"
+                autoComplete="one-time-code"
+                textContentType="oneTimeCode"
+                onSubmitEditing={onVerify}
+                returnKeyType="go"
+              />
+              <Button
+                text="Verify and continue"
+                textColor={colors.buttonText}
+                backgroundColor={colors.buttonBackground}
+                onPress={onVerify}
+                loading={busy}
+                disabled={!code}
+                paddingVertical={15}
+                borderRadius={14}
+                style={styles.primary}
+              />
+              <Button
+                text="Resend code"
+                textColor={colors.tint}
+                backgroundColor="transparent"
+                onPress={onResend}
+                disabled={busy}
+                paddingVertical={2}
+                paddingHorizontal={0}
+                style={styles.quiet}
+              />
+            </>
+          ) : (
+            <>
+              <CustomTextInput
+                value={email}
+                onChangeText={setEmail}
+                labelText="Email"
+                placeholder="you@example.com"
+                icon={<Mail size={17} color={colors.textMuted} />}
+                autoCapitalize="none"
+                autoComplete="email"
+                keyboardType="email-address"
+                textContentType="emailAddress"
+                returnKeyType="next"
+              />
+              <CustomTextInput
+                value={password}
+                onChangeText={setPassword}
+                labelText="Password"
+                placeholder="Your password"
+                icon={<Lock size={17} color={colors.textMuted} />}
+                trailing={
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityLabel={
+                      revealPassword ? "Hide password" : "Show password"
+                    }
+                    onPress={() => setRevealPassword((shown) => !shown)}
+                    hitSlop={10}
+                  >
+                    {revealPassword ? (
+                      <EyeOff size={18} color={colors.textMuted} />
+                    ) : (
+                      <Eye size={18} color={colors.textMuted} />
+                    )}
+                  </Pressable>
+                }
+                autoCapitalize="none"
+                autoComplete="current-password"
+                textContentType="password"
+                secureTextEntry={!revealPassword}
+                onSubmitEditing={onSignIn}
+                returnKeyType="go"
+              />
+              <Button
+                text="Forgot password?"
+                textColor={colors.tint}
+                backgroundColor="transparent"
+                // The email already typed travels with it, so the reset screen
+                // does not ask for it a second time.
+                onPress={() =>
+                  router.push({
+                    pathname: "/reset-password",
+                    params: { email: email.trim() },
+                  })
+                }
+                paddingVertical={2}
+                paddingHorizontal={0}
+                style={styles.forgot}
+              />
+              <Button
+                text="Sign in"
+                textColor={colors.buttonText}
+                backgroundColor={colors.buttonBackground}
+                onPress={onSignIn}
+                loading={busy}
+                disabled={!email || !password}
+                paddingVertical={15}
+                borderRadius={14}
+                style={styles.primary}
+              />
+            </>
+          )}
+        </View>
+      </KeyboardAwareScrollView>
+
+      {/* Outside the scroll view so it stays on the bottom edge rather than
+          trailing the form, and clear of the home indicator. The keyboard covers
+          it while typing, which is the right trade: it is a link away from this
+          screen, not part of the form. */}
+      <View style={[styles.footer, { paddingBottom: insets.bottom + 30 }]}>
+        <Text style={[styles.footerText, { color: colors.textMuted }]}>
+          {awaitingCode ? "Wrong account?" : "New to KirayaKit?"}
+        </Text>
+        <Button
+          text={awaitingCode ? "Back to sign in" : "Create an account"}
+          textColor={colors.tint}
+          backgroundColor="transparent"
+          onPress={awaitingCode ? onStartOver : () => router.push("/sign-up")}
+          paddingVertical={2}
+          paddingHorizontal={0}
+        />
+      </View>
     </View>
   );
 }
@@ -371,9 +365,6 @@ export default function SignInScreen() {
 // Layout only — the colours are applied inline from the active scheme.
 const styles = StyleSheet.create({
   screen: {
-    flex: 1,
-  },
-  fill: {
     flex: 1,
   },
   scroll: {
