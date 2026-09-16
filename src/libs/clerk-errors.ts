@@ -1,3 +1,7 @@
+import {
+  NETWORK_FAILURE_MESSAGE,
+  isNetworkFailure,
+} from "@/libs/network-errors";
 import { isClerkAPIResponseError } from "@clerk/expo";
 
 /**
@@ -35,24 +39,6 @@ const MESSAGES: Record<string, string> = {
 
 /** Nothing matched and there is nothing to act on, so it says only that. */
 const FALLBACK = "Something went wrong. Try again in a moment.";
-
-/**
- * The one failure worth naming, because it carries no Clerk code: the request
- * never reached Clerk.
- */
-const OFFLINE = "Can't reach KirayaKit. Check your connection and try again.";
-
-/**
- * Whether a failure is really a dead connection. React Native rejects `fetch`
- * with a TypeError reading "Network request failed"; Clerk sometimes passes that
- * on as the `cause` of its own error, so both are checked. The wording is what
- * identifies it — there is no code or status to go on when nothing was sent.
- */
-function isOffline(err: unknown): boolean {
-  if (!(err instanceof Error)) return false;
-  const wrapped = err.cause instanceof Error ? err.cause.message : "";
-  return /network request failed/i.test(`${err.message} ${wrapped}`);
-}
 
 /**
  * The code and, if the API sent one, Clerk's own sentence — read out of either
@@ -96,5 +82,5 @@ export function clerkErrorMessage(err: unknown): string {
   const ours = code ? MESSAGES[code] : undefined;
   if (ours) return ours;
   if (longMessage) return longMessage;
-  return isOffline(err) ? OFFLINE : FALLBACK;
+  return isNetworkFailure(err) ? NETWORK_FAILURE_MESSAGE : FALLBACK;
 }

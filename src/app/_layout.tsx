@@ -184,6 +184,13 @@ function RootLayoutNav({ onLoaded, onUnreachable }: RootLayoutNavProps) {
           <Stack.Protected guard={!isSignedIn}>
             <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           </Stack.Protected>
+          {/* Outside both guards, like +not-found below: Google's redirect is
+              routed here while the session it created is still being activated,
+              so isSignedIn is false at the moment of arrival and a guard either
+              way would bounce it. Declared rather than left implicit only to
+              take the header off — an undeclared route keeps the default one,
+              which is the grey bar this screen has nothing to put in. */}
+          <Stack.Screen name="sso-callback" options={{ headerShown: false }} />
           {/* +not-found stays outside both guards: a bad URL should show the
               404 either way, and its "Go to home screen" link resolves through
               the guards above. */}

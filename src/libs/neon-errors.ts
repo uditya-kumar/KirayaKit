@@ -1,3 +1,8 @@
+import {
+  NETWORK_FAILURE_MESSAGE,
+  isNetworkFailure,
+} from "@/libs/network-errors";
+
 /**
  * Turns a rejected Data API write into a sentence a landlord can act on.
  *
@@ -47,6 +52,11 @@ const INVALID_TEXT = "22P02";
 const OUT_OF_RANGE = "22003";
 
 export function neonErrorMessage(err: unknown): string {
+  // Ahead of the SQLSTATE branches, because a request that never arrived has no
+  // code for them to read — and its message is whatever the platform's fetch
+  // threw, which on Android is `java.net.UnknownHostException` verbatim.
+  if (isNetworkFailure(err)) return NETWORK_FAILURE_MESSAGE;
+
   if (err && typeof err === "object" && "message" in err) {
     const { code, message } = err as { code?: string; message: string };
 

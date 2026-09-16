@@ -12,9 +12,7 @@ export function useCreateTenant() {
       queryClient.invalidateQueries({
         queryKey: ["tenants", "list", tenant.house_id],
       });
-      queryClient.invalidateQueries({ queryKey: ["houses"] });
-      // And the Tenants tile on Profile, which counts them across every house.
-      return queryClient.invalidateQueries({ queryKey: ["profile"] });
+      return queryClient.invalidateQueries({ queryKey: ["houses"] });
     },
   });
 }

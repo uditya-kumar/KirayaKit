@@ -9,7 +9,12 @@ import { useHouse } from "@/hooks/useHouse";
 import { useTenantRecord } from "@/hooks/useTenantRecord";
 import { useUpdateTenant } from "@/hooks/useUpdateTenant";
 import { neonErrorMessage } from "@/libs/neon-errors";
-import { MAX_AMOUNT, MAX_RATE, normaliseMobile } from "@/utils/validate";
+import {
+  MAX_AMOUNT,
+  MAX_RATE,
+  isPersonName,
+  normaliseMobile,
+} from "@/utils/validate";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import {
   Calendar,
@@ -174,6 +179,15 @@ function TenantForm({ houseId, tenant }: TenantFormProps) {
       return;
     }
 
+    // A mobile number in the name field is the slip this catches: the two sit next
+    // to each other, the column takes any non-blank text, and the wrong one is only
+    // noticed when a receipt goes out headed "9876543210". Nothing but the blank
+    // check stood between that and the database.
+    if (!isPersonName(name)) {
+      setError("A tenant's name can't have numbers or symbols in it.");
+      return;
+    }
+
     // The floor is the one number with no default: the database has to know
     // which one is being occupied, and 0 is the ground floor.
     const floorNumber = Number(floor.trim());
@@ -301,6 +315,10 @@ function TenantForm({ houseId, tenant }: TenantFormProps) {
         icon={<User size={18} color={colors.textMuted} />}
         autoCapitalize="words"
         returnKeyType="next"
+        // The column is unbounded text, so nothing downstream stops a pasted
+        // paragraph — and this name heads the tenant's receipt. Capped where it is
+        // typed rather than complained about on save.
+        maxLength={60}
       />
 
       <CustomTextInput

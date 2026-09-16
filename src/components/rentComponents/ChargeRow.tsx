@@ -40,6 +40,10 @@ export function ChargeRow({
         onChangeText={onChangeLabel}
         placeholder={labelPlaceholder}
         icon={<Tag size={16} color={colors.textMuted} />}
+        // A label is one line on a receipt beside its amount, and the column is
+        // unbounded text. Capped here so it cannot be pasted long enough to push
+        // the amount off the row.
+        maxLength={40}
         style={styles.labelField}
       />
 

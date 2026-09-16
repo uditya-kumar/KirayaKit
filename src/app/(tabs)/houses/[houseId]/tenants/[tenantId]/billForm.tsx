@@ -13,7 +13,7 @@ import {
   formatBillMonthShort,
   formatRupees,
 } from "@/utils/format";
-import { MAX_AMOUNT } from "@/utils/validate";
+import { MAX_AMOUNT, isChargeLabel } from "@/utils/validate";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import {
   CalendarDays,
@@ -264,6 +264,15 @@ function BillForm({ tenantId, month, onChangeMonth, draft }: BillFormProps) {
     );
     if (filled.some((charge) => charge.label.trim() === "")) {
       setError("Give every charge a name, or remove the row.");
+      return;
+    }
+    // Quoted back rather than pointed at: there can be several rows, and the one
+    // error line sits under all of them.
+    const misnamed = filled.find((charge) => !isChargeLabel(charge.label));
+    if (misnamed) {
+      setError(
+        `A charge name can have letters and numbers — check "${misnamed.label.trim()}".`,
+      );
       return;
     }
     if (

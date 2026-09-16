@@ -1,24 +1,14 @@
 import Button from "@/components/rentComponents/Button";
 import { useAppearance, useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
-import { useOwnerSummary } from "@/hooks/useOwnerSummary";
 import { clerkErrorMessage } from "@/libs/clerk-errors";
-import { neonErrorMessage } from "@/libs/neon-errors";
 import { queryClient } from "@/libs/query-client";
-import { formatAmount } from "@/utils/format";
-import { useAuth } from "@clerk/expo";
+import { useAuth, useUser } from "@clerk/expo";
 import * as WebBrowser from "expo-web-browser";
-import {
-  Code,
-  ExternalLink,
-  House,
-  IndianRupee,
-  LogOut,
-  Moon,
-  Users,
-} from "lucide-react-native";
+import { Code, ExternalLink, LogOut, Moon } from "lucide-react-native";
 import { useState } from "react";
 import {
+  Image,
   Pressable,
   StyleSheet,
   Switch,
@@ -31,8 +21,20 @@ import {
 const DEV_SITE = "https://udityakumar.dev";
 
 /**
- * Profile — the portfolio in three numbers, the app's own settings, and the way
- * out.
+ * The letter or two an avatar falls back to: "Uditya Kumar Pandey" -> "UP".
+ *
+ * First and last rather than every word, because a middle name is not part of how
+ * anyone initials themselves.
+ */
+function initialsOf(name: string): string {
+  const words = name.trim().split(/\s+/);
+  const first = words.at(0)?.at(0) ?? "";
+  const last = words.length > 1 ? (words.at(-1)?.at(0) ?? "") : "";
+  return (first + last).toUpperCase();
+}
+
+/**
+ * Profile — who is signed in, the app's own settings, and the way out.
  *
  * Sign out matters most: it is the only exit from the signed-in app, since the
  * guard in the root layout has no other one.
@@ -42,7 +44,7 @@ export default function ProfileScreen() {
   const colors = Colors[colorScheme];
   const { setScheme } = useAppearance();
   const { signOut } = useAuth();
-  const { data: summary, error, refetch } = useOwnerSummary();
+  const { user } = useUser();
   const [signingOut, setSigningOut] = useState(false);
   const [signOutError, setSignOutError] = useState<string | null>(null);
 
@@ -70,26 +72,12 @@ export default function ProfileScreen() {
     }
   }
 
-  // An em dash rather than a zero until the numbers arrive: "0 Properties" is a
-  // claim, and a wrong one for anyone who has some.
-  const unknown = "—";
-  // The two counts share the top row; pending gets the row under them to itself,
-  // because it is the number the landlord came to read and it is the one that can
-  // run to six digits.
-  const counts = [
-    {
-      key: "properties",
-      icon: House,
-      label: "Properties",
-      value: summary ? String(summary.properties) : unknown,
-    },
-    {
-      key: "tenants",
-      icon: Users,
-      label: "Tenants",
-      value: summary ? String(summary.tenants) : unknown,
-    },
-  ];
+  // Clerk holds both of these already — Google hands over the name and the picture
+  // at sign-in and Clerk keeps them on the user — so neither is ours to store, and
+  // the `users` table deliberately holds an id and timestamps and nothing else
+  // (0001). The email is the fallback because an account made without a name still
+  // has one of those.
+  const name = user?.fullName ?? user?.primaryEmailAddress?.emailAddress ?? "";
 
   // Every panel on this screen sits on a background barely darker than its own
   // fill, so each one is outlined to read as a separate block; the widths live in
@@ -102,54 +90,38 @@ export default function ProfileScreen() {
 
   return (
     <View style={[styles.screen, { backgroundColor: colors.background }]}>
-      <View style={styles.stats}>
-        <View style={styles.countRow}>
-          {counts.map(({ key, icon: Icon, label, value }) => (
-            <View key={key} style={[styles.tile, styles.tileHalf, cardStyle]}>
-              <Icon size={18} color={colors.textMuted} />
-              <Text style={[styles.tileValue, { color: colors.text }]}>
-                {value}
-              </Text>
-              <Text style={[styles.tileLabel, { color: colors.textMuted }]}>
-                {label}
-              </Text>
-            </View>
-          ))}
+      <View style={styles.identity}>
+        <View
+          style={[styles.avatar, { backgroundColor: colors.fillBackground }]}
+          // Hidden from a screen reader, which the name below is not: the initials
+          // in here only repeat it, and a picture of someone is not information to
+          // anyone who cannot see it.
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+        >
+          {/* Underneath rather than instead of the picture: imageUrl is a remote
+              URL, and Clerk's own no-picture fallback is itself one, so an empty
+              circle is what a cold start with no network would otherwise show. */}
+          <Text style={[styles.initials, { color: colors.textMuted }]}>
+            {initialsOf(name)}
+          </Text>
+          {user?.imageUrl ? (
+            <Image
+              source={{ uri: user.imageUrl }}
+              style={styles.avatarImage}
+              accessibilityIgnoresInvertColors
+            />
+          ) : null}
         </View>
 
-        <View style={[styles.tile, cardStyle]}>
-          <IndianRupee size={18} color={colors.textMuted} />
-          <Text style={[styles.tileValue, { color: colors.text }]}>
-            {summary ? formatAmount(summary.pending) : unknown}
+        {/* One line: a long name belongs to the person, not to the layout, and
+            wrapping it would push the settings down the screen. */}
+        {name ? (
+          <Text style={[styles.name, { color: colors.text }]} numberOfLines={1}>
+            {name}
           </Text>
-          <Text style={[styles.tileLabel, { color: colors.textMuted }]}>
-            Pending
-          </Text>
-        </View>
+        ) : null}
       </View>
-
-      {/* Only worth saying when the numbers are missing — the tiles already show
-          the dashes, this says why and offers the way out. The cause is printed
-          rather than hidden behind the friendly line: "couldn't load" alone gives
-          nobody anything to act on, and it is what someone can send us. */}
-      {error ? (
-        <View style={styles.statsError}>
-          <Text
-            style={[styles.statsErrorText, { color: colors.textMuted }]}
-            selectable
-          >
-            Couldn&apos;t load your totals. {neonErrorMessage(error)}
-          </Text>
-          <Button
-            text="Try again"
-            textColor={colors.tint}
-            backgroundColor="transparent"
-            onPress={() => refetch()}
-            paddingVertical={0}
-            paddingHorizontal={0}
-          />
-        </View>
-      ) : null}
 
       <View style={[styles.card, cardStyle]}>
         <View style={styles.row}>
@@ -219,40 +191,37 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 16,
   },
-  stats: {
-    gap: 10,
+  identity: {
+    alignItems: "center",
+    gap: 12,
+    paddingTop: 14,
+    paddingBottom: 18,
   },
-  countRow: {
-    flexDirection: "row",
-    gap: 10,
+  avatar: {
+    width: 88,
+    height: 88,
+    borderRadius: 44,
+    alignItems: "center",
+    justifyContent: "center",
   },
-  tile: {
-    gap: 6,
-    paddingVertical: 12,
-    paddingHorizontal: 12,
-    borderRadius: 14,
-    borderWidth: 1,
+  // Fills the circle it sits in and carries the same radius, so the picture is
+  // round without the wrapper having to clip it — overflow and a border on one
+  // node do not agree with each other on Android.
+  avatarImage: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    borderRadius: 44,
   },
-  // Equal halves, whatever the numbers in them are.
-  tileHalf: {
-    flex: 1,
+  initials: {
+    fontSize: 30,
+    fontWeight: "600",
   },
-  tileValue: {
-    fontSize: 17,
-    fontWeight: "700",
-  },
-  tileLabel: {
-    fontSize: 11,
-    fontWeight: "500",
-  },
-  // Stacked, not a row: the cause on the end of the sentence can run to a couple
-  // of lines, and beside the button it would squeeze it to nothing.
-  statsError: {
-    alignItems: "flex-start",
-    gap: 8,
-  },
-  statsErrorText: {
-    fontSize: 13,
+  name: {
+    fontSize: 19,
+    fontWeight: "600",
   },
   // Sits directly above the button it belongs to, so it needs no row of its own.
   signOutError: {

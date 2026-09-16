@@ -7,7 +7,12 @@ import { useCreateHouse } from "@/hooks/useCreateHouse";
 import { useHouse } from "@/hooks/useHouse";
 import { useUpdateHouse } from "@/hooks/useUpdateHouse";
 import { neonErrorMessage } from "@/libs/neon-errors";
-import { isUpiId, normaliseMobile } from "@/utils/validate";
+import {
+  isAddress,
+  isHouseName,
+  isUpiId,
+  normaliseMobile,
+} from "@/utils/validate";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import {
   House,
@@ -116,6 +121,24 @@ function HouseForm({ house }: HouseFormProps) {
       return;
     }
 
+    // A number in a house name is normal — it is the floor field and the rent
+    // that must not hold one. So only the symbols are refused, and the message
+    // says which side of the line the digits fall on.
+    if (!isHouseName(name)) {
+      setError(
+        "A house name can have letters and numbers — check for a stray symbol like # or @.",
+      );
+      return;
+    }
+
+    const addressText = orNull(address);
+    if (addressText !== null && !isAddress(addressText)) {
+      setError(
+        "An address can have letters, numbers and , . / - # ( ) — check for a stray symbol.",
+      );
+      return;
+    }
+
     // Blank means "one floor", which is also the column's default. Anything
     // typed has to be a whole number in range, or the CHECK constraint would
     // bounce it after a round trip.
@@ -147,7 +170,7 @@ function HouseForm({ house }: HouseFormProps) {
 
     const fields: HouseInput = {
       name: name.trim(),
-      address: orNull(address),
+      address: addressText,
       number_of_floors: numberOfFloors,
       upi_id: upi,
       // Stored as bare digits so the same number typed two different ways is
@@ -185,6 +208,10 @@ function HouseForm({ house }: HouseFormProps) {
         icon={<House size={18} color={colors.textMuted} />}
         autoCapitalize="words"
         returnKeyType="next"
+        // Both columns are unbounded text, so nothing downstream stops a pasted
+        // paragraph — and the name is what the house cards and the bar title show.
+        // Capped where it is typed rather than complained about on save.
+        maxLength={60}
       />
 
       <CustomTextInput
@@ -195,6 +222,7 @@ function HouseForm({ house }: HouseFormProps) {
         icon={<MapPin size={18} color={colors.textMuted} />}
         autoCapitalize="words"
         returnKeyType="next"
+        maxLength={200}
       />
 
       <CustomTextInput

@@ -14,9 +14,7 @@ export function useDeleteTenant() {
       // The house's list loses a row, and its card in the house list loses one
       // from the tenant count.
       queryClient.invalidateQueries({ queryKey: ["tenants", "list"] });
-      queryClient.invalidateQueries({ queryKey: ["houses"] });
-      // Profile loses a tenant, and whatever they owed leaves the pending total.
-      return queryClient.invalidateQueries({ queryKey: ["profile"] });
+      return queryClient.invalidateQueries({ queryKey: ["houses"] });
     },
   });
 }

@@ -47,6 +47,62 @@ export function isUpiId(raw: string): boolean {
 }
 
 /**
+ * Whether a name is a person's name rather than something that landed in the
+ * wrong field.
+ *
+ * Digits are the whole point of this one. `tenants_name_not_blank` is all the
+ * column insists on, so a mobile number typed into the name field saves happily
+ * and then heads a receipt. What a real name does carry is allowed: the dot in
+ * "Mr.", the apostrophe in "D'Souza", the hyphen in "Anne-Marie".
+ *
+ * Letters are Unicode rather than A-Z, because "पांडेय" is a name a landlord will
+ * type. Its matras are combining marks and not letters, which is why \p{M} is in
+ * the set as well — without it that name fails on its second character.
+ */
+export function isPersonName(raw: string): boolean {
+  return /^\p{L}[\p{L}\p{M}\s.'-]*$/u.test(raw.trim());
+}
+
+/**
+ * Whether a house name is one: everything `isPersonName` allows, plus digits,
+ * because landlords number buildings — "Pandey Niwas 2" is the second of them,
+ * and sometimes the number is the whole name. The ampersand is in for "A & B
+ * Villa".
+ *
+ * Anything else the keyboard offers is a mis-key or a half-landed paste, and it
+ * matters here more than it looks: both list screens match this name as typed, so
+ * a house saved as "Niwas #2/@" is one its owner has to scroll to find.
+ */
+export function isHouseName(raw: string): boolean {
+  return /^[\p{L}\p{N}][\p{L}\p{M}\p{N}\s.'&-]*$/u.test(raw.trim());
+}
+
+/**
+ * Whether an address is plausibly one.
+ *
+ * The most permissive of these by design, because an Indian address is largely
+ * punctuation — "12/4, Flat #3, MG Road (near the temple)" — and a rule tight
+ * enough to be interesting would reject more real addresses than typos. It earns
+ * its place on the first character: a field holding nothing but symbols is a
+ * paste that went wrong, and that is what this catches.
+ */
+export function isAddress(raw: string): boolean {
+  return /^[\p{L}\p{N}][\p{L}\p{M}\p{N}\s.,'&#()/-]*$/u.test(raw.trim());
+}
+
+/**
+ * Whether an extra charge's name reads as one — "Water charge", "Lift AMC",
+ * "Repairs (Feb)", "GST 18%".
+ *
+ * A label is printed on the receipt beside an amount the tenant is asked to pay,
+ * so it has to be words. `bill_charges_label_not_blank` refuses an empty one;
+ * this refuses a row named with a stray keypress, which the column would take.
+ */
+export function isChargeLabel(raw: string): boolean {
+  return /^[\p{L}\p{N}][\p{L}\p{M}\p{N}\s.,'&%()/-]*$/u.test(raw.trim());
+}
+
+/**
  * The largest figure the money and meter columns will take: they are
  * numeric(12,2), so ten digits in front of the point.
  *
