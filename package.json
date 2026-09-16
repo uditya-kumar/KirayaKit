@@ -10,7 +10,8 @@
     "lint": "expo lint",
     "migrate": "node scripts/apply-migration.mjs",
     "gen-types": "node scripts/gen-types.mjs",
-    "seed-dev": "node scripts/seed-dev.mjs"
+    "seed-dev": "node scripts/seed-dev.mjs",
+    "eas-build-pre-install": "node scripts/eas-pre-install.mjs"
   },
   "dependencies": {
     "@clerk/expo": "^4.6.6",
@@ -19,6 +20,7 @@
     "@shopify/flash-list": "2.0.2",
     "@tanstack/react-query": "^5.102.8",
     "expo": "^57.0.22",
+    "expo-auth-session": "~57.0.12",
     "expo-constants": "~57.0.18",
     "expo-font": "~57.0.4",
     "expo-linking": "~57.0.10",

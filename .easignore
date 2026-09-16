@@ -1,0 +1,59 @@
+# What EAS Build leaves out of the uploaded project.
+#
+# It exists because packing the project failed on Windows: `.claude/skills/`
+# holds symlinks into `.agents/skills/`, and recreating a symlink needs
+# Developer Mode or an admin shell, so the upload died with `EPERM: operation
+# not permitted, symlink`. None of it is used to build the app.
+#
+# EAS reads this file *instead of* .gitignore, not as well as it, so everything
+# .gitignore holds is repeated here. Keep the two in step: a secret or a build
+# artefact dropped from this list is one that gets uploaded.
+
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# local env files
+.env*.local
+
+# typescript
+*.tsbuildinfo
+
+# generated native folders
+/ios
+/android
+
+# agent skills
+.agents
+.github
+.vscode
+.neon
+
+# Agent tooling, and the reason this file exists — see the note at the top.
+.claude
