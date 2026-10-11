@@ -6,6 +6,7 @@ import {
   DropdownMenu,
   type MenuItem,
 } from "@/components/rentComponents/DropdownMenu";
+import { MeterReadingCard } from "@/components/rentComponents/MeterReadingCard";
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
 import { useBillDraft } from "@/hooks/useBillDraft";
@@ -27,7 +28,6 @@ import {
   IndianRupee,
   Plus,
   ReceiptText,
-  Zap,
 } from "lucide-react-native";
 import { useState, type ReactNode } from "react";
 import {
@@ -348,9 +348,6 @@ function BillForm({
     );
   }
 
-  const computedLabelStyle = [styles.computedLabel, { color: colors.text }];
-  const computedValueStyle = [styles.computedValue, { color: colors.text }];
-
   return (
     <KeyboardAwareScrollView
       style={[styles.screen, { backgroundColor: colors.background }]}
@@ -424,82 +421,16 @@ function BillForm({
         returnKeyType="next"
       />
 
-      <View
-        style={[
-          styles.elecSection,
-          {
-            backgroundColor: colors.cardBackground,
-            borderColor: colors.borderColor,
-          },
-        ]}
-      >
-        <View style={styles.elecHead}>
-          <Zap size={22} color={colors.warning} />
-          <Text style={[styles.elecTitle, { color: colors.text }]}>
-            Electricity reading
-          </Text>
-        </View>
-
-        <View style={styles.row}>
-          <CustomTextInput
-            labelText="Current"
-            value={currentReading}
-            onChangeText={(value) =>
-              setCurrentReading(withoutLeadingZeros(value))
-            }
-            placeholder={formatAmount(draft.previousReading)}
-            keyboardType="decimal-pad"
-            returnKeyType="next"
-            style={styles.field}
-          />
-          {/* Snapshotted with the bill, same as the rent. */}
-          <ReadOnlyField
-            labelText="Rate ₹/unit"
-            value={formatAmount(draft.electricityRate)}
-            style={styles.field}
-          />
-        </View>
-
-        <View
-          style={[
-            styles.computed,
-            { backgroundColor: colors.warningBackground },
-          ]}
-        >
-          <View style={styles.computedRow}>
-            <Text style={computedLabelStyle}>Previous reading</Text>
-            <Text style={computedValueStyle}>
-              {formatAmount(draft.previousReading)}
-            </Text>
-          </View>
-          <View style={styles.computedRow}>
-            <Text style={computedLabelStyle}>Current reading</Text>
-            <Text style={computedValueStyle}>{formatAmount(reading)}</Text>
-          </View>
-          <View style={styles.computedRow}>
-            <Text style={computedLabelStyle}>Units consumed</Text>
-            <Text style={computedValueStyle}>
-              {formatAmount(units)} × {formatRupees(draft.electricityRate)}
-            </Text>
-          </View>
-
-          <View
-            style={[
-              styles.elecDivider,
-              { backgroundColor: colors.warningBorder },
-            ]}
-          />
-
-          <View style={styles.computedRow}>
-            <Text style={[styles.elecTotalLabel, { color: colors.text }]}>
-              Electricity total
-            </Text>
-            <Text style={[styles.elecTotalValue, { color: colors.warning }]}>
-              {formatRupees(electricity)}
-            </Text>
-          </View>
-        </View>
-      </View>
+      <MeterReadingCard
+        previousReading={draft.previousReading}
+        currentReading={currentReading}
+        onChangeCurrentReading={(value) =>
+          setCurrentReading(withoutLeadingZeros(value))
+        }
+        electricityRate={draft.electricityRate}
+        units={units}
+        electricityAmount={electricity}
+      />
 
       <View style={styles.extras}>
         <View style={styles.extrasHead}>
@@ -662,7 +593,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
-  // The mock pairs the month with the rent, and the reading with the rate.
+  // The mock pairs the month with the rent.
   row: {
     flexDirection: "row",
     gap: 12,
@@ -708,52 +639,6 @@ const styles = StyleSheet.create({
   readOnlyValue: {
     flex: 1,
     fontSize: 15,
-  },
-  elecSection: {
-    gap: 14,
-    padding: 16,
-    borderRadius: 20,
-    borderWidth: 1,
-  },
-  elecHead: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-  },
-  elecTitle: {
-    fontSize: 16,
-    fontWeight: "700",
-  },
-  computed: {
-    gap: 8,
-    paddingTop: 14,
-    paddingHorizontal: 14,
-    paddingBottom: 12,
-    borderRadius: 14,
-  },
-  computedRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingVertical: 2,
-  },
-  computedLabel: {
-    fontSize: 14,
-  },
-  computedValue: {
-    fontSize: 14,
-    fontWeight: "600",
-  },
-  elecDivider: {
-    height: 1,
-  },
-  elecTotalLabel: {
-    fontSize: 16,
-    fontWeight: "700",
-  },
-  elecTotalValue: {
-    fontSize: 20,
-    fontWeight: "700",
   },
   extras: {
     gap: 10,

@@ -1,5 +1,5 @@
 {
-  "version": "2.13",
+  "version": "2.19",
   "children": [
     {
       "type": "frame",
@@ -1194,6 +1194,173 @@
             },
             {
               "type": "frame",
+              "id": "rtOEW",
+              "name": "PaidCard",
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": "$radius-card",
+              "stroke": "$separator",
+              "strokeWidth": 1,
+              "strokeAlignment": "inner",
+              "layout": "vertical",
+              "gap": 14,
+              "padding": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "WCSTM",
+                  "name": "PaidHead",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "SAN3G",
+                      "name": "PaidTitle",
+                      "fill": "$text-primary",
+                      "content": "Paid amount",
+                      "fontFamily": "$font",
+                      "fontSize": 17,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "S7wR9",
+                  "name": "PaidRow",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "J4obe",
+                      "name": "Field Month",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 7,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Elc72",
+                          "name": "MonthLabel",
+                          "fill": "$text-secondary",
+                          "content": "Month",
+                          "fontFamily": "$font",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "dsEAx",
+                          "name": "MonthBtn",
+                          "width": "fill_container",
+                          "fill": "$surface",
+                          "cornerRadius": "$radius-inner",
+                          "stroke": "$separator",
+                          "strokeWidth": 1,
+                          "gap": 8,
+                          "padding": [
+                            14,
+                            16
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "dwFOn",
+                              "name": "Cal",
+                              "width": 18,
+                              "height": 18,
+                              "icon": "calendar-days",
+                              "library": "lucide",
+                              "fill": "$text-secondary"
+                            },
+                            {
+                              "type": "text",
+                              "id": "imdZg",
+                              "name": "MonthValue",
+                              "fill": "$text-primary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Oct 2026",
+                              "fontFamily": "$font",
+                              "fontSize": 15,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "icon",
+                              "id": "lWUiz",
+                              "name": "Chev",
+                              "width": 16,
+                              "height": 16,
+                              "icon": "chevron-down",
+                              "library": "lucide",
+                              "fill": "$text-secondary"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "NRlH9",
+                      "type": "ref",
+                      "ref": "lpzRE",
+                      "name": "Field Amount",
+                      "width": "fill_container",
+                      "descendants": {
+                        "r0CiLB": {
+                          "content": "Amount"
+                        },
+                        "HeO6Y": {
+                          "icon": "indian-rupee"
+                        },
+                        "klFBi": {
+                          "content": "0"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "mFkDM",
+                  "name": "SavePaidBtn",
+                  "width": "fill_container",
+                  "fill": "$accent",
+                  "cornerRadius": 14,
+                  "gap": 8,
+                  "padding": 15,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "nu8zb",
+                      "name": "PaidIcon",
+                      "width": 18,
+                      "height": 18,
+                      "icon": "wallet",
+                      "library": "lucide",
+                      "fill": "#FFFFFF"
+                    },
+                    {
+                      "type": "text",
+                      "id": "tQdRK",
+                      "name": "PaidCTATxt",
+                      "fill": "#FFFFFF",
+                      "content": "Save payment",
+                      "fontFamily": "$font",
+                      "fontSize": 16,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
               "id": "DRQ0u",
               "name": "HistoryHead",
               "width": "fill_container",
@@ -2195,7 +2362,7 @@
       "type": "frame",
       "id": "lXpcT",
       "x": 1415,
-      "y": 1049,
+      "y": 1253,
       "name": "Screen — Edit Tenant",
       "clip": true,
       "width": 390,
@@ -4035,8 +4202,8 @@
     {
       "type": "frame",
       "id": "KGzqj",
-      "x": 957,
-      "y": 313,
+      "x": 930,
+      "y": 378,
       "name": "DeleteHouseDialog",
       "reusable": true,
       "width": 320,
@@ -4423,8 +4590,7 @@
               "x": 0,
               "y": 6
             },
-            "blur": 18,
-            "spread": -4
+            "blur": 18
           },
           "padding": [
             8,
@@ -4842,7 +5008,8 @@
                       "fill": "$text-primary",
                       "content": "Rent",
                       "fontFamily": "$font",
-                      "fontSize": 15
+                      "fontSize": 15,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -4888,7 +5055,8 @@
                       "fill": "$text-primary",
                       "content": "Electricity",
                       "fontFamily": "$font",
-                      "fontSize": 15
+                      "fontSize": 15,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "text",
@@ -4897,7 +5065,8 @@
                       "fill": "$text-secondary",
                       "content": "129 units × ₹6",
                       "fontFamily": "$font",
-                      "fontSize": 12
+                      "fontSize": 12,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -4943,7 +5112,8 @@
                       "fill": "$text-primary",
                       "content": "Water charge",
                       "fontFamily": "$font",
-                      "fontSize": 15
+                      "fontSize": 15,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -4989,7 +5159,8 @@
                       "fill": "$text-primary",
                       "content": "IGL (Gas)",
                       "fontFamily": "$font",
-                      "fontSize": 15
+                      "fontSize": 15,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -5035,7 +5206,8 @@
                       "fill": "$text-primary",
                       "content": "Previous balance",
                       "fontFamily": "$font",
-                      "fontSize": 15
+                      "fontSize": 15,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -5119,6 +5291,392 @@
                   "letterSpacing": -0.8
                 }
               ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "VgfUe",
+      "x": -522,
+      "y": -190,
+      "name": "BottomTabBarPro",
+      "reusable": true,
+      "width": 390,
+      "fill": "$surface",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "rectangle",
+          "id": "UUA9D",
+          "name": "TopHairline",
+          "fill": "$hairline",
+          "width": "fill_container",
+          "height": 1
+        },
+        {
+          "type": "frame",
+          "id": "lLS1l",
+          "name": "Tabs",
+          "width": "fill_container",
+          "padding": [
+            8,
+            12,
+            2,
+            12
+          ],
+          "justifyContent": "space_around",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "FG4w6",
+              "name": "Tab Houses",
+              "fill": "#00000000",
+              "cornerRadius": 12,
+              "layout": "vertical",
+              "gap": 3,
+              "padding": [
+                6,
+                16
+              ],
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "BYfX8",
+                  "name": "Icon",
+                  "width": 22,
+                  "height": 22,
+                  "icon": "house",
+                  "library": "lucide",
+                  "fill": "$accent"
+                },
+                {
+                  "type": "text",
+                  "id": "Q8cUzF",
+                  "name": "Label",
+                  "fill": "$accent",
+                  "content": "Houses",
+                  "lineHeight": 1.3,
+                  "fontFamily": "$font",
+                  "fontSize": 10,
+                  "fontWeight": "600",
+                  "letterSpacing": 0.1
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "bK8Do",
+              "name": "Tab Settings",
+              "fill": "#00000000",
+              "cornerRadius": 12,
+              "layout": "vertical",
+              "gap": 3,
+              "padding": [
+                6,
+                16
+              ],
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "y3x7P",
+                  "name": "Icon",
+                  "width": 22,
+                  "height": 22,
+                  "icon": "settings",
+                  "library": "lucide",
+                  "fill": "$text-secondary"
+                },
+                {
+                  "type": "text",
+                  "id": "DDlQl",
+                  "name": "Label",
+                  "fill": "$text-secondary",
+                  "content": "Settings",
+                  "lineHeight": 1.3,
+                  "fontFamily": "$font",
+                  "fontSize": 10,
+                  "fontWeight": "600",
+                  "letterSpacing": 0.1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "sBthF",
+          "name": "HomeIndicatorArea",
+          "width": "fill_container",
+          "height": 24,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "zpmWt",
+              "name": "HomeIndicator",
+              "fill": "$text-primary",
+              "width": 138,
+              "height": 5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "Q6TanM",
+      "x": -522,
+      "y": -320,
+      "name": "HouseRow",
+      "reusable": true,
+      "width": 390,
+      "fill": "#00000000",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "fZeqh",
+          "name": "Row",
+          "width": "fill_container",
+          "gap": 12,
+          "padding": 24,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "Z10jAJ",
+              "name": "Info",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 3,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Ucubc",
+                  "name": "HouseName",
+                  "fill": "$text-primary",
+                  "content": "Meera Residency",
+                  "lineHeight": 1.25,
+                  "fontFamily": "$font",
+                  "fontSize": 16,
+                  "fontWeight": "600",
+                  "letterSpacing": -0.3
+                },
+                {
+                  "type": "text",
+                  "id": "f0Pq2z",
+                  "name": "Address",
+                  "fill": "$text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Sector 12, Dwarka",
+                  "lineHeight": 1.3,
+                  "fontFamily": "$font",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "u3HdPp",
+              "name": "Right",
+              "layout": "vertical",
+              "gap": 3,
+              "alignItems": "end",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "c1V9M4",
+                  "name": "Amount",
+                  "fill": "$text-primary",
+                  "content": "₹42,000",
+                  "lineHeight": 1.25,
+                  "fontFamily": "$font",
+                  "fontSize": 15,
+                  "fontWeight": "500",
+                  "letterSpacing": -0.2
+                },
+                {
+                  "type": "text",
+                  "id": "E8z5y",
+                  "name": "Meta",
+                  "fill": "$text-secondary",
+                  "content": "4 tenants",
+                  "lineHeight": 1.3,
+                  "fontFamily": "$font",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "icon",
+              "id": "WCPxp",
+              "name": "Chevron",
+              "width": 15,
+              "height": 15,
+              "icon": "chevron-right",
+              "library": "lucide",
+              "fill": "$text-tertiary"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "YsbRz",
+          "name": "DividerInset",
+          "width": "fill_container",
+          "padding": [
+            0,
+            0,
+            0,
+            24
+          ],
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "QzkwZ",
+              "name": "Divider",
+              "fill": "$hairline",
+              "width": "fill_container",
+              "height": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "Aw2cb",
+      "x": 1947,
+      "y": -596,
+      "name": "AuthField",
+      "reusable": true,
+      "width": 358,
+      "layout": "vertical",
+      "gap": 10,
+      "children": [
+        {
+          "type": "text",
+          "id": "oiRBQ",
+          "name": "FieldLabel",
+          "fill": "$text-secondary",
+          "content": "EMAIL",
+          "fontFamily": "$font",
+          "fontSize": 11,
+          "fontWeight": "600",
+          "letterSpacing": 1.2
+        },
+        {
+          "type": "frame",
+          "id": "V0Ttm",
+          "name": "FieldRow",
+          "width": "fill_container",
+          "stroke": "$hairline-strong",
+          "strokeWidth": {
+            "bottom": 1.5
+          },
+          "gap": 12,
+          "padding": [
+            0,
+            0,
+            13,
+            0
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "vAz0r",
+              "name": "FieldValue",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Placeholder",
+              "fontFamily": "$font",
+              "fontSize": 16,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "icon",
+              "id": "efKeV",
+              "name": "FieldTrailing",
+              "width": 18,
+              "height": 18,
+              "icon": "eye-off",
+              "library": "lucide",
+              "fill": "$text-tertiary"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "bCUJe",
+      "x": 1947,
+      "y": -776,
+      "name": "ReceiptField",
+      "reusable": true,
+      "width": 358,
+      "layout": "vertical",
+      "gap": 9,
+      "children": [
+        {
+          "type": "text",
+          "id": "VyYxP",
+          "name": "FieldLabel",
+          "fill": "$text-secondary",
+          "content": "EMAIL",
+          "fontFamily": "$--font-primary",
+          "fontSize": 10.5,
+          "fontWeight": "700",
+          "letterSpacing": 1.4
+        },
+        {
+          "type": "frame",
+          "id": "hcA7a",
+          "name": "FieldCell",
+          "width": "fill_container",
+          "fill": "$field",
+          "cornerRadius": 10,
+          "gap": 10,
+          "padding": [
+            13,
+            14
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "MIiBj",
+              "name": "FieldValue",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Placeholder",
+              "fontFamily": "$font",
+              "fontSize": 16,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "icon",
+              "id": "ZOFQy",
+              "name": "FieldTrailing",
+              "width": 17,
+              "height": 17,
+              "icon": "eye-off",
+              "library": "lucide",
+              "fill": "$text-secondary"
             }
           ]
         }
@@ -5707,6 +6265,39 @@
     "text-tertiary": {
       "type": "color",
       "value": "#C7C7CC"
+    },
+    "hairline": {
+      "type": "color",
+      "value": "#1C1C1E14"
+    },
+    "hairline-strong": {
+      "type": "color",
+      "value": "#1C1C1E1F"
+    },
+    "shadow-key": {
+      "type": "color",
+      "value": "#1C1C1E0F"
+    },
+    "shadow-ambient": {
+      "type": "color",
+      "value": "#1C1C1E14"
+    },
+    "green-ink": {
+      "type": "color",
+      "value": "#1B7F3B"
+    },
+    "orange-ink": {
+      "type": "color",
+      "value": "#8A5200"
+    },
+    "red-ink": {
+      "type": "color",
+      "value": "#B3261E"
+    },
+    "field": {
+      "type": "color",
+      "value": "#E8E8ED"
     }
-  }
+  },
+  "fileToken": "8812116e-1001-4cec-bdec-9fca87e89952"
 }

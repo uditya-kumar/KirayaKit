@@ -40,6 +40,9 @@ export default {
     warning: "#FF9500",
     warningBackground: "#FFF3E0",
     warningBorder: "#FF950033",
+    // Text on warningBackground, where the orange itself is too light to read:
+    // the units and electricity total on the meter reading card.
+    warningText: "#8A5200",
     receiptBackground: "#EFFBF5",
     receiptMonthBackground: "#D8F6E0",
     receiptMonthIcon: "#10762D",
@@ -69,6 +72,7 @@ export default {
     warning: "#FF9F0A",
     warningBackground: "#2B1E06",
     warningBorder: "#FF9F0A33",
+    warningText: "#FFB340",
     receiptBackground: "#12291D",
     receiptMonthBackground: "#1D3D28",
     receiptMonthIcon: "#30D158",

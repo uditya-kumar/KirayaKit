@@ -28,6 +28,11 @@ type CustomTextInputProps = {
    * rather than to the form, like the eye that reveals a password.
    */
   trailing?: ReactNode;
+  /**
+   * The one figure a card is about, like the meter reading: a taller box, a
+   * larger number, and a tint border that marks it as the field to fill in.
+   */
+  prominent?: boolean;
 } & Omit<
   TextInputProps,
   "value" | "onChangeText" | "placeholder" | "style" | "keyboardType"
@@ -47,6 +52,7 @@ function CustomTextInput({
   labelText,
   icon,
   trailing,
+  prominent = false,
   ...inputProps
 }: CustomTextInputProps) {
   const colorScheme = useColorScheme() ?? "light";
@@ -56,9 +62,10 @@ function CustomTextInput({
 
   const fieldStyle = [
     styles.field,
+    prominent && styles.prominentField,
     {
       backgroundColor: colors.cardBackground,
-      borderColor: colors.borderColor,
+      borderColor: prominent ? colors.tint : colors.borderColor,
     },
   ];
 
@@ -78,7 +85,11 @@ function CustomTextInput({
           autoCorrect={false}
           keyboardType={keyboardType}
           {...inputProps}
-          style={[styles.input, { color: colors.text }]}
+          style={[
+            styles.input,
+            prominent && styles.prominentInput,
+            { color: colors.text },
+          ]}
         />
         {trailing}
       </View>
@@ -109,6 +120,16 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     // The box supplies the padding; TextInput adds its own on Android.
     padding: 0,
+  },
+  prominentField: {
+    height: 50,
+    borderRadius: 14,
+    borderWidth: 1.5,
+    paddingHorizontal: 14,
+  },
+  prominentInput: {
+    fontSize: 22,
+    fontWeight: "700",
   },
 });
 
