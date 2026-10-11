@@ -4,8 +4,12 @@ import { useQuery } from "@tanstack/react-query";
 /**
  * The bill form's month, whether or not it has been billed yet.
  *
- * The month is in the key, so changing it in the picker fetches that month's
- * draft and stepping back to one already seen draws it from the cache.
+ * Never served from the cache: `gcTime: 0` drops a draft as soon as the form
+ * stops showing it, so every open waits for a fresh one. The form copies the
+ * draft into its fields once, on mount, so a cached draft was not just stale but
+ * stuck — open October, bill September, reopen October, and the old draft seeded
+ * Current with the opening reading while the background refetch moved Previous
+ * up to September's, and the bill opened at negative units.
  *
  * Held back until there is a tenant to ask about: a route param can be missing
  * for a render — a deep link, a reload in dev — and calling anyway sends an RPC
@@ -20,5 +24,6 @@ export function useBillDraft(tenantId: string | undefined, month: string) {
       return fetchBillDraft(tenantId, month);
     },
     enabled: Boolean(tenantId),
+    gcTime: 0,
   });
 }
