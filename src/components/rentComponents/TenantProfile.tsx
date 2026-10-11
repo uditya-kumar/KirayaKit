@@ -1,9 +1,8 @@
 import Button from "@/components/rentComponents/Button";
-import { InfoTile } from "@/components/rentComponents/InfoTile";
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
 import { formatFloor, formatRate, formatRupees } from "@/utils/format";
-import { House, Pencil, Zap } from "lucide-react-native";
+import { House, Pencil, Zap, type LucideIcon } from "lucide-react-native";
 import { StyleSheet, Text, View } from "react-native";
 
 type TenantProfileProps = {
@@ -66,17 +65,45 @@ export function TenantProfile({
       </View>
 
       <View style={styles.infoRow}>
-        <InfoTile
-          label="Monthly Rent"
-          value={formatRupees(monthlyRent)}
+        <TermPill
           icon={House}
+          value={formatRupees(monthlyRent)}
+          accessibilityLabel={`Monthly rent, ${formatRupees(monthlyRent)}`}
         />
-        <InfoTile
-          label="Electricity"
-          value={formatRate(electricityRate)}
+        <TermPill
           icon={Zap}
+          value={formatRate(electricityRate)}
+          accessibilityLabel={`Electricity, ${formatRate(electricityRate)}`}
         />
       </View>
+    </View>
+  );
+}
+
+type TermPillProps = {
+  icon: LucideIcon;
+  value: string;
+  /** Says what the figure is, since the pill itself shows only the icon. */
+  accessibilityLabel: string;
+};
+
+/**
+ * One of the tenant's terms as an outlined pill. Not `InfoTile`: the mock drops
+ * the label here, because the icon and the "/ unit" already say which is which,
+ * and lets each pill hug its figure instead of splitting the row in half.
+ */
+function TermPill({ icon: Icon, value, accessibilityLabel }: TermPillProps) {
+  const colorScheme = useColorScheme() ?? "light";
+  const colors = Colors[colorScheme];
+
+  return (
+    <View
+      style={[styles.pill, { borderColor: colors.borderColor }]}
+      accessible
+      accessibilityLabel={accessibilityLabel}
+    >
+      <Icon size={16} color={colors.textMuted} />
+      <Text style={[styles.pillValue, { color: colors.text }]}>{value}</Text>
     </View>
   );
 }
@@ -112,6 +139,19 @@ const styles = StyleSheet.create({
   },
   infoRow: {
     flexDirection: "row",
-    gap: 10,
+    gap: 8,
+  },
+  pill: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    borderRadius: 14,
+    borderWidth: 1,
+  },
+  pillValue: {
+    fontSize: 15,
+    fontWeight: "700",
   },
 });
