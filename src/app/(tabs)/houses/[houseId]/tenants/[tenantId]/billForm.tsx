@@ -19,7 +19,12 @@ import {
   formatBillMonthShort,
   formatRupees,
 } from "@/utils/format";
-import { MAX_AMOUNT, isChargeLabel } from "@/utils/validate";
+import {
+  MAX_AMOUNT,
+  fieldAmount,
+  isChargeLabel,
+  withoutLeadingZeros,
+} from "@/utils/validate";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import {
   CalendarDays,
@@ -69,20 +74,6 @@ function billableMonths(movedInOn: string, now: Date): string[] {
   const movedInMonth = `${movedInOn.slice(0, 7)}-01`;
   // String comparison is date comparison here: both are "YYYY-MM-01".
   return movedInMonth <= lastMonth ? [lastMonth, thisMonth] : [thisMonth];
-}
-
-/** A blank number field counts as 0, the same way the columns default. */
-function amount(value: string): number {
-  return value.trim() === "" ? 0 : Number(value);
-}
-
-/**
- * A number field's text with the zeros in front of its first digit dropped, so
- * typing into a field that reads "0" gives "12" and not "012". A zero before the
- * decimal point stays: "0.5" is a figure, ".5" only looks like a typo.
- */
-function withoutLeadingZeros(value: string): string {
-  return value.replace(/^0+(?=\d)/, "");
 }
 
 /** Money as the database stores it: two decimal places, not a long binary tail. */
@@ -246,11 +237,11 @@ function BillForm({
 
   // The same arithmetic the `total_billed` column does, so the figure under the
   // button is the one the receipt will carry.
-  const reading = amount(currentReading);
+  const reading = fieldAmount(currentReading);
   const units = reading - draft.previousReading;
   const electricity = round2(units * draft.electricityRate);
   const extras = charges.reduce(
-    (sum, charge) => sum + amount(charge.amount),
+    (sum, charge) => sum + fieldAmount(charge.amount),
     0,
   );
   const total = round2(
@@ -278,7 +269,7 @@ function BillForm({
       return;
     }
 
-    const paid = amount(amountPaid);
+    const paid = fieldAmount(amountPaid);
     if (!Number.isFinite(paid) || paid < 0 || paid > MAX_AMOUNT) {
       setError(
         "Paid this month has to be a number, not negative, and no more than ten digits.",
@@ -306,7 +297,7 @@ function BillForm({
     }
     if (
       filled.some((charge) => {
-        const value = amount(charge.amount);
+        const value = fieldAmount(charge.amount);
         return !Number.isFinite(value) || value < 0 || value > MAX_AMOUNT;
       })
     ) {
@@ -336,7 +327,7 @@ function BillForm({
         amountPaid: paid,
         charges: filled.map((charge) => ({
           label: charge.label.trim(),
-          amount: amount(charge.amount),
+          amount: fieldAmount(charge.amount),
         })),
       },
       {

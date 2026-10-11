@@ -122,3 +122,17 @@ export const MAX_AMOUNT = 9_999_999_999.99;
  * front of the point rather than ten.
  */
 export const MAX_RATE = 99_999_999.99;
+
+/** A number field's text as a figure: blank counts as 0, the way the columns default. */
+export function fieldAmount(value: string): number {
+  return value.trim() === "" ? 0 : Number(value);
+}
+
+/**
+ * A number field's text with the zeros in front of its first digit dropped, so
+ * typing into a field that reads "0" gives "12" and not "012". A zero before the
+ * decimal point stays: "0.5" is a figure, ".5" only looks like a typo.
+ */
+export function withoutLeadingZeros(value: string): string {
+  return value.replace(/^0+(?=\d)/, "");
+}

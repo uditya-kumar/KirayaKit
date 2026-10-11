@@ -23,6 +23,10 @@ export default {
     fillBackground: "#F9F9FB",
     borderColor: "#E5E5EA",
     divider: "#C7C7CC",
+    // The track of a segmented control, and the round close button on a sheet
+    // (the mock's $field): darker than fillBackground, so the selected segment,
+    // drawn in cardBackground, stands out of it.
+    segmentBackground: "#E8E8ED",
     // Behind a modal dialog. The mock draws its dialogs on their own, so this is
     // the one colour here without a node to point at.
     scrim: "#00000066",
@@ -59,6 +63,7 @@ export default {
     fillBackground: "#2C2C2E",
     borderColor: "#38383A",
     divider: "#48484A",
+    segmentBackground: "#3A3A3C",
     scrim: "#000000A6",
     tint: tintColorDark,
     tabBackground: "#191919",

@@ -1,16 +1,22 @@
 import { outstandingAmount, type Bill } from "@/api/bills";
-import { BillBreakdown } from "@/components/rentComponents/BillBreakdown";
+import {
+  AddPaymentSheet,
+  type PaymentMonth,
+} from "@/components/rentComponents/AddPaymentSheet";
 import Button from "@/components/rentComponents/Button";
 import { DeleteDialog } from "@/components/rentComponents/DeleteDialog";
 import { PaymentCard } from "@/components/rentComponents/PaymentCard";
 import { TenantProfile } from "@/components/rentComponents/TenantProfile";
+import { TenantSummaryCard } from "@/components/rentComponents/TenantSummaryCard";
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
+import { useBillDraft } from "@/hooks/useBillDraft";
 import { useBills } from "@/hooks/useBills";
 import { useDeleteTenant } from "@/hooks/useDeleteTenant";
+import { useSaveBill } from "@/hooks/useSaveBill";
 import { useTenant } from "@/hooks/useTenant";
 import { neonErrorMessage } from "@/libs/neon-errors";
-import { formatRupees } from "@/utils/format";
+import { MAX_AMOUNT, fieldAmount } from "@/utils/validate";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Trash2 } from "lucide-react-native";
 import { useState } from "react";
@@ -26,15 +32,16 @@ import {
 const RECENT_MONTHS = 2;
 
 /**
- * The month the app is running in, as "2026-09", to match against a bill's
- * `bill_month` ("2026-09-01").
+ * A month counted back from the one the app is running in, as "2026-09", to match
+ * against a bill's `bill_month` ("2026-09-01"). 0 is this month.
  *
  * Built from the local parts rather than sliced off toISOString, which is UTC and
  * would still say August through the first hours of the 1st in IST.
  */
-function currentBillMonth(): string {
+function billMonth(monthsBack: number): string {
   const now = new Date();
-  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  const month = new Date(now.getFullYear(), now.getMonth() - monthsBack, 1);
+  return `${month.getFullYear()}-${String(month.getMonth() + 1).padStart(2, "0")}`;
 }
 
 /**
@@ -63,6 +70,18 @@ export default function TenantDetailScreen() {
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const { mutate: deleteTenant, isPending: isDeleting } = useDeleteTenant();
+
+  // The month the Add payment sheet is open on, or null while it is shut. Its
+  // draft is only fetched while the sheet is up: a payment is saved as the
+  // month's own bill with everything but the paid amount sent back unchanged, so
+  // the reading and the charges have to be in hand to leave them alone.
+  const [payingMonth, setPayingMonth] = useState<string | null>(null);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
+  const payingDraft = useBillDraft(
+    payingMonth ? tenantId : undefined,
+    payingMonth ?? "",
+  );
+  const { mutate: savePayment, isPending: isSavingPayment } = useSaveBill();
 
   // Both queries fill one screen, so the spinner waits for the pair and the
   // first failure is the one reported.
@@ -111,7 +130,7 @@ export default function TenantDetailScreen() {
 
   // A month with no bill yet reads as zeros rather than vanishing: the card is
   // where the month's bill gets created, so it has to be there before one exists.
-  const thisMonth = currentBillMonth();
+  const thisMonth = billMonth(0);
   const currentBill: Bill | undefined = bills.find(
     (bill) => bill.bill_month.slice(0, 7) === thisMonth,
   );
@@ -120,19 +139,72 @@ export default function TenantDetailScreen() {
   // and hands the rest to Payment History.
   const recent = bills.slice(0, RECENT_MONTHS);
 
-  // Signed, so overpayment can be said rather than hidden: paying past the total
-  // leaves a credit that the next bill takes off, and showing it as "-₹500
-  // pending" in the same red as a debt would read as an alarm about the opposite
-  // of what happened. Red is kept for money actually owed, which is also why a
-  // settled ₹0 is not red either.
-  const outstanding = outstandingAmount(bills);
-  const inCredit = outstanding < 0;
+  // The two months the bill form also allows, and only those that have been
+  // billed: a payment needs a bill to land on, and raising one is the bill form's
+  // job rather than a side effect of recording money. Oldest first, so the sheet's
+  // segments read left to right in time.
+  const payableMonths = [billMonth(1), thisMonth];
+  const paymentMonths: PaymentMonth[] = bills
+    .filter((bill) => payableMonths.includes(bill.bill_month.slice(0, 7)))
+    .map((bill) => ({
+      month: bill.bill_month,
+      billed: bill.total_billed,
+      paid: bill.amount_paid,
+    }))
+    .reverse();
 
   function openBill(billId: string) {
     router.push({
       pathname: "/houses/[houseId]/tenants/[tenantId]/bills/[billId]",
       params: { houseId, tenantId, billId },
     });
+  }
+
+  /**
+   * Records what has been paid on one month, which is the bill form's "Paid this
+   * month" on its own: `save_bill` is handed the month's existing reading and
+   * charges back, so the only thing that moves is `amount_paid`.
+   */
+  function onSavePayment(text: string) {
+    setPaymentError(null);
+    const draft = payingDraft.data;
+    if (!payingMonth || !draft) {
+      if (payingDraft.isError) void payingDraft.refetch();
+      return;
+    }
+    // The sheet only ever offers months that have a bill, so this is a month that
+    // was deleted in another session. Saving anyway would raise it again at zero
+    // units through save_bill's upsert, which is not what a payment should do.
+    if (draft.billId === null) {
+      setPaymentError(
+        "This month has no bill any more — raise it from Edit Bill.",
+      );
+      return;
+    }
+
+    const paid = fieldAmount(text);
+    if (!Number.isFinite(paid) || paid < 0 || paid > MAX_AMOUNT) {
+      setPaymentError(
+        "The amount paid has to be a number, not negative, and no more than ten digits.",
+      );
+      return;
+    }
+
+    savePayment(
+      {
+        tenantId,
+        month: payingMonth,
+        currentReading: draft.currentReading,
+        amountPaid: paid,
+        charges: draft.charges,
+      },
+      {
+        // The mutation has already invalidated the ledger, so the card behind the
+        // sheet refills with the new figures as it closes.
+        onSuccess: () => setPayingMonth(null),
+        onError: (err) => setPaymentError(neonErrorMessage(err)),
+      },
+    );
   }
 
   function onConfirmDelete() {
@@ -174,44 +246,32 @@ export default function TenantDetailScreen() {
         }
       />
 
-      {/* A plain frame in the mock (node Uy7Zi) rather than a component: one row
-          of two words, used nowhere else. */}
-      <View
-        style={[
-          styles.pending,
-          {
-            backgroundColor: colors.cardBackground,
-            borderColor: colors.borderColor,
-          },
-        ]}
-      >
-        <Text style={[styles.pendingLabel, { color: colors.text }]}>
-          {inCredit ? "In credit" : "Total pending"}
-        </Text>
-        <Text
-          style={[
-            styles.pendingAmount,
-            { color: outstanding > 0 ? colors.error : colors.success },
-          ]}
-        >
-          {formatRupees(Math.abs(outstanding))}
-        </Text>
-      </View>
-
-      <BillBreakdown
-        title="Current Month"
+      <TenantSummaryCard
+        outstanding={outstandingAmount(bills)}
         billed={currentBill?.total_billed ?? 0}
         paid={currentBill?.amount_paid ?? 0}
         // Nothing to view until the month has been billed, which is what dims the
-        // button while the card is showing zeros.
+        // link while the card is showing zeros.
         onViewDetails={currentBill ? () => openBill(currentBill.id) : undefined}
         // Edit doubles as "raise it": the same form creates this month's bill when
         // the card is showing zeros because there is nothing to edit yet.
-        onEdit={() =>
+        onEditBill={() =>
           router.push({
             pathname: "/houses/[houseId]/tenants/[tenantId]/billForm",
             params: { houseId, tenantId, month: `${thisMonth}-01` },
           })
+        }
+        // Dimmed until some month has a bill: there is nothing for the money to
+        // go against, and the sheet would open on no month at all.
+        onAddPayment={
+          paymentMonths.length > 0
+            ? () => {
+                setPaymentError(null);
+                // Opens on the newest billed month, which is what most payments
+                // are for.
+                setPayingMonth(paymentMonths.at(-1)?.month ?? null);
+              }
+            : undefined
         }
       />
 
@@ -268,6 +328,25 @@ export default function TenantDetailScreen() {
         style={styles.delete}
       />
 
+      <AddPaymentSheet
+        visible={payingMonth !== null}
+        months={paymentMonths}
+        month={payingMonth ?? ""}
+        onChangeMonth={(month) => {
+          setPaymentError(null);
+          setPayingMonth(month);
+        }}
+        onSave={onSavePayment}
+        onClose={() => setPayingMonth(null)}
+        // Also busy while the draft is on its way: Save has nothing to send back
+        // unchanged until the month it is paying against has arrived.
+        saving={isSavingPayment || payingDraft.isPending}
+        errorMessage={
+          paymentError ??
+          (payingDraft.error ? neonErrorMessage(payingDraft.error) : null)
+        }
+      />
+
       <DeleteDialog
         visible={confirmingDelete}
         title="Delete this tenant?"
@@ -311,24 +390,6 @@ const styles = StyleSheet.create({
   errorText: {
     fontSize: 13,
     textAlign: "center",
-  },
-  pending: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingTop: 18,
-    paddingHorizontal: 18,
-    paddingBottom: 16,
-    borderRadius: 20,
-    borderWidth: 1,
-  },
-  pendingLabel: {
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  pendingAmount: {
-    fontSize: 18,
-    fontWeight: "600",
   },
   historyHead: {
     flexDirection: "row",

@@ -4,6 +4,7 @@ import {
   Pressable,
   StyleSheet,
   Text,
+  View,
   ViewStyle,
   type StyleProp,
 } from "react-native";
@@ -24,6 +25,8 @@ type ButtonProps = {
   /** Overrides `text` for screen readers, when the label needs more context. */
   accessibilityLabel?: string;
   icon?: ReactNode;
+  /** Drawn after the label: the chevron on a link that opens another screen. */
+  trailingIcon?: ReactNode;
   /**
    * Layout only: where the button sits and how wide it is (`alignSelf`, `flex`,
    * margins). Colour, padding and radius come from the props above so that
@@ -51,6 +54,7 @@ function Button({
   disabled = false,
   accessibilityLabel,
   icon,
+  trailingIcon,
   style,
 }: ButtonProps) {
   const inactive = loading || disabled;
@@ -89,6 +93,9 @@ function Button({
       >
         {text}
       </Text>
+      {trailingIcon ? (
+        <View style={styles.trailingIcon}>{trailingIcon}</View>
+      ) : null}
 
       {loading && (
         <ActivityIndicator
@@ -116,6 +123,9 @@ const styles = StyleSheet.create({
   },
   textWithIcon: {
     marginLeft: 6,
+  },
+  trailingIcon: {
+    marginLeft: 2,
   },
 });
 
