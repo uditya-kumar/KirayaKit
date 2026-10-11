@@ -153,6 +153,10 @@ export type NewTenant = TenantInput &
  * One tenant with everything the form fills in. Read from `tenants` rather than
  * `v_tenant_list`: the view is built for lists and carries neither the Aadhaar
  * number nor the agreement expiry.
+ *
+ * `moved_in_on` is not a form field. The bill form reads it to decide whether the
+ * previous month can be billed — a tenant who moved in this month had no last
+ * month.
  */
 export type TenantRecord = Pick<
   Tables<"tenants">,
@@ -164,10 +168,11 @@ export type TenantRecord = Pick<
   | "monthly_rent"
   | "electricity_rate"
   | "agreement_expiry"
+  | "moved_in_on"
 >;
 
 const TENANT_FORM_COLUMNS =
-  "id, name, mobile_number, aadhaar_number, floor_number, monthly_rent, electricity_rate, agreement_expiry";
+  "id, name, mobile_number, aadhaar_number, floor_number, monthly_rent, electricity_rate, agreement_expiry, moved_in_on";
 
 /**
  * The tenant behind the Edit Tenant form.

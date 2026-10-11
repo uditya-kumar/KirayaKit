@@ -1,6 +1,6 @@
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
-import type { LucideIcon } from "lucide-react-native";
+import { Check, type LucideIcon } from "lucide-react-native";
 import { useRef, useState, type ReactNode } from "react";
 import {
   Modal,
@@ -16,7 +16,12 @@ import {
 export type MenuItem = {
   key: string;
   label: string;
-  icon: LucideIcon;
+  /** Read out instead of `label` when the visible text is abbreviated. */
+  accessibilityLabel?: string;
+  /** Left out by a list of choices, where the rows are values, not actions. */
+  icon?: LucideIcon;
+  /** The choice currently in force. Ticked, and the tick takes the icon's place. */
+  selected?: boolean;
   /** Renders the row in red, like "Delete House" in the mock. */
   destructive?: boolean;
   /** Dimmed and unpressable — an action whose screen is not built yet. */
@@ -26,19 +31,30 @@ export type MenuItem = {
 
 type DropdownMenuProps = {
   items: MenuItem[];
-  /** The trigger's contents — an icon in every case so far. */
+  /** The trigger's contents — a header icon, or a whole field-shaped box. */
   children: ReactNode;
   /** Read out for the trigger, e.g. "House actions". */
   accessibilityLabel: string;
+  /** The trigger cannot open — there is nothing in the menu worth choosing. */
+  disabled?: boolean;
+  /**
+   * Hang the menu at the trigger's own width rather than the fixed 220, the way a
+   * select under a form field does.
+   */
+  matchTriggerWidth?: boolean;
   /** Layout only: where the trigger sits (margins, alignment). */
   style?: StyleProp<ViewStyle>;
 };
 
-/** Where the surface hangs: under the trigger, right edges aligned. */
-type Anchor = { top: number; right: number };
+/**
+ * Where the surface hangs: under the trigger, right edges aligned. `width` is
+ * null for the fixed-width action menu.
+ */
+type Anchor = { top: number; right: number; width: number | null };
 
 /**
- * A trigger and the menu it opens. Note the row ordering, which is unusual and
+ * A trigger and the menu it opens — the app's one dropdown, for a list of actions
+ * and a list of choices alike. Note the row ordering, which is unusual and
  * deliberate: the label comes first and the icon is pinned to the right edge.
  *
  * Opening, closing and placement are the component's own business, so a caller
@@ -50,6 +66,8 @@ export function DropdownMenu({
   items,
   children,
   accessibilityLabel,
+  disabled = false,
+  matchTriggerWidth = false,
   style,
 }: DropdownMenuProps) {
   const colorScheme = useColorScheme() ?? "light";
@@ -73,6 +91,7 @@ export function DropdownMenu({
       setAnchor({
         top: y + height + 6,
         right: Math.max(windowWidth - (x + width), 0),
+        width: matchTriggerWidth ? width : null,
       });
     });
   }
@@ -87,7 +106,8 @@ export function DropdownMenu({
         ref={triggerRef}
         accessibilityRole="button"
         accessibilityLabel={accessibilityLabel}
-        accessibilityState={{ expanded: anchor !== null }}
+        accessibilityState={{ expanded: anchor !== null, disabled }}
+        disabled={disabled}
         onPress={open}
         style={({ pressed }) => [style, { opacity: pressed ? 0.5 : 1 }]}
       >
@@ -113,11 +133,12 @@ export function DropdownMenu({
           style={[
             styles.menu,
             { top: anchor?.top ?? 0, right: anchor?.right ?? 0 },
+            anchor?.width != null && { width: anchor.width },
             { backgroundColor: colors.cardBackground },
           ]}
         >
           {items.map((item, index) => {
-            const Icon = item.icon;
+            const Icon = item.selected ? Check : item.icon;
             const tint = item.destructive ? colors.error : colors.text;
 
             return (
@@ -132,7 +153,11 @@ export function DropdownMenu({
                 ) : null}
                 <Pressable
                   accessibilityRole="menuitem"
-                  accessibilityState={{ disabled: item.disabled }}
+                  accessibilityLabel={item.accessibilityLabel}
+                  accessibilityState={{
+                    disabled: item.disabled,
+                    selected: item.selected,
+                  }}
                   disabled={item.disabled}
                   onPress={() => {
                     close();
@@ -146,7 +171,12 @@ export function DropdownMenu({
                   <Text style={[styles.label, { color: tint }]}>
                     {item.label}
                   </Text>
-                  <Icon size={19} color={tint} />
+                  {Icon ? (
+                    <Icon
+                      size={19}
+                      color={item.selected ? colors.tint : tint}
+                    />
+                  ) : null}
                 </Pressable>
               </View>
             );
@@ -168,7 +198,8 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
   },
-  // `top` and `right` come from the measured trigger.
+  // `top` and `right` come from the measured trigger, and so does the width
+  // when it is matched.
   menu: {
     position: "absolute",
     width: 220,

@@ -2,10 +2,15 @@ import type { BillDraft } from "@/api/bills";
 import Button from "@/components/rentComponents/Button";
 import { ChargeRow } from "@/components/rentComponents/ChargeRow";
 import CustomTextInput from "@/components/rentComponents/CustomTextInput";
+import {
+  DropdownMenu,
+  type MenuItem,
+} from "@/components/rentComponents/DropdownMenu";
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
 import { useBillDraft } from "@/hooks/useBillDraft";
 import { useSaveBill } from "@/hooks/useSaveBill";
+import { useTenantRecord } from "@/hooks/useTenantRecord";
 import { neonErrorMessage } from "@/libs/neon-errors";
 import {
   formatAmount,
@@ -17,10 +22,7 @@ import { MAX_AMOUNT, isChargeLabel } from "@/utils/validate";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import {
   CalendarDays,
-  Check,
   ChevronDown,
-  ChevronLeft,
-  ChevronRight,
   CirclePlus,
   IndianRupee,
   Plus,
@@ -30,9 +32,6 @@ import {
 import { useState, type ReactNode } from "react";
 import {
   ActivityIndicator,
-  Modal,
-  Pressable,
-  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -40,9 +39,6 @@ import {
   type ViewStyle,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
-
-/** How far back the picker's year stepper reaches, which is further than a rent ledger is ever corrected. */
-const YEARS_BACK = 5;
 
 /**
  * The first of a month, as a `date` column stores it: "2026-09-01".
@@ -54,22 +50,39 @@ function firstOfMonth(date: Date): string {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-01`;
 }
 
-/** One year's twelve months, January first. */
-function monthsOfYear(year: number): string[] {
-  return Array.from(
-    { length: 12 },
-    (_unused, index) => `${year}-${String(index + 1).padStart(2, "0")}-01`,
+/**
+ * The months a bill can be raised or corrected for: this one, and the one before
+ * it unless the tenant moved in this month. Oldest first.
+ *
+ * Only two, because anything older has already been carried into later bills, and
+ * correcting it now would change receipts the tenant has been sent. Nothing
+ * ahead of today either: next month's rent is not owed yet.
+ *
+ * `movedInOn` is a `date` column ("2026-10-14"). It is cut down to its month as a
+ * string so no timezone can move it into the month before.
+ */
+function billableMonths(movedInOn: string, now: Date): string[] {
+  const thisMonth = firstOfMonth(now);
+  const lastMonth = firstOfMonth(
+    new Date(now.getFullYear(), now.getMonth() - 1, 1),
   );
-}
-
-/** The year out of "2026-09-01", read off the string so no timezone can shift it. */
-function yearOf(month: string): number {
-  return Number(month.slice(0, 4));
+  const movedInMonth = `${movedInOn.slice(0, 7)}-01`;
+  // String comparison is date comparison here: both are "YYYY-MM-01".
+  return movedInMonth <= lastMonth ? [lastMonth, thisMonth] : [thisMonth];
 }
 
 /** A blank number field counts as 0, the same way the columns default. */
 function amount(value: string): number {
   return value.trim() === "" ? 0 : Number(value);
+}
+
+/**
+ * A number field's text with the zeros in front of its first digit dropped, so
+ * typing into a field that reads "0" gives "12" and not "012". A zero before the
+ * decimal point stays: "0.5" is a figure, ".5" only looks like a typo.
+ */
+function withoutLeadingZeros(value: string): string {
+  return value.replace(/^0+(?=\d)/, "");
 }
 
 /** Money as the database stores it: two decimal places, not a long binary tail. */
@@ -100,12 +113,14 @@ export default function BillFormScreen() {
   }>();
 
   const [month, setMonth] = useState(monthParam ?? firstOfMonth(new Date()));
-  const {
-    data: draft,
-    error,
-    isPending,
-    refetch,
-  } = useBillDraft(tenantId, month);
+  const draftQuery = useBillDraft(tenantId, month);
+  // Waited on with the draft, so the month field does not offer last month for
+  // a moment before the move-in date arrives and takes it away again.
+  const tenantQuery = useTenantRecord(tenantId);
+  const draft = draftQuery.data;
+  const tenant = tenantQuery.data;
+  const error = draftQuery.error ?? tenantQuery.error;
+  const isPending = draftQuery.isPending || tenantQuery.isPending;
 
   return (
     <>
@@ -131,7 +146,7 @@ export default function BillFormScreen() {
         <View style={[styles.centered, { backgroundColor: colors.background }]}>
           <ActivityIndicator size="large" color={colors.tint} />
         </View>
-      ) : error || !draft ? (
+      ) : error || !draft || !tenant ? (
         <View style={[styles.centered, { backgroundColor: colors.background }]}>
           <Text style={[styles.errorTitle, { color: colors.text }]}>
             Couldn&apos;t load this month
@@ -146,7 +161,10 @@ export default function BillFormScreen() {
             text="Try again"
             textColor={colors.tint}
             backgroundColor="transparent"
-            onPress={() => void refetch()}
+            onPress={() => {
+              if (draftQuery.isError) void draftQuery.refetch();
+              if (tenantQuery.isError) void tenantQuery.refetch();
+            }}
             paddingHorizontal={0}
           />
         </View>
@@ -156,6 +174,7 @@ export default function BillFormScreen() {
           tenantId={tenantId}
           month={month}
           onChangeMonth={setMonth}
+          movedInOn={tenant.moved_in_on}
           draft={draft}
         />
       )}
@@ -174,10 +193,18 @@ type BillFormProps = {
   /** First of the month being billed; the form is remounted when it changes. */
   month: string;
   onChangeMonth: (month: string) => void;
+  /** The tenant's `moved_in_on`, which decides whether last month is offered. */
+  movedInOn: string;
   draft: BillDraft;
 };
 
-function BillForm({ tenantId, month, onChangeMonth, draft }: BillFormProps) {
+function BillForm({
+  tenantId,
+  month,
+  onChangeMonth,
+  movedInOn,
+  draft,
+}: BillFormProps) {
   const colorScheme = useColorScheme() ?? "light";
   const colors = Colors[colorScheme];
 
@@ -186,34 +213,36 @@ function BillForm({ tenantId, month, onChangeMonth, draft }: BillFormProps) {
   const [currentReading, setCurrentReading] = useState(
     String(draft.currentReading),
   );
-  const [amountPaid, setAmountPaid] = useState(String(draft.amountPaid));
+  // Blank rather than "0" when nothing has been paid: the placeholder already
+  // shows 0, a blank saves as 0, and the first digit typed is then the figure.
+  const [amountPaid, setAmountPaid] = useState(
+    draft.amountPaid === 0 ? "" : String(draft.amountPaid),
+  );
   const [charges, setCharges] = useState<ChargeDraft[]>(
     draft.charges.map((charge) => ({
       label: charge.label,
       amount: String(charge.amount),
     })),
   );
-  const [pickingMonth, setPickingMonth] = useState(false);
-  // Which year the picker is showing. Separate from the month being billed, so
-  // stepping through years does not change the bill until a month is tapped.
-  const [pickerYear, setPickerYear] = useState(() => yearOf(month));
   const [error, setError] = useState<string | null>(null);
 
   const { mutate: saveBill, isPending: saving } = useSaveBill();
 
-  // No month the calendar has not reached: a bill belongs to a month that has
-  // begun, and billing December in September would raise a rent nobody owes yet
-  // and put a reading in front of the months between. The floor is five years
-  // back, or further when an older bill is the one open — whichever month is
-  // being edited has to stay reachable, which is also why a month already open
-  // ahead of today (from an older build, or a device with a wrong clock) does not
-  // become unpickable.
-  const now = new Date();
-  const thisMonth = firstOfMonth(now);
-  const lastMonth = month > thisMonth ? month : thisMonth;
-  const thisYear = now.getFullYear();
-  const firstYear = Math.min(thisYear - YEARS_BACK, yearOf(month));
-  const lastYear = Math.max(thisYear, yearOf(month));
+  const months = billableMonths(movedInOn, new Date());
+  // With nothing to switch to, the field shows the month but no longer opens.
+  const canPickMonth = months.length > 1;
+  // The open month is listed too, ticked, so picking last month can be undone
+  // from the same menu. Picking a month that has already been billed is not an
+  // error: the form loads that bill and the bar changes to "Edit Bill".
+  const monthItems: MenuItem[] = months.map((option) => ({
+    key: option,
+    label: formatBillMonthShort(option),
+    accessibilityLabel: formatBillMonth(option),
+    selected: option === month,
+    onPress: () => {
+      if (option !== month) onChangeMonth(option);
+    },
+  }));
 
   // The same arithmetic the `total_billed` column does, so the figure under the
   // button is the one the receipt will carry.
@@ -340,37 +369,39 @@ function BillForm({ tenantId, month, onChangeMonth, draft }: BillFormProps) {
             it as a field-shaped button. */}
         <View style={[styles.field, styles.monthField]}>
           <Text style={[styles.label, { color: colors.text }]}>Month</Text>
-          <Pressable
-            accessibilityRole="button"
+          <DropdownMenu
             accessibilityLabel={`Month, ${formatBillMonth(month)}`}
-            onPress={() => {
-              // Opening always lands on the year of the month being billed, so a
-              // stray step into another year does not linger after a cancel.
-              setPickerYear(yearOf(month));
-              setPickingMonth(true);
-            }}
-            style={({ pressed }) => [
-              styles.monthButton,
-              {
-                backgroundColor: colors.cardBackground,
-                borderColor: colors.borderColor,
-                opacity: pressed ? 0.8 : 1,
-              },
-            ]}
+            items={monthItems}
+            disabled={!canPickMonth}
+            matchTriggerWidth
           >
-            <CalendarDays size={18} color={colors.textMuted} />
-            {/* Abbreviated because the field is half a row wide with an icon at
-                each end: "September 2026" wraps there and pushes the box out of
-                shape. The accessibility label says the month in full, and so do
-                the rows in the picker. */}
-            <Text
-              style={[styles.monthText, { color: colors.text }]}
-              numberOfLines={1}
+            <View
+              style={[
+                styles.monthButton,
+                {
+                  backgroundColor: colors.cardBackground,
+                  borderColor: colors.borderColor,
+                },
+              ]}
             >
-              {formatBillMonthShort(month)}
-            </Text>
-            <ChevronDown size={16} color={colors.textMuted} />
-          </Pressable>
+              <CalendarDays size={18} color={colors.textMuted} />
+              {/* Abbreviated because the field is half a row wide with an icon
+                  at each end: "September 2026" wraps there and pushes the box
+                  out of shape. The accessibility labels say the month in full. */}
+              <Text
+                style={[styles.monthText, { color: colors.text }]}
+                numberOfLines={1}
+              >
+                {formatBillMonthShort(month)}
+              </Text>
+              {/* Only the chevron fades when the field cannot open: the month is
+                  still the answer to a question, and greying it would read as
+                  missing. */}
+              <View style={{ opacity: canPickMonth ? 1 : 0.3 }}>
+                <ChevronDown size={16} color={colors.textMuted} />
+              </View>
+            </View>
+          </DropdownMenu>
         </View>
 
         {/* Read-only because the bill snapshots the rent it was raised with:
@@ -386,7 +417,7 @@ function BillForm({ tenantId, month, onChangeMonth, draft }: BillFormProps) {
       <CustomTextInput
         labelText="Paid this month"
         value={amountPaid}
-        onChangeText={setAmountPaid}
+        onChangeText={(value) => setAmountPaid(withoutLeadingZeros(value))}
         placeholder="0"
         icon={<IndianRupee size={18} color={colors.textMuted} />}
         keyboardType="decimal-pad"
@@ -413,7 +444,9 @@ function BillForm({ tenantId, month, onChangeMonth, draft }: BillFormProps) {
           <CustomTextInput
             labelText="Current"
             value={currentReading}
-            onChangeText={setCurrentReading}
+            onChangeText={(value) =>
+              setCurrentReading(withoutLeadingZeros(value))
+            }
             placeholder={formatAmount(draft.previousReading)}
             keyboardType="decimal-pad"
             returnKeyType="next"
@@ -487,7 +520,10 @@ function BillForm({ tenantId, month, onChangeMonth, draft }: BillFormProps) {
             amount={charge.amount}
             onChangeLabel={(label) => setCharge(index, { ...charge, label })}
             onChangeAmount={(value) =>
-              setCharge(index, { ...charge, amount: value })
+              setCharge(index, {
+                ...charge,
+                amount: withoutLeadingZeros(value),
+              })
             }
             onRemove={() =>
               setCharges(charges.filter((_unused, at) => at !== index))
@@ -559,21 +595,6 @@ function BillForm({ tenantId, month, onChangeMonth, draft }: BillFormProps) {
         paddingVertical={15}
         style={styles.action}
       />
-
-      <MonthPicker
-        visible={pickingMonth}
-        year={pickerYear}
-        firstYear={firstYear}
-        lastYear={lastYear}
-        lastMonth={lastMonth}
-        onChangeYear={setPickerYear}
-        selected={month}
-        onSelect={(picked) => {
-          setPickingMonth(false);
-          if (picked !== month) onChangeMonth(picked);
-        }}
-        onCancel={() => setPickingMonth(false)}
-      />
     </KeyboardAwareScrollView>
   );
 }
@@ -616,142 +637,6 @@ function ReadOnlyField({ labelText, value, icon, style }: ReadOnlyFieldProps) {
         </Text>
       </View>
     </View>
-  );
-}
-
-type MonthPickerProps = {
-  visible: boolean;
-  /** The year on show; its twelve months are what the list offers. */
-  year: number;
-  /** Bounds for the stepper, inclusive. */
-  firstYear: number;
-  lastYear: number;
-  /** The latest month that can be billed, as "2026-09-01". Later ones are shown greyed. */
-  lastMonth: string;
-  onChangeYear: (year: number) => void;
-  /** First of the month currently being billed, as "2026-09-01". */
-  selected: string;
-  onSelect: (month: string) => void;
-  onCancel: () => void;
-};
-
-/**
- * Which month is being billed.
- *
- * A list rather than a calendar: a bill belongs to a whole month, never a day, and
- * this keeps the screen free of a date-picker dependency. One year at a time, in
- * calendar order, because that is how a landlord reads a ledger — the stepper is
- * what reaches last year. Picking a month that has already been billed is not an
- * error: the form loads that bill and the bar changes to "Edit Bill".
- *
- * Months past `lastMonth` are shown and greyed rather than left out, so the year
- * always reads as twelve rows and it is obvious why the rest cannot be tapped.
- */
-function MonthPicker({
-  visible,
-  year,
-  firstYear,
-  lastYear,
-  lastMonth,
-  onChangeYear,
-  selected,
-  onSelect,
-  onCancel,
-}: MonthPickerProps) {
-  const colorScheme = useColorScheme() ?? "light";
-  const colors = Colors[colorScheme];
-
-  const atFirst = year <= firstYear;
-  const atLast = year >= lastYear;
-
-  return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType="fade"
-      onRequestClose={onCancel}
-    >
-      {/* Nothing has been changed yet, so a tap beside the card is a harmless way
-          out — unlike the delete confirmation, which insists on Cancel. */}
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel="Close month picker"
-        onPress={onCancel}
-        style={[styles.scrim, { backgroundColor: colors.scrim }]}
-      >
-        <Pressable
-          style={[styles.sheet, { backgroundColor: colors.cardBackground }]}
-        >
-          <Text style={[styles.sheetTitle, { color: colors.text }]}>
-            Choose a month
-          </Text>
-
-          <View style={styles.yearRow}>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel={`Show ${year - 1}`}
-              accessibilityState={{ disabled: atFirst }}
-              onPress={atFirst ? undefined : () => onChangeYear(year - 1)}
-              style={({ pressed }) => [
-                styles.yearStep,
-                { opacity: atFirst ? 0.3 : pressed ? 0.6 : 1 },
-              ]}
-            >
-              <ChevronLeft size={20} color={colors.text} />
-            </Pressable>
-
-            <Text style={[styles.yearText, { color: colors.text }]}>
-              {year}
-            </Text>
-
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel={`Show ${year + 1}`}
-              accessibilityState={{ disabled: atLast }}
-              onPress={atLast ? undefined : () => onChangeYear(year + 1)}
-              style={({ pressed }) => [
-                styles.yearStep,
-                { opacity: atLast ? 0.3 : pressed ? 0.6 : 1 },
-              ]}
-            >
-              <ChevronRight size={20} color={colors.text} />
-            </Pressable>
-          </View>
-
-          <ScrollView>
-            {monthsOfYear(year).map((month) => {
-              // String comparison is date comparison here: both are "YYYY-MM-01".
-              const future = month > lastMonth;
-              return (
-                <Pressable
-                  key={month}
-                  accessibilityRole="button"
-                  accessibilityLabel={formatBillMonth(month)}
-                  accessibilityState={{
-                    selected: month === selected,
-                    disabled: future,
-                  }}
-                  onPress={future ? undefined : () => onSelect(month)}
-                  style={({ pressed }) => [
-                    styles.monthOption,
-                    { opacity: future ? 0.3 : pressed ? 0.6 : 1 },
-                  ]}
-                >
-                  <Text
-                    style={[styles.monthOptionText, { color: colors.text }]}
-                  >
-                    {formatBillMonth(month)}
-                  </Text>
-                  {month === selected ? (
-                    <Check size={18} color={colors.tint} />
-                  ) : null}
-                </Pressable>
-              );
-            })}
-          </ScrollView>
-        </Pressable>
-      </Pressable>
-    </Modal>
   );
 }
 
@@ -930,56 +815,5 @@ const styles = StyleSheet.create({
   },
   action: {
     alignSelf: "stretch",
-  },
-  scrim: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  sheet: {
-    width: 300,
-    // A share of the screen rather than a fixed height: all twelve months fit
-    // without scrolling on a normal phone, where 420 showed eight and left the
-    // rest behind a scroll nothing hinted at. A short screen still scrolls.
-    maxHeight: "80%",
-    paddingVertical: 14,
-    borderRadius: 24,
-    boxShadow: [
-      { offsetX: 0, offsetY: 12, blurRadius: 32, color: "#00000026" },
-    ],
-  },
-  sheetTitle: {
-    fontSize: 17,
-    fontWeight: "700",
-    paddingHorizontal: 20,
-    paddingBottom: 8,
-  },
-  yearRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 14,
-    paddingBottom: 4,
-  },
-  // Square enough to be a comfortable target either side of the year.
-  yearStep: {
-    width: 40,
-    height: 40,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  yearText: {
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  monthOption: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingVertical: 13,
-    paddingHorizontal: 20,
-  },
-  monthOptionText: {
-    fontSize: 15,
   },
 });
