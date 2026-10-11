@@ -139,19 +139,25 @@ export default function TenantDetailScreen() {
   // and hands the rest to Payment History.
   const recent = bills.slice(0, RECENT_MONTHS);
 
-  // The two months the bill form also allows, and only those that have been
-  // billed: a payment needs a bill to land on, and raising one is the bill form's
-  // job rather than a side effect of recording money. Oldest first, so the sheet's
-  // segments read left to right in time.
-  const payableMonths = [billMonth(1), thisMonth];
-  const paymentMonths: PaymentMonth[] = bills
-    .filter((bill) => payableMonths.includes(bill.bill_month.slice(0, 7)))
-    .map((bill) => ({
-      month: bill.bill_month,
-      billed: bill.total_billed,
-      paid: bill.amount_paid,
-    }))
-    .reverse();
+  // The two months the bill form also allows, oldest first so the sheet's
+  // segments read left to right in time. A month keeps its place in the list
+  // without a bill so the sheet can show it greyed, but only this month does:
+  // last month unbilled is a month nobody is going to bill now, while this month
+  // is the one the landlord is working in and will raise next.
+  const paymentMonths: PaymentMonth[] = [billMonth(1), thisMonth]
+    .map((month) => {
+      const bill = bills.find((row) => row.bill_month.slice(0, 7) === month);
+      return {
+        month: `${month}-01`,
+        bill: bill
+          ? { billed: bill.total_billed, paid: bill.amount_paid }
+          : null,
+      };
+    })
+    .filter((entry) => entry.bill !== null || entry.month === `${thisMonth}-01`);
+  // What the sheet can actually open on. Raising a bill stays the bill form's
+  // job, so with nothing billed there is no payment to record.
+  const billedMonths = paymentMonths.filter((entry) => entry.bill !== null);
 
   function openBill(billId: string) {
     router.push({
@@ -264,12 +270,13 @@ export default function TenantDetailScreen() {
         // Dimmed until some month has a bill: there is nothing for the money to
         // go against, and the sheet would open on no month at all.
         onAddPayment={
-          paymentMonths.length > 0
+          billedMonths.length > 0
             ? () => {
                 setPaymentError(null);
                 // Opens on the newest billed month, which is what most payments
-                // are for.
-                setPayingMonth(paymentMonths.at(-1)?.month ?? null);
+                // are for — this month once it has been raised, last month until
+                // then.
+                setPayingMonth(billedMonths.at(-1)?.month ?? null);
               }
             : undefined
         }

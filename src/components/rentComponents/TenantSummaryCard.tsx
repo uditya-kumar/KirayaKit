@@ -156,9 +156,9 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   pendingAmount: {
-    fontSize: 32,
+    fontSize: 27,
     fontWeight: "700",
-    letterSpacing: -1,
+    letterSpacing: -0.8,
   },
   divider: {
     height: 1,

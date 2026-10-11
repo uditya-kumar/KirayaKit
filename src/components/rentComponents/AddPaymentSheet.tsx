@@ -10,30 +10,26 @@ import {
 import { fieldAmount, withoutLeadingZeros } from "@/utils/validate";
 import { IndianRupee, X } from "lucide-react-native";
 import { useState } from "react";
-import {
-  KeyboardAvoidingView,
-  Modal,
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import { KeyboardAvoidingView } from "react-native-keyboard-controller";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-/** A billed month the sheet can record a payment against. */
+/** A month the sheet offers, whether or not it has a bill to pay against. */
 export type PaymentMonth = {
   /** First of the month, as the bill stores it ("2026-10-01"). */
   month: string;
-  billed: number;
-  paid: number;
+  /**
+   * The month's bill, or null when it has not been raised yet — which is what
+   * greys its segment out: there is nothing for the money to land on.
+   */
+  bill: { billed: number; paid: number } | null;
 };
 
 type AddPaymentSheetProps = {
   visible: boolean;
   /** Oldest first, so the segments read left to right in time. */
   months: PaymentMonth[];
-  /** The `month` of the entry in `months` being paid against. */
+  /** The `month` of the entry in `months` being paid against; it must have a bill. */
   month: string;
   onChangeMonth: (month: string) => void;
   /** The field's text as typed; the caller checks it and owns the save. */
@@ -68,14 +64,22 @@ export function AddPaymentSheet({
   const selected = months.find((option) => option.month === month);
 
   return (
+    // Both translucent flags are what let the keyboard be measured inside a
+    // modal, which has its own window on Android; KeyboardProvider in the root
+    // layout is mounted with the matching pair.
     <Modal
       visible={visible}
       transparent
+      statusBarTranslucent
+      navigationBarTranslucent
       animationType="slide"
       onRequestClose={onClose}
     >
+      {/* keyboard-controller's own, not React Native's: the app is edge-to-edge,
+          so Android never resizes the window and RN's does nothing there — the
+          sheet sat under the keyboard. This one lifts it on both platforms. */}
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        behavior="padding"
         style={[styles.scrim, { backgroundColor: colors.scrim }]}
       >
         {/* Unlike the delete dialog, a stray tap beside this sheet only loses a
@@ -86,13 +90,14 @@ export function AddPaymentSheet({
           style={StyleSheet.absoluteFill}
           onPress={saving ? undefined : onClose}
         />
-        {selected ? (
+        {selected?.bill ? (
           // Keyed by month so switching segments re-seeds the field from that
           // month's bill, rather than carrying one month's figure into another.
           <SheetBody
             key={selected.month}
             months={months}
             selected={selected}
+            bill={selected.bill}
             onChangeMonth={onChangeMonth}
             onSave={onSave}
             onClose={onClose}
@@ -107,12 +112,15 @@ export function AddPaymentSheet({
 
 type SheetBodyProps = Omit<AddPaymentSheetProps, "visible" | "month"> & {
   selected: PaymentMonth;
+  /** `selected.bill`, narrowed by the caller so the fields can rely on it. */
+  bill: { billed: number; paid: number };
 };
 
 /** The sheet itself; the typed amount is held here and goes when it closes. */
 function SheetBody({
   months,
   selected,
+  bill,
   onChangeMonth,
   onSave,
   onClose,
@@ -126,12 +134,12 @@ function SheetBody({
   // Blank rather than "0" when nothing has been paid, as on the bill form: the
   // placeholder already shows 0, and the first digit typed is then the figure.
   const [amountPaid, setAmountPaid] = useState(
-    selected.paid === 0 ? "" : String(selected.paid),
+    bill.paid === 0 ? "" : String(bill.paid),
   );
 
   const monthName = formatBillMonth(selected.month).split(" ")[0];
   const typed = fieldAmount(amountPaid);
-  const left = Math.round((selected.billed - typed) * 100) / 100;
+  const left = Math.round((bill.billed - typed) * 100) / 100;
 
   // Only said once the field holds a number; a half-typed "12." still parses,
   // anything worse is for the save to refuse.
@@ -172,8 +180,8 @@ function SheetBody({
         </Pressable>
       </View>
 
-      {/* With one month to pay against there is nothing to choose, and the line
-          under the field already names it. */}
+      {/* With one month on offer there is nothing to choose, and the line under
+          the field already names it. */}
       {months.length > 1 ? (
         <View
           style={[
@@ -183,6 +191,11 @@ function SheetBody({
         >
           {months.map((option) => {
             const isSelected = option.month === selected.month;
+            // A month with no bill is shown but cannot be picked: there is
+            // nothing for the money to land on until it has been raised, and
+            // leaving it out would make the sheet look as if the month had been
+            // forgotten. The label says why rather than only greying out.
+            const unbilled = option.bill === null;
             return (
               <Button
                 key={option.month}
@@ -191,11 +204,15 @@ function SheetBody({
                 backgroundColor={
                   isSelected ? colors.cardBackground : "transparent"
                 }
-                accessibilityLabel={`${formatBillMonth(option.month)}${isSelected ? ", selected" : ""}`}
+                accessibilityLabel={
+                  unbilled
+                    ? `${formatBillMonth(option.month)}, not billed yet`
+                    : `${formatBillMonth(option.month)}${isSelected ? ", selected" : ""}`
+                }
                 onPress={() => {
                   if (!isSelected) onChangeMonth(option.month);
                 }}
-                disabled={saving}
+                disabled={saving || unbilled}
                 paddingVertical={9}
                 borderRadius={9}
                 style={styles.segment}
